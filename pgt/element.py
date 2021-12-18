@@ -3,6 +3,7 @@ import time
 from .pos_size import Pos, Size
 from .exceptions import InvalidPosError
 from .mathf import clamp
+from typing import Union, Optional
 pygame.init()
 
 

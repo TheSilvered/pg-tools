@@ -1,2 +1,2 @@
 # pygame-tools
- Pygame utilities
+This module offers many useful tools that make using pygame easier.

@@ -22,5 +22,5 @@ while True:
 
     screen.fill(pgt.GRAY(50))
     pygame.draw.rect(screen, pgt.WHITE, pygame.Rect(100, 0, 200, 800))
-    pgt.draw.odd_circle(screen, (100, 100), 50, pgt.SALMON + (128,))
+    pgt.draw.odd_circle(screen, (100, 100), 50, pgt.SALMON + (255,), 10, pgt.GREEN + (100,))
     pygame.display.update()

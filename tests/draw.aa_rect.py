@@ -9,7 +9,7 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 
-rect = pygame.Rect(100, 100, 100, 40)
+rect = pygame.Rect(100, 100, 150, 200)
 
 while True:
     clock.tick()
@@ -22,5 +22,5 @@ while True:
             rect.center = event.pos
 
     screen.fill(pgt.GRAY(50))
-    pgt.draw.aa_rect(screen, rect, pgt.WHITE, 3, pgt.SALMON, 2)
+    pgt.draw.aa_rect(screen, rect, pgt.WHITE + (255,), 50, 20, pgt.SALMON + (50,))
     pygame.display.update()

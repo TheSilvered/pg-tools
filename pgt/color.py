@@ -22,9 +22,7 @@ def max_col(col1, col2):
 
 
 def calc_alpha(new_color, prev_color, alpha):
-    return alpha * new_color[0] + (1 - alpha) * prev_color[0],\
-           alpha * new_color[1] + (1 - alpha) * prev_color[1],\
-           alpha * new_color[2] + (1 - alpha) * prev_color[2]
+    return [alpha * c1 + (1 - alpha) * c2 for c1, c2 in zip(new_color, prev_color)]
 
 
 BLACK       = (1  , 1  , 1  )

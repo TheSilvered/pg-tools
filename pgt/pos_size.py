@@ -23,6 +23,28 @@ class Pos:
     Initialisation: you can give two separate arguments or an iterable
         containing them, and they will be automatically be set
 
+    Args:
+        When the given two arguments, `x` is assigned to the first and
+        `y` to the second.
+        When given an iterable of length two, `x` is assigned to the
+        first value and `y` to the second.
+        In any other case both `x` and `y` get the value of the first
+        argument
+        >>> Pos(1, 2)
+        Pos(1, 2)
+        >>> Pos([1, 2])
+        Pos(1, 2)
+        >>> Pos(1)
+        Pos(1, 1)
+        >>> Pos(1, 2, 3)  # Here too many arguments are passed so the
+        ...               # so the first value is taken
+        Pos(1, 1)
+        >>> Pos([1, 2, 3])  # Here happens the same thing, the iterable
+        ...                 # is too long
+        Pos([1, 2, 3], [1, 2, 3]
+
+        No keyword arguments are accepted
+
     Attrs:
         'x' (Any): position on the x-axis
         'y' (Any): position on the y-axis
@@ -37,12 +59,13 @@ class Pos:
         iterable) it will make the operation between x and the first
         object, and between y and the second object, else just adds
         the object to both x and y.
-        >>> Pos(2, 3) + [10, 5] == Pos(12, 8)
-
-        >>> Pos(4, 4) - 3 == Pos(1, 1)
-
+        >>> Pos(2, 3) + [10, 5]
+        Pos(12, 8)
+        >>> Pos(4, 4) - 3
+        Pos(1, 1)
         # Pos can contain any type of object
-        >>> Pos((1,), (2,)) + (1, 2) == Pos((1, 1, 2), (2, 1, 2))
+        >>> Pos((1,), (2,)) + (1, 2)
+        Pos((1, 1, 2), (2, 1, 2))
 
     """
     __slots__ = "x", "y"
@@ -137,7 +160,7 @@ class Pos:
             y = self.y << other
         return self.c(x, y)
 
-    def __lshift__(self, other):
+    def __rshift__(self, other):
         try:
             x = self.x >> other[0]
             y = self.y >> other[1]

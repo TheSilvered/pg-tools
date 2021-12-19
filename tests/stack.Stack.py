@@ -24,10 +24,10 @@ print(s, len(s))
 
 # Enable for checks on memory leaks
 
-# for i in range(1_000_000):
-#     s.push(i)
-#     print(i)
+for i in range(1_000_000):
+    s.push(i)
+    print(i)
 
-# time.sleep(10)
+time.sleep(10)
 
-# s.clear()
+s.clear()

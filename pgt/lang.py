@@ -1,31 +1,133 @@
+"""
+lang.py
+
+Type: module
+
+Description: a parser for a filetype that makes it easier to implement
+    various languages in the game
+
+Classes:
+    - Node (not automatically imported)
+    - Lang
+
+See the syntax of the file with help(Lang)
+"""
 from .stack import Stack
 
 
 class Node:
-    def add_node(self, name, node):
+    """Used by the Lang class to create connections"""
+    def add_node(self, name: str, node):
         if not hasattr(self, name):
             setattr(self, name, node)
 
-    def empty(self):
+    def empty(self) -> None:
         for attr in dir(self):
-            if attr[:3] == "__" or attr in ("empty", "get", "reload", "load"):
+            if attr[:2] == "__" or attr in ("empty", "get", "reload", "load"):
                 break
             else:
                 delattr(self, attr)
 
+    def __del__(self):
+        self.empty()
+
 
 class Lang(Node):
-    def get(self, attrs):
-        try:
-            return eval(f"self.{attrs}")
-        except Exception:
-            return attrs
+    """
+    Lang
 
-    def reload(self, *args, **kwargs):
+    Type: Class
+
+    Description: a type that parses and stores the data inside a file
+
+    Args:
+        'path' (str?): the path of the file to load
+        'encoding' (str): the encoding to load the file with
+        'log' (bool): if the errors while parsing the file should be
+            logged to the console
+
+    Methods:
+        'get(attrs_str)' (str): gets a name without returning an error
+            'attrs_str' (str): the sets and attribute names separated
+                by points
+        'load(path, encoding="utf-8", log=True)' (None): loads the
+            specified files, for the arguments see the __init__
+            arguments
+        'reload(path, encoding="utf-8", log=True)' (None): loads a new
+            file, removing the old attributes and sets
+        'empty()' (None): deletes the old sets and attributes
+
+    Lang file structure:
+        a Lang file can be divided into sets that contain other sets or
+        attributes, there is always a base set.
+
+    To create a set:
+    $set_name
+
+    To create a sub_set you must add a dollar sign for every level of
+    subordination
+    $set_on_level_1
+      $set_on_level_2_under_level_1
+
+    To create an attribute you write:
+    @attribute_name
+
+    Any text following that line will be set as the value of the
+    attribute (new lines included). To make a one-line attribute write
+    @attribute_name: attribute_value
+
+    Local References are used to set the value of an attribute to the
+    value of another one in the same set. The attribute you're taking
+    the value from must be already declared
+    ~@new_attribute_name;other_attribute_name
+
+    Absolute Reverences are used to set the value of an attribute to
+    the value of another one declared anywhere, to access the varius
+    sets use the names separated by points `.`
+    .~@new_attribute;set1.set2.attribute
+
+    Comments start with a double colon, can only be the entire line
+    :: this is a comment
+
+    The and-percent `&` is used to remove the newline character at the
+    end of the line.
+    @attribute1
+    &This is line 1
+    this is also line 1
+
+    The value of attribute1 is 'This is line 1this is also line 1\n'
+
+    Spaces and tabs at the start of a line are ignored.
+    To escape special characters or instructions ($, @, ~@, .~@, &, ::)
+    or to keep the indent use a backslash at the start
+
+    To specify the encoding of the file write
+    %=UTF-8
+    or any other encoding supported by python. This line should always
+    be put before any set or attribute declaration
+
+    @attribute2
+    \  the indent is kept
+
+    Value attribute2: '  the indent is kept'
+
+    To access within code the various attributes
+    """
+    def __init__(self, path=None, encoding="utf-8", log=True):
+        if path is not None:
+            self.load(path, encoding, log)
+
+    def get(self, attrs_str: str) -> str:
+        try:
+            return eval(f"self.{attrs_str}")
+        except Exception:
+            return attrs_str
+
+    def reload(self, *args, **kwargs) -> None:
         self.empty()
         self.load(*args, **kwargs)
 
-    def load(self, path, encoding="utf-8", log=True):
+    def load(self, path: str, encoding: str = "utf-8", log: bool = True) -> None:
         file = open(f"{path}", "r", encoding=encoding)
         sets = Stack()
         node_str = ""
@@ -37,15 +139,13 @@ class Lang(Node):
 
         for l_no, l in enumerate(file):
             for idx, char in enumerate(l):
-                if char != " ":
+                if char != " " or char == "\t":
                     l = l[idx:]
                     break
 
-            l = l.replace("'", "\\'").replace('"', '\\"')
-
             if l[:2] == "::": continue
 
-            elif l[:2] == "!=":
+            elif l[:2] == "%=":
                 if l[2:-1].lower() != encoding.lower():
                     return self.load(path, l[2:-1], log)
                 continue
@@ -112,8 +212,13 @@ class Lang(Node):
             elif l[:1] == "&":
                 l = l[1:-1]
 
+            elif l[:1] == "\\":
+                l = l[1:]
+
             else:
                 l = l[:-1] + "\\n"
+
+            l = l.replace("'", "\\'").replace('"', '\\"')
 
             if get_text_local is not None:
                 exec_statements.append(f"self.{node_str}{attr} = "

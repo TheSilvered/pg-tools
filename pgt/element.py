@@ -1,9 +1,11 @@
 import pygame
 import time
+from typing import Optional, Iterable
 from .pos_size import Pos, Size
 from .exceptions import InvalidPosError
 from .mathf import clamp
-from typing import Union, Optional
+from .type_hints import _pos, _size, _col_type
+
 pygame.init()
 
 
@@ -133,17 +135,17 @@ class Element(pygame.sprite.Sprite):
             'rect_color' (tuple): the color of the rect if shown
     """
     def __init__(self,
-       pos=None,
-       size=Size(0),
-       image=None,
-       pos_point=Anc.UL,
-       anchor_element=None,
-       anchor_point=Anc.UL,
-       offset=Pos(0),
-       img_offset=Pos(0),
-       alpha=255,
-       rotation=0,
-       hidden=False):
+                 pos: _pos = None,
+                 size: _size = Size(0),
+                 image: Optional[pygame.Surface] = None,
+                 pos_point: str = Anc.UL,
+                 anchor_element=None,
+                 anchor_point: str = Anc.UL,
+                 offset: _pos = Pos(0),
+                 img_offset: _pos = Pos(0),
+                 alpha: int = 255,
+                 rotation: int = 0,
+                 hidden: bool = False):
         pygame.sprite.Sprite.__init__(self)
         self.rect = pygame.Rect((0, 0), size)
         self.image = image
@@ -163,8 +165,7 @@ class Element(pygame.sprite.Sprite):
             self.__a_element = anchor_element
             self._a_point = anchor_point
             setattr(self, pos_point,
-                    getattr(self.__a_element, self._a_point) + self.__offset
-            )
+                    getattr(self.__a_element, self._a_point) + self.__offset)
         else:
             raise InvalidPosError(f"Element {id(self)} needs a position")\
                   from None
@@ -276,7 +277,10 @@ class Element(pygame.sprite.Sprite):
         if self.image: self.image.set_alpha(clamp(value, 0, 255))
         self._alpha = value
 
-    def rotate(self, angle, abs_=False, colorkey=(0, 0, 0)):
+    def rotate(self,
+               angle: int,
+               abs_: bool = False,
+               colorkey: _col_type = (0, 0, 0)) -> None:
         prev_pos = self.pos.copy()
 
         if self.__backup_image is None:
@@ -300,7 +304,10 @@ class Element(pygame.sprite.Sprite):
 
         self.pos = prev_pos
 
-    def scale(self, size, smooth=False, point=None):
+    def scale(self,
+              size: _size,
+              smooth: bool = False,
+              point: Optional[str] = None) -> None:
         if self.__backup_image is None:
             self.__backup_image = self.image.copy()
         else:
@@ -317,14 +324,14 @@ class Element(pygame.sprite.Sprite):
         else:
             setattr(self, point, prev_pos)
 
-    def change_image(self, surface):
+    def change_image(self, surface: pygame.Surface) -> None:
         self.image = surface
         self.image.set_alpha(self._alpha)
         if self.__backup_image is not None:
             self.__backup_image = self.image.copy()
         self.rotate(self._rot, True)
 
-    def collide(self, other):
+    def collide(self, other: pygame.sprite.Sprite) -> bool:
         if self.hidden: return False
 
         if isinstance(other, pygame.sprite.Sprite):
@@ -336,24 +343,24 @@ class Element(pygame.sprite.Sprite):
                            f"pygame.sprite.Sprite, got '{type(other)}'"
                             " instead") from None
 
-    def collide_point(self, point):
+    def collide_point(self, point: _pos) -> bool:
         if self.hidden: return False
         return self.rect.collidepoint(point)
 
-    def show(self):
+    def show(self) -> None:
         self.hidden = False
 
-    def hide(self):
+    def hide(self) -> None:
         self.hidden = True
 
     def draw(self,
-       surface,
-       pos=None,
-       point=Anc.UL,
-       offset=None,
-       flags=0,
-       show_rect=False,
-       rect_color=(255, 0, 255)):
+             surface: pygame.Surface,
+             pos: _pos = None,
+             point: str = Anc.UL,
+             offset: Optional[_pos] = None,
+             flags: int = 0,
+             show_rect: bool = False,
+             rect_color: _col_type = (255, 0, 255)) -> None:
 
         if self.hidden or self.image is None: return
 
@@ -412,7 +419,7 @@ class AniElement(Element):
         - if the element is hidden all the animations are still updated
     """
     def __init__(self,
-       animations=None,
+       animations: Optional[Iterable] = None,
        *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -428,7 +435,7 @@ class AniElement(Element):
         setattr(self, ani.name, ani)
         ani.e = self
 
-    def update_ani(self, global_time=None):
+    def update_ani(self, global_time: int = None) -> None:
         if global_time is None:
             global_time = time.time()
         for i in self.current_ani:
@@ -438,7 +445,7 @@ class AniElement(Element):
         for i in self.current_ani:
             getattr(self, i[0]).set_element()
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         if "update_ani" in kwargs:
             if kwargs["update_ani"]: self.update_ani()
             del kwargs["update_ani"]

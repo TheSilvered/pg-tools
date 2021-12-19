@@ -1,27 +1,29 @@
 import pygame
 from pgt.element import Element, AniElement
+from pgt.type_hints import _col_type
+from typing import Union, Optional
 from .font import Font
 
 
 class Label(Element):
     def __init__(self,
-       text="",
-       text_size=20,
-       color=None,
-       bg_color=None,
-       font=None,
-       style="",
-       alignment="left",
-       line_height=None,
-       adapt_to_width=False,
-       exceed_size=True,
-       auto_size=False,
+       text: str = "",
+       text_size: int = 20,
+       color: _col_type = None,
+       bg_color: _col_type = None,
+       font: Union[Font, pygame.font.Font] = None,
+       style: str = "",
+       alignment: str = "left",
+       line_height: Optional[int] = None,
+       adapt_to_width: bool = False,
+       exceed_size: bool = True,
+       auto_size: bool = False,
        *args, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         style = style.split(" ")
-        self._aa = not "no_aa" in style
+        self._aa = "no_aa" not in style
         if not self._aa: style.remove("no_aa")
 
         if isinstance(font, pygame.font.Font):
@@ -56,7 +58,7 @@ class Label(Element):
         if bg_color is None: bg_color = (0, 0, 0)
         self.bg_color = bg_color
 
-        if not self.alignment in ("left", "right", "center", "centre"):
+        if self.alignment not in ("left", "right", "center", "centre"):
             self.alignment = "left"
 
         if line_height is None:
@@ -124,7 +126,7 @@ class Label(Element):
 
         self.change_image(new_image)
 
-    def rotate(self, *args, **kwargs):
+    def rotate(self, *args, **kwargs) -> None:
         if self.auto_size:
             super().rotate(*args, **kwargs)
         else:

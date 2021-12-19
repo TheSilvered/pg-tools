@@ -3,6 +3,7 @@ from pgt.pos_size import Size
 from pgt.color import GRAY
 pygame.init()
 
+
 class Font:
     def __init__(self, image, chars_order, chars_widths, size=None):
         if len(chars_order) != len(chars_widths):

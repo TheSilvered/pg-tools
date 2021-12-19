@@ -79,18 +79,22 @@ e_out_back = lambda x: 1 + 2.70158 * (x - 1)**3 + 1.70158 * (x - 1)**2
 e_in_out_back = lambda x: e_in_back(x * 2) / 2 if x < .5 else\
                           e_out_back(x * 2 - 1) / 2 + .5
 
-def e_in_elastic(x):
+
+def e_in_elastic(x: float) -> float:
     if x in (0, 1): return x
     return -2 ** (10 * x - 10) * sin((x * 10 - 10.75) * 2.09439)
 
-def e_out_elastic(x):
+
+def e_out_elastic(x: float) -> float:
     if x in (0, 1): return x
     return 2**(-10 * x) * sin((x * 10 - 0.75) * 2.09439) + 1
+
 
 e_in_out_elastic = lambda x: e_in_elastic(x * 2) / 2 if x < .5 else\
                              e_out_elastic(x * 2 - 1) / 2 + .5
 
-def e_out_bounce(x):
+
+def e_out_bounce(x: float) -> float:
     if x < 4 / 11:
         return 121 * x * x / 16
     elif x < 8 / 11:
@@ -98,6 +102,7 @@ def e_out_bounce(x):
     elif x < 9 / 10:
         return (4356 / 361 * x * x) - (35442 / 1805 * x) + 16061 / 1805
     return (54 / 5 * x * x) - (513 / 25 * x) + 268 / 25
+
 
 e_in_bounce = lambda x: 1 - e_out_bounce(1 - x)
 e_in_out_bounce = lambda x: (1 - e_out_bounce(1 - 2 * x)) / 2 if x < .5 else \

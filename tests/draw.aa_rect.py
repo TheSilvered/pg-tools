@@ -22,5 +22,5 @@ while True:
             rect.center = event.pos
 
     screen.fill(pgt.GRAY(50))
-    pgt.draw.aa_rect(screen, rect, pgt.WHITE + (255,), 50, 20, pgt.SALMON + (50,))
+    pgt.draw.aa_rect(screen, rect, pgt.WHITE, 50, 10, pgt.SALMON[:3] + (50,))
     pygame.display.update()

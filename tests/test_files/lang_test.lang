@@ -12,7 +12,3 @@ $set1_l1
   &Local reference
 $set2_l1
   ~@attr1_set2_l1;set1_l1.set1_l2_under_set1_l1.attr1_set1_l2_under_set1_l1
-::  ~@attr2_set2_l1;invalid;syntax
-::$!
-::$$syntax_error_test
-::  @cannot_get_here:Right?

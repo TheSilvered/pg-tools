@@ -18,6 +18,8 @@ e = pgt.MouseInteractionElement(
     pos_point=pgt.Anc.CC
 )
 
+prev_state = None
+
 while True:
     clock.tick()
 
@@ -28,5 +30,7 @@ while True:
 
     screen.fill(pgt.GRAY(50))
     e.draw(screen)
-    print(e.hovered, e.clicked)
+    if (e.hovered, e.clicked) != prev_state:
+        prev_state = (e.hovered, e.clicked)
+        print(e.hovered, e.clicked)
     pygame.display.update()

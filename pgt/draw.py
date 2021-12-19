@@ -1,6 +1,8 @@
 import pygame
 from .color import calc_alpha
 from .mathf import get_i
+from .type_hints import _pos, _col_type
+from typing import Optional
 pygame.init()
 
 even_circle_cache = []
@@ -14,7 +16,8 @@ ODD_CIRCLE_CACHE = 0b001
 EVEN_CIRCLE_CACHE = 0b010
 RECT_CACHE = 0b100
 
-def clear_cache(caches=RECT_CACHE | EVEN_CIRCLE_CACHE | ODD_CIRCLE_CACHE):
+
+def clear_cache(caches: int = RECT_CACHE | EVEN_CIRCLE_CACHE | ODD_CIRCLE_CACHE):
     if caches & ODD_CIRCLE_CACHE:
         odd_circle_cache.clear()
         odd_circle_srufs.clear()
@@ -26,7 +29,13 @@ def clear_cache(caches=RECT_CACHE | EVEN_CIRCLE_CACHE | ODD_CIRCLE_CACHE):
         rect_srufs.clear()
 
 
-def even_circle(surface, center, radius, color, border=0, border_color=None):
+def even_circle(surface: pygame.Surface,
+                center: _pos,
+                radius: int,
+                color: _col_type,
+                border: int = 0,
+                border_color: Optional[_col_type] = None):
+
     blit_pos = (center[0] - radius, center[1] - radius)
 
     if radius - border < 0: border = radius
@@ -65,8 +74,6 @@ def even_circle(surface, center, radius, color, border=0, border_color=None):
                 new_surf.set_at((inv_x, inv_y), new_color)
 
             elif distance < radius:
-                if border: new_color = border_color
-                else: new_color = color
                 new_surf.set_at((x, y), border_color)
                 new_surf.set_at((inv_x, y), border_color)
                 new_surf.set_at((x, inv_y), border_color)
@@ -75,10 +82,11 @@ def even_circle(surface, center, radius, color, border=0, border_color=None):
             elif distance < radius + 1:
                 if border:
                     alpha = (border_color[3] if alpha_b_col else 255) * (1 - (distance - radius))
-                    new_color = tuple(border_color[:3]) + (alpha,)
+                    new_color = list(border_color[:3])
                 else:
                     alpha = (color[3] if alpha_col else 255) * (1 - (distance - radius))
-                    new_color = tuple(color[:3]) + (alpha,)
+                    new_color = list(color[:3])
+                new_color.append(alpha)
 
                 new_surf.set_at((x, y), new_color)
                 new_surf.set_at((inv_x, y), new_color)
@@ -90,7 +98,13 @@ def even_circle(surface, center, radius, color, border=0, border_color=None):
     even_circle_srufs.append(new_surf)
 
 
-def odd_circle(surface, center, radius, color, border=0, border_color=None):
+def odd_circle(surface: pygame.Surface,
+               center: _pos,
+               radius: int,
+               color: _col_type,
+               border: int = 0,
+               border_color: Optional[_col_type] = None):
+
     blit_pos = (center[0] - radius, center[1] - radius)
     try:
         i = odd_circle_cache.index([radius, color, border, border_color])
@@ -128,8 +142,6 @@ def odd_circle(surface, center, radius, color, border=0, border_color=None):
                 new_surf.set_at((inv_x, inv_y), new_color)
 
             elif distance < radius:
-                if border: new_color = border_color
-                else: new_color = color
                 new_surf.set_at((x, y), border_color)
                 new_surf.set_at((inv_x, y), border_color)
                 new_surf.set_at((x, inv_y), border_color)
@@ -138,10 +150,11 @@ def odd_circle(surface, center, radius, color, border=0, border_color=None):
             elif distance < radius + 1:
                 if border:
                     alpha = (border_color[3] if alpha_b_col else 255) * (1 - (distance - radius))
-                    new_color = tuple(border_color[:3]) + (alpha,)
+                    new_color = list(border_color[:3])
                 else:
                     alpha = (color[3] if alpha_col else 255) * (1 - (distance - radius))
-                    new_color = tuple(color[:3]) + (alpha,)
+                    new_color = list(color[:3])
+                new_color.append(alpha)
 
                 new_surf.set_at((x, y), new_color)
                 new_surf.set_at((inv_x, y), new_color)
@@ -158,7 +171,12 @@ def odd_circle(surface, center, radius, color, border=0, border_color=None):
     odd_circle_srufs.append(new_surf)
 
 
-def aa_rect(surface, rect, color, corner_radius=0, border=0, border_color=None):
+def aa_rect(surface: pygame.Surface,
+            rect: pygame.Rect,
+            color: _col_type,
+            corner_radius: int = 0,
+            border: int = 0,
+            border_color: Optional[_col_type] = None):
     if corner_radius > min(rect.width, rect.height) / 2:
         corner_radius = int(min(rect.width, rect.height) / 2)
 
@@ -206,8 +224,6 @@ def aa_rect(surface, rect, color, corner_radius=0, border=0, border_color=None):
                 new_surf.set_at((inv_x, inv_y), new_color)
 
             elif distance < corner_radius:
-                if border: new_color = border_color
-                else: new_color = color
                 new_surf.set_at((x, y), border_color)
                 new_surf.set_at((inv_x, y), border_color)
                 new_surf.set_at((x, inv_y), border_color)
@@ -216,10 +232,11 @@ def aa_rect(surface, rect, color, corner_radius=0, border=0, border_color=None):
             elif distance < corner_radius + 1:
                 if border:
                     alpha = (border_color[3] if alpha_b_col else 255) * (1 - (distance - corner_radius))
-                    new_color = tuple(border_color[:3]) + (alpha,)
+                    new_color = list(border_color[:3])
                 else:
                     alpha = (color[3] if alpha_col else 255) * (1 - (distance - corner_radius))
-                    new_color = tuple(color[:3]) + (alpha,)
+                    new_color = list(color[:3])
+                new_color.append(alpha)
 
                 new_surf.set_at((x, y), new_color)
                 new_surf.set_at((inv_x, y), new_color)

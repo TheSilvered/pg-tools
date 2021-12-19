@@ -31,7 +31,8 @@ e = pgt.AniElement(
             loop=False
         )
     ],
-    rotation=45
+    rotation=45,
+    alpha=152
 )
 
 e.flash.start()

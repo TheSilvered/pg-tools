@@ -1,5 +1,8 @@
 from pgt.element import MouseInteractionAniElement, Anc
+from pgt.ani import AniBase
+from .label import Label
 import pygame.mixer
+from typing import Optional, Callable, Iterable
 
 BUTTON_NORMAL = 1
 BUTTON_HOVER = 2
@@ -8,19 +11,19 @@ BUTTON_CLICK = 3
 
 class Button(MouseInteractionAniElement):
     def __init__(self,
-       normal_ani=None,
-       on_hover_ani=None,
-       on_click_ani=None,
-       repeat_normal_ani=False,
-       repeat_hover_ani=False,
-       repeat_click_ani=False,
-       text_label=None,
-       text_label_point=Anc.CC,
-       func=None,
-       func_args=None,
-       func_kwargs=None,
-       button=0,
-       sound=None,
+       normal_ani: Optional[AniBase] = None,
+       on_hover_ani: Optional[AniBase] = None,
+       on_click_ani: Optional[AniBase] = None,
+       repeat_normal_ani: bool = False,
+       repeat_hover_ani: bool = False,
+       repeat_click_ani: bool = False,
+       text_label: Optional[Label] = None,
+       text_label_point: str = Anc.CC,
+       func: Optional[Callable] = None,
+       func_args: Optional[Iterable] = None,
+       func_kwargs: Optional[dict] = None,
+       button: int = 0,
+       sound: pygame.mixer.Sound = None,
        *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -74,10 +77,10 @@ class Button(MouseInteractionAniElement):
     def button_clicked(self):
         return self.clicked[self.button]
 
-    def run(self):
+    def run(self) -> None:
         if self.func: self.func(*self.fargs, **self.fkwargs)
 
-    def auto_run(self):
+    def auto_run(self) -> bool:
         if self.button_clicked:
             if not self.__pressed and self.sound is not None:
                 pygame.mixer.Sound.play(self.sound)
@@ -92,7 +95,7 @@ class Button(MouseInteractionAniElement):
 
         return False
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         hovered = self.hovered
         clicked = self.button_clicked
 

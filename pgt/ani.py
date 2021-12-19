@@ -40,7 +40,7 @@ class MyAnimation(pgt.AniBase):
         # here goes any operation that the animation should do when
         # a frame passes
         # you can use self.get_frame() to get the value of the current
-        # frame
+        # frame, returned either by the function or the list of frames
         pass
 
     def reset_element(self):
@@ -67,6 +67,8 @@ class PosAni(FuncAniBase):
 
 from abc import ABC, abstractmethod
 import time as t
+from typing import Callable, Optional, Sized, Any
+from .element import AniElement
 
 PERC         = 0b00001
 PREV_VAL     = 0b00010
@@ -98,7 +100,7 @@ class FuncAniFrames:
 
     See tests/animations.PosAni.py for examples
     """
-    def __init__(self, function, frames):
+    def __init__(self, function: Callable, frames: int):
         self._func = function
         self._frames = frames
 
@@ -190,14 +192,14 @@ class AniBase(ABC):
             (e.g. PosAni resets the element's position)
     """
     def __init__(self,
-       name=None,
-       element=None,
-       id_=None,
-       frames=None,
-       time=0.001,
-       tot_time=0,
-       loop=False,
-       reset_on_end=True):
+       name: Optional[str] = None,
+       element: Optional[AniElement] = None,
+       id_: Optional[int] = None,
+       frames: Sized = None,
+       time: float = 0.001,
+       tot_time: float = 0.0,
+       loop: bool = False,
+       reset_on_end: bool = True):
 
         if element is not None: setattr(element, name, self)
 
@@ -227,7 +229,7 @@ class AniBase(ABC):
     def __repr__(self):
         return str(self)
 
-    def start(self, frame=0, start_time=None):
+    def start(self, frame: int = 0, start_time: Optional[float] = None):
         if self._ending:
             self._ending = False
             return
@@ -250,7 +252,7 @@ class AniBase(ABC):
                 self.e.current_ani.append((self.name, self.id))
         self.__running = True
 
-    def update(self, frame_time):
+    def update(self, frame_time: float):
         elapsed_time = frame_time - self._last_frame
 
         if elapsed_time < self._time: return
@@ -300,7 +302,7 @@ class AniBase(ABC):
     def get_frame(self):
         return self.frames[self._current_frame]
 
-    def set_frames(self, frames):
+    def set_frames(self, frames: Sized):
         self._tot_frames = len(frames)
         self.frames = frames
 
@@ -348,8 +350,8 @@ class FuncAniBase(AniBase):
         '__func_args' (int): see 'func_args' in arguments
     """
     def __init__(self,
-       starting_val=None,
-       func_args=PREV_VAL,
+       starting_val: Any = None,
+       func_args: int = PREV_VAL,
        *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__using_func = isinstance(self.frames, FuncAniFrames)
@@ -358,7 +360,7 @@ class FuncAniBase(AniBase):
         self.__prev_val = starting_val
         self.__func_args = func_args
 
-    def start(self, starting_val=None, frame=0, start_time=None):
+    def start(self, starting_val: Any = None, frame: int = 0, start_time: Optional[float] = None):
         if starting_val is None: self.__prev_val = self.starting_val
         else: self.__prev_val = starting_val
         super().start(frame, start_time)
@@ -398,6 +400,7 @@ class FuncAniBase(AniBase):
         super().restart(*args, **kwargs)
         self.__pending = 0
 
+    @property
     def get_frame(self):
         if not self.__using_func: return self.frames[self._current_frame]
         return_val = self.__prev_val
@@ -457,7 +460,7 @@ class PosAni(FuncAniBase):
         self.element_val = self.e.pos.copy()
 
     def set_element(self):
-        self.e.pos = self.get_frame()
+        self.e.pos = self.get_frame
 
     def reset_element(self):
         self.e.pos = self.element_val
@@ -495,7 +498,7 @@ class RotAni(FuncAniBase):
         self.element_val = self.e._rot
 
     def set_element(self):
-        self.e.rotate(self.get_frame(), True)
+        self.e.rotate(self.get_frame, True)
 
     def reset_element(self):
         self.e.rotate(self.element_val, True)
@@ -516,7 +519,7 @@ class ScaleAni(FuncAniBase):
     Attrs:
         'smooth': see 'smooth' in args
     """
-    def __init__(self, smooth=False, *args, **kwargs):
+    def __init__(self, smooth: bool = False, *args, **kwargs):
         self.smooth = smooth
         super().__init__(*args, **kwargs)
 
@@ -525,7 +528,7 @@ class ScaleAni(FuncAniBase):
         self.element_val = self.e.size
 
     def set_element(self):
-        self.e.scale(self.get_frame(), self.smooth)
+        self.e.scale(self.get_frame, self.smooth)
 
     def reset_element(self):
         self.e.scale(self.element_val)

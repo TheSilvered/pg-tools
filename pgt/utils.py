@@ -1,7 +1,12 @@
 from pygame.image import load
+from pygame import Surface
+from typing import Optional, Union
+from os import PathLike
 import json
 
-def parse_json_file(path, encoding="utf-8"):
+
+def parse_json_file(path: Union[str, PathLike],
+                    encoding: str = "utf-8") -> Union[list, dict]:
     """
     parse_json_file
 
@@ -18,7 +23,10 @@ def parse_json_file(path, encoding="utf-8"):
         data = json.load(f)
     return data
 
-def load_image(path, has_alpha=False, surface=None):
+
+def load_image(path: Union[str, PathLike],
+               has_alpha: bool = False,
+               surface: Optional[Surface] = None) -> Surface:
     """
     load_image
 

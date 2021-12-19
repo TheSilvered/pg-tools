@@ -3,7 +3,7 @@ from typing import Any
 
 
 class Node:
-    def __init__(self, val):
+    def __init__(self, val: Any):
         self.val = val
         self.next = None
 
@@ -26,9 +26,14 @@ class Stack:
         any number of arguments is accepted and the value will be put
         into the stack from last to first, therefor the first value
         given will be the first value on the stack
+        >>> a = Stack(1, 2, 3, 4)
+        >>> a
+        Stack(1, 2, 3, 4)
+        >>> a.peek()
+        1
 
     Properties:
-        'is_empty': if the stack has no items
+        'is_empty' (bool, readonly): if the stack has no items
 
     Magic methods:
         '__len__()' (int): returns the size of the stack

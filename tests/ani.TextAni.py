@@ -20,7 +20,7 @@ l = pgt.gui.AniLabel(
     color=pgt.WHITE,
     text_size=22,
     animations=[
-        pgt.animations.TextAni(
+        pgt.ani.TextAni(
             name="text_ani",
             frames=animation_texts,
             reset_on_end=True,

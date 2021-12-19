@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d99aefd-cb9c-425b-92fa-007ec23f9d69" name="Default Changelist" comment="">
+    <list default="true" id="9d99aefd-cb9c-425b-92fa-007ec23f9d69" name="Default Changelist" comment="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value">
+      <change afterPath="$PROJECT_DIR$/pgt/type_hints.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Pygame tools.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame tools.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/ani.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/ani.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/color.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/draw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/element.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/gui/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/button.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/gui/font.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/font.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/gui/label.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/label.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/gui/surface_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/surface_element.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/mathf.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/mathf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/pos_size.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/pos_size.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/stack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ani.TextAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.TextAni.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ani.TextureAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.TextureAni.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/draw.aa_rect.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.aa_rect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/draw.even_circle.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.even_circle.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/draw.odd_circle.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.odd_circle.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/element.MouseInteractionElement.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/element.MouseInteractionElement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/lang.Lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/lang.Lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/size_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/stack.Stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/stack.Stack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_files/lang_test.lang" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_files/lang_test.lang" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +37,22 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="858233c9-4dff-41e9-9335-d572d56481d0" />
+        <option name="url" value="https://github.com/TheSilvered/pygame-tools.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -33,7 +66,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -42,6 +75,122 @@
         <option name="myModuleName" value="Pygame tools" />
       </console-settings>
     </option>
+  </component>
+  <component name="RunManager" selected="Python.lang.Lang">
+    <configuration name="gui.SurfaceElement" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/gui.SurfaceElement.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="label.Label.text" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/label.Label.text.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="lang.Lang" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/lang.Lang.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mathf.e_in_out" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/mathf.e_in_out.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="stack.Stack" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/stack.Stack.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.lang.Lang" />
+        <item itemvalue="Python.stack.Stack" />
+        <item itemvalue="Python.mathf.e_in_out" />
+        <item itemvalue="Python.label.Label.text" />
+        <item itemvalue="Python.gui.SurfaceElement" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -53,6 +202,17 @@
       <updated>1638452922645</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value" />

@@ -202,7 +202,7 @@ class Lang(Node):
 
             elif l[:2] == "~@":
                 if l[-1] == "\n": l = l[:-1]
-                vals = l[3:].split(";")
+                vals = l[2:].split(";")
                 if len(vals) != 2:
                     raise SyntaxError(
                         f"line {l_no + 1} of {path}, invalid syntax"

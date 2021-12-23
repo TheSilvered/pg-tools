@@ -1,6 +1,6 @@
 import pygame
 import time
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Callable
 from .pos_size import Pos, Size
 from .exceptions import InvalidPosError
 from .mathf import clamp
@@ -437,7 +437,7 @@ class AniElement(Element):
 
     def update_ani(self, global_time: int = None) -> None:
         if global_time is None:
-            global_time = time.time()
+            global_time = time.perf_counter()
         for i in self.current_ani:
             getattr(self, i[0]).update(global_time)
 
@@ -466,26 +466,36 @@ class MouseInteractionElement(Element):
     Description: element that keeps track of the interactions it has
         with the mouse cursor
 
+    Args:
+        'transform_mouse_pos' (Callable): a function that changes the
+            mouse position for the single element, can be used when
+            it's part of a SurfaceElement
+
     Attrs:
         'hovered' (bool): if the mouse is over the rect of the element
         'clicked' (tuple[bool]): returns a tuple with the buttons
             that are clicking the element, at index 0 is the leftmost
             button, at index 1 the middlemost one ant at index 2 the
             rightmost one
+        'transform_mouse_pos' (Callable): see 'transform_mouse_pos' in args
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self,
+                 transform_mouse_pos: Callable = lambda x: x,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # These prevent that the element is considered clicked when
         # the mouse enters already clicking
         self.__prev_hovered = False
         self.__keep_clicked = False
+        self.transform_mouse_pos = transform_mouse_pos
 
     @property
     def hovered(self):
         if self.hidden: return False
 
-        in_area = self.collide_point(pygame.mouse.get_pos())
+        new_pos = self.transform_mouse_pos(Pos(pygame.mouse.get_pos()))
+        in_area = self.collide_point(new_pos)
 
         if not any(pygame.mouse.get_pressed()) and in_area:
             self.__prev_hovered = True

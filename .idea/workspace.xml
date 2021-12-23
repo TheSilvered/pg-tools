@@ -2,31 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d99aefd-cb9c-425b-92fa-007ec23f9d69" name="Default Changelist" comment="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value">
-      <change afterPath="$PROJECT_DIR$/pgt/type_hints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Pygame tools.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame tools.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/ani.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/ani.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/color.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/draw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/element.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/gui/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/button.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/font.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/font.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/label.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/label.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/surface_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/surface_element.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/lang.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/mathf.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/mathf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/pos_size.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/pos_size.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/stack.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ani.TextAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.TextAni.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ani.TextureAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.TextureAni.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/draw.aa_rect.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.aa_rect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/draw.even_circle.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.even_circle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/draw.odd_circle.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.odd_circle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/element.MouseInteractionElement.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/element.MouseInteractionElement.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/lang.Lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/lang.Lang.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/size_test.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/stack.Stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/stack.Stack.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_files/lang_test.lang" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_files/lang_test.lang" afterDir="false" />
     </list>
@@ -66,7 +51,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -76,7 +61,7 @@
       </console-settings>
     </option>
   </component>
-  <component name="RunManager" selected="Python.lang.Lang">
+  <component name="RunManager" selected="Python.stack.Stack">
     <configuration name="gui.SurfaceElement" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Pygame tools" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -184,9 +169,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.lang.Lang" />
         <item itemvalue="Python.stack.Stack" />
         <item itemvalue="Python.mathf.e_in_out" />
+        <item itemvalue="Python.lang.Lang" />
         <item itemvalue="Python.label.Label.text" />
         <item itemvalue="Python.gui.SurfaceElement" />
       </list>

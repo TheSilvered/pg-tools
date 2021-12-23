@@ -101,7 +101,8 @@ class SurfaceElement(Element):
             try:
                 e_args = elements_args[i]
             except IndexError:
-                e_args = [None]
+                e_args = []
+
             if isinstance(e_args, list):
                 e_args.insert(0, new_image)
                 e.draw(*e_args)

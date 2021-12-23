@@ -110,10 +110,8 @@ class Label(Element):
         new_image.set_colorkey((0, 0, 0))
 
         for l_no, i in enumerate(self.lines):
-            if self.pygame_font:
-                line = self.font.render(i, self._aa, self.color)
-            else:
-                line = self.font.render(i, self.color, self.bg_color, self._aa)
+            line = self.font.render(i, self._aa, self.color, self.bg_color)
+
             y = self._line_h * l_no
             if self.alignment == "left":
                 new_image.blit(line, (0, y))

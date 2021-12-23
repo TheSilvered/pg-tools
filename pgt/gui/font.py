@@ -40,7 +40,7 @@ class Font:
 
         return tot_width, self.line_size
 
-    def render(self, text, text_c=(1, 1, 1), bg_c=(0, 0, 0), aa_colors=False):
+    def render(self, text, aa_colors=False, text_c=(1, 1, 1), bg_c=(0, 0, 0)):
         image = pygame.Surface(self.size(text), flags=pygame.SRCALPHA)
         image.set_colorkey((0, 0, 0))
         text = str(text)
@@ -52,21 +52,40 @@ class Font:
         text_c = pygame.Color(text_c)
         bg_c = pygame.Color(bg_c)
 
-        for ch in text:
-            surf = self.chars.get(ch, self.nochar)[0].convert_alpha(image)
-            char_pixel_arr = pygame.PixelArray(surf.copy())
-            if aa_colors:
-                for i in range(255, -1, -1):
+        # Creates a temporary char map if it's convenient
+        temp_chars = self.chars
+        if aa_colors and len(text) > len(self.chars):
+            for i in temp_chars:
+                surf = temp_chars[i][0].convert_alpha(image)
+                char_pixel_arr = pygame.PixelArray(surf.copy())
+                for j in range(255, -1, -1):
                     if bg_c == (0, 0, 0):
-                        text_c.a = i
-                        char_pixel_arr.replace(GRAY(i), text_c)
+                        text_c.a = j
+                        char_pixel_arr.replace(GRAY(j), text_c)
                         continue
-                    char_pixel_arr.replace(GRAY(i), bg_c.lerp(text_c, i / 255))
+                    char_pixel_arr.replace(GRAY(j), bg_c.lerp(text_c, j / 255))
+                char_img = char_pixel_arr.surface.copy()
+                char_img.unlock()
+                temp_chars[i] = (char_img, temp_chars[i][1])
+
+        for ch in text:
+            if aa_colors and len(text) > len(self.chars) and ch in self.chars:
+                char_img = temp_chars[ch][0]
             else:
-                char_pixel_arr.replace(BG_COLOR, bg_c)
-                char_pixel_arr.replace(COLOR, text_c)
-            char_img = char_pixel_arr.surface.copy()
-            char_img.unlock()
+                surf = self.chars.get(ch, self.nochar)[0].convert_alpha(image)
+                char_pixel_arr = pygame.PixelArray(surf.copy())
+                if aa_colors:
+                    for i in range(255, -1, -1):
+                        if bg_c == (0, 0, 0):
+                            text_c.a = i
+                            char_pixel_arr.replace(GRAY(i), text_c)
+                            continue
+                        char_pixel_arr.replace(GRAY(i), bg_c.lerp(text_c, i / 255))
+                else:
+                    char_pixel_arr.replace(BG_COLOR, bg_c)
+                    char_pixel_arr.replace(COLOR, text_c)
+                char_img = char_pixel_arr.surface.copy()
+                char_img.unlock()
             image.blit(char_img, (current_x, 0))
             current_x += self.chars.get(ch, self.nochar)[1]
 

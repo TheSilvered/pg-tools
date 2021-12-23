@@ -10,6 +10,62 @@ BUTTON_CLICK = 3
 
 
 class Button(MouseInteractionAniElement):
+    """
+    Button(MouseInteractionAniElement)
+
+    Type: class
+
+    Args:
+        'normal_ani' (AniBase?): animation that plays when the button
+            is idle
+        'on_hover_ani' (AniBase?): animation that plays when the
+            button is hovered by the cursor
+        'on_click_ani' (AniBase?): animation that plays when the
+            button is clicked
+        'repeat_normal_ani' (bool): if the animation should be
+            started each frame or only once
+        'repeat_hover_ani' (bool): if the animation should be
+            started each frame or only once
+        'repeat_click_ani' (bool): if the animation should be
+            started each frame or only once
+        'text_label' (Label?): a Label that gets drawn in front of
+            the button
+        'text_label_point' (Anc): element_point of the label
+        'func' (Callable): function to run when the button is pressed
+        'func_args' (Iterable?): *args of the function
+        'func_kwargs' (dict?): **kwargs of the function
+        'button' (int): which mouse button should activate the button
+            1 - left, 2 - middle, 3 - right
+        'sound' (pygame.mixer.Sound?): a sound to play when the
+            button is clicked
+
+    Attrs:
+        'normal_ani' (AniBase?): see 'normal_ani' in args
+        'on_hover_ani' (AniBase?): see 'on_hover_ani' in args
+        'on_click_ani' (AniBase?): see 'on_click_ani' in args
+        'repeat_normal_ani' (bool): see 'repeat_normal_ani' in args
+        'repeat_hover_ani' (bool): see 'repeat_hover_ani' in args
+        'repeat_hover_ani' (bool): see 'repeat_hover_ani' in args
+        'func' (Callable?): see 'func' in args
+        'fargs' (Iterable?): see 'func_args' in args
+        'fkwargs' (dict?): see 'func_kwargs' in args
+        'button' (int): see 'button' in args
+        'sound' (pygame.mixer.Sound?): see 'sound' in args
+        'force_state' (int?): which state is shown of the button,
+            if set to None the current one is shown.
+            The module provides three constants BUTTON_NORMAL,
+            BUTTON_HOVER and BUTTON_CLICK
+        'label' (Label?): see 'label' in args
+
+    Properties:
+        'button_clicked' (bool, readonly): if the button is clicked
+            with the assigned mouse button
+
+    Methods:
+        'run()': runs the function
+        'auto_run()': to call every frame, calls 'run' automatically
+            when the button is pressed and plays the sound
+    """
     def __init__(self,
        normal_ani: Optional[AniBase] = None,
        on_hover_ani: Optional[AniBase] = None,
@@ -23,7 +79,7 @@ class Button(MouseInteractionAniElement):
        func_args: Optional[Iterable] = None,
        func_kwargs: Optional[dict] = None,
        button: int = 0,
-       sound: pygame.mixer.Sound = None,
+       sound: Optional[pygame.mixer.Sound] = None,
        *args, **kwargs):
         super().__init__(*args, **kwargs)
 

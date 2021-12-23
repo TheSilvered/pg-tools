@@ -235,7 +235,7 @@ class AniBase(ABC):
             return
         if self.__running:
             return
-        if not start_time: start_time = t.time()
+        if not start_time: start_time = t.perf_counter()
         self._start_time = start_time
         self._last_frame = start_time
         self._current_frame = frame
@@ -291,8 +291,8 @@ class AniBase(ABC):
             self.start(*args, **kwargs)
             return
 
-        self._start_time = t.time()
-        self._last_frame = t.time()
+        self._start_time = t.perf_counter()
+        self._last_frame = t.perf_counter()
         self._current_frame = 0
         self._ending = False
         self.__running = True

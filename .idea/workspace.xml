@@ -2,23 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d99aefd-cb9c-425b-92fa-007ec23f9d69" name="Default Changelist" comment="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value">
-      <change afterPath="$PROJECT_DIR$/pgt/constants.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/draw.aa_line.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/bug_report.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/bug_report.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/feature_request.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/feature_request.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/ani.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/ani.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/color.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/draw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/gui/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/button.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/gui/font.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/font.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/gui/label.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/label.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ani.PosAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.PosAni.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ani.ScaleAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.ScaleAni.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/gui.Label.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gui.Label.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/lang.Lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/lang.Lang.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/stack.Stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/stack.Stack.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

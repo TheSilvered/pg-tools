@@ -2,23 +2,35 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d99aefd-cb9c-425b-92fa-007ec23f9d69" name="Default Changelist" comment="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value">
+      <change afterPath="$PROJECT_DIR$/pgt/constants.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/draw.aa_line.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/bug_report.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/bug_report.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/feature_request.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/feature_request.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/ani.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/ani.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/element.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/gui/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/color.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/draw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/button.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/font.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/font.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/label.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/label.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/gui/surface_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/surface_element.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ani.PosAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.PosAni.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ani.ScaleAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.ScaleAni.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/gui.Label.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gui.Label.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/lang.Lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/lang.Lang.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/stack.Stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/stack.Stack.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_files/lang_test.lang" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_files/lang_test.lang" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -61,8 +73,8 @@
       </console-settings>
     </option>
   </component>
-  <component name="RunManager" selected="Python.stack.Stack">
-    <configuration name="gui.SurfaceElement" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.gui.Label.auto_size">
+    <configuration name="gui.Label" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Pygame tools" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -74,7 +86,28 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/gui.SurfaceElement.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/gui.Label.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="gui.Label.auto_size" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/gui.Label.auto_size.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -96,27 +129,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/label.Label.text.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="lang.Lang" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Pygame tools" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/lang.Lang.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -169,11 +181,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.gui.Label.auto_size" />
+        <item itemvalue="Python.label.Label.text" />
+        <item itemvalue="Python.gui.Label" />
         <item itemvalue="Python.stack.Stack" />
         <item itemvalue="Python.mathf.e_in_out" />
-        <item itemvalue="Python.lang.Lang" />
-        <item itemvalue="Python.label.Label.text" />
-        <item itemvalue="Python.gui.SurfaceElement" />
       </list>
     </recent_temporary>
   </component>

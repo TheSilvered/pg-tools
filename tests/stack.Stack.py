@@ -1,6 +1,5 @@
 import sys; sys.path.insert(0, "..")
 from pgt import Stack
-import time
 
 s = Stack(1, 2, 3, 4)
 print(s, len(s))
@@ -24,6 +23,7 @@ print(s, len(s))
 
 # Enable for checks on memory leaks
 
+# import time
 # for i in range(1_000_000):
 #     s.push(i)
 #     print(i)

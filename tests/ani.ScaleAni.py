@@ -23,7 +23,7 @@ e = pgt.AniElement(
                 1000
             ),
             reset_on_end=False,
-            func_args=pgt.ani.PERC,
+            func_args=pgt.PERC,
             tot_time=1
         )
     ]

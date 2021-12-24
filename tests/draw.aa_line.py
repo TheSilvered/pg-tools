@@ -1,41 +1,34 @@
 import pygame
 import sys; sys.path.insert(0, "..")
 import pgt
-
 pygame.init()
 
-__test_name__ = "gui.Label"
+__test_name__ = "_test_base"
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 
-text = """Line 1
-Line 2 wordtoolongtofitinasingleline
-Line 3 a
-Line 4"""
-
-
-l = pgt.gui.Label(
-    pos=(100, 100),
-    size=(200, 115),
-    text=text,
-    font="consolas",
-    adapt_to_width=True,
-    alignment="center",
-    color=pgt.SALMON,
-    bg_color=pgt.BLACK,
-    exceed_size=True,
-    text_size=22
-)
+line_y = 10
+line_ascending = True
 
 while True:
-    clock.tick()
+    clock.tick(100)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
+    if line_ascending:
+        line_y += 1
+    else:
+        line_y -= 1
+
+    if line_y > 399:
+        line_ascending = False
+    elif line_y < 10:
+        line_ascending = True
+
     screen.fill(pgt.GRAY(50))
-    l.draw(screen, show_rect=True)
+    pgt.draw.aa_line(screen, pgt.SALMON, (100, line_y), (400, 400), 1)
     pygame.display.update()

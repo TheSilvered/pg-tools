@@ -3,10 +3,7 @@ from pgt.ani import AniBase
 from .label import Label
 import pygame.mixer
 from typing import Optional, Callable, Iterable
-
-BUTTON_NORMAL = 1
-BUTTON_HOVER = 2
-BUTTON_CLICK = 3
+from pgt.constants import BUTTON_NORMAL, BUTTON_CLICK, BUTTON_HOVER
 
 
 class Button(MouseInteractionAniElement):
@@ -14,6 +11,9 @@ class Button(MouseInteractionAniElement):
     Button(MouseInteractionAniElement)
 
     Type: class
+
+    Description: a customizable button that can run a function
+        when clicked
 
     Args:
         'normal_ani' (AniBase?): animation that plays when the button

@@ -40,7 +40,8 @@ class Font:
 
         return tot_width, self.line_size
 
-    def render(self, text, aa_colors=False, text_c=(1, 1, 1), bg_c=(0, 0, 0)):
+    def render(self, text, aa_colors=False, text_c=(1, 1, 1), bg_c=None):
+        if bg_c is None: bg_c = (0, 0, 0)
         image = pygame.Surface(self.size(text), flags=pygame.SRCALPHA)
         image.set_colorkey((0, 0, 0))
         text = str(text)

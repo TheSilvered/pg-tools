@@ -67,14 +67,9 @@ class PosAni(FuncAniBase):
 
 from abc import ABC, abstractmethod
 import time as t
-from typing import Callable, Optional, Sized, Any
+from typing import Callable, Optional, Any, Sequence
 from .element import AniElement
-
-PERC         = 0b00001
-PREV_VAL     = 0b00010
-STARTING_VAL = 0b00100
-FRAME        = 0b01000
-ANIMATION    = 0b10000
+from .constants import PERC, PREV_VAL, STARTING_VAL, FRAME, ANIMATION
 
 
 class FuncAniFrames:
@@ -195,7 +190,7 @@ class AniBase(ABC):
        name: Optional[str] = None,
        element: Optional[AniElement] = None,
        id_: Optional[int] = None,
-       frames: Sized = None,
+       frames: Sequence = None,
        time: float = 0.001,
        tot_time: float = 0.0,
        loop: bool = False,
@@ -302,7 +297,7 @@ class AniBase(ABC):
     def get_frame(self):
         return self.frames[self._current_frame]
 
-    def set_frames(self, frames: Sized):
+    def set_frames(self, frames: Sequence):
         self._tot_frames = len(frames)
         self.frames = frames
 

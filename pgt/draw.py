@@ -3,6 +3,8 @@ from .color import calc_alpha
 from .mathf import get_i
 from .type_hints import _pos, _col_type
 from typing import Optional
+from .pos_size import Pos
+from .constants import ODD_CIRCLE_CACHE, EVEN_CIRCLE_CACHE, RECT_CACHE
 pygame.init()
 
 even_circle_cache = []
@@ -12,12 +14,23 @@ odd_circle_srufs = []
 rect_cache = []
 rect_srufs = []
 
-ODD_CIRCLE_CACHE = 0b001
-EVEN_CIRCLE_CACHE = 0b010
-RECT_CACHE = 0b100
 
+def clear_cache(caches: int = RECT_CACHE | EVEN_CIRCLE_CACHE | ODD_CIRCLE_CACHE) -> None:
+    """
+    clear_cache(caches: int)
 
-def clear_cache(caches: int = RECT_CACHE | EVEN_CIRCLE_CACHE | ODD_CIRCLE_CACHE):
+    Type: function
+
+    Description: empties the caches of the draw functions, aa_line
+        not included
+
+    Args:
+        'cashes' (int) specify what caches should be cleared, you can
+            pass any combination of RECT_CACHE, EVEN_CIRCLE_CACHE and
+            ODD_CIRCLE_CACHE separated by `|`
+
+    Return type: None
+    """
     if caches & ODD_CIRCLE_CACHE:
         odd_circle_cache.clear()
         odd_circle_srufs.clear()
@@ -34,7 +47,32 @@ def even_circle(surface: pygame.Surface,
                 radius: int,
                 color: _col_type,
                 border: int = 0,
-                border_color: Optional[_col_type] = None):
+                border_color: Optional[_col_type] = None) -> None:
+    """
+    even_circle(surface: pygame.Surface,
+                center: _pos,
+                radius: int,
+                color: _col_type,
+                border: int,
+                border_color: Optional[_col_type])
+
+    Type: function
+
+    Description: draws a circle with a 2x2 center
+
+    Args:
+        'surface' (pygame.Surface): where the circle should be drawn
+        'center' (pgt.Pos): where the top-left pixel of the center should
+            be on the surface
+        'radius' (int): radius of the circle
+        'color' (tuple, list): the color of the circle
+        'border' (int): the thickness of the border, if 0 the border
+            is not drawn
+        'border_color' (tuple, list): the color of the border, can be
+            omitted if border == 0
+
+    Return type: None
+    """
 
     blit_pos = (center[0] - radius, center[1] - radius)
 
@@ -103,8 +141,31 @@ def odd_circle(surface: pygame.Surface,
                radius: int,
                color: _col_type,
                border: int = 0,
-               border_color: Optional[_col_type] = None):
+               border_color: Optional[_col_type] = None) -> None:
+    """
+    odd_circle(surface: pygame.Surface,
+               center: _pos,
+               radius: int,
+               color: _col_type,
+               border: int,
+               border_color: Optional[_col_type])
 
+    Type: function
+
+    Description: draws a circle with a 1x1 center
+
+    Args:
+        'surface' (pygame.Surface): where the circle should be drawn
+        'center' (pgt.Pos): where the center should be on the surface
+        'radius' (int): radius of the circle
+        'color' (tuple, list): the color of the circle
+        'border' (int): the thickness of the border, if 0 the border
+            is not drawn
+        'border_color' (tuple, list): the color of the border, can be
+            omitted if border == 0
+
+    Return type: None
+    """
     blit_pos = (center[0] - radius, center[1] - radius)
     try:
         i = odd_circle_cache.index([radius, color, border, border_color])
@@ -161,8 +222,9 @@ def odd_circle(surface: pygame.Surface,
                 new_surf.set_at((x, inv_y), new_color)
                 new_surf.set_at((inv_x, inv_y), new_color)
 
-    pygame.draw.line(new_surf, border_color, (radius, 0), (radius, radius*2))
-    pygame.draw.line(new_surf, border_color, (0, radius), (radius*2, radius))
+    if border:
+        pygame.draw.line(new_surf, border_color, (radius, 0), (radius, radius*2))
+        pygame.draw.line(new_surf, border_color, (0, radius), (radius*2, radius))
     pygame.draw.line(new_surf, color, (radius, border), (radius, radius*2 - border))
     pygame.draw.line(new_surf, color, (border, radius), (radius*2 - border, radius))
 
@@ -176,7 +238,33 @@ def aa_rect(surface: pygame.Surface,
             color: _col_type,
             corner_radius: int = 0,
             border: int = 0,
-            border_color: Optional[_col_type] = None):
+            border_color: Optional[_col_type] = None) -> None:
+    """
+    aa_rect(surface: pygame.Surface,
+            rect: pygame.Rect,
+            color: _col_type,
+            corner_radius: int,
+            border: int,
+            border_color: Optional[_col_type])
+
+    Type: function
+
+    Description: draws a rect like pygame.draw.rect but anti-aliasing
+        the corners
+
+    Args:
+        'surface' (pygame.Surface): where the rect should be drawn
+        'rect' (pygame.Rect): the rectangle to draw
+        'color' (list, tuple): the color of the rectangle
+        'corner_radius' (int): the radius of the curvature of the
+            corners
+        'border' (int): the thickness of the border, if 0 the border
+            is not drawn
+        'border_color' (tuple, list): the color of the border, can be
+            omitted if border == 0
+
+    Return type: None
+    """
     if corner_radius > min(rect.width, rect.height) / 2:
         corner_radius = int(min(rect.width, rect.height) / 2)
 
@@ -246,3 +334,43 @@ def aa_rect(surface: pygame.Surface,
     surface.blit(new_surf, rect.topleft)
     rect_cache.append([rect.size, color, corner_radius, border, border_color])
     rect_srufs.append(new_surf)
+
+
+def aa_line(surface: pygame.Surface,
+            color: _col_type,
+            start_pos: _pos,
+            end_pos: _pos,
+            width: int = 1) -> None:
+    """
+    aa_line(surface: pygame.Surface,
+            color: _col_type,
+            start_pos: _pos,
+            end_pos: _pos,
+            width: int)
+
+    Type: function
+
+    Description: draws an anti-aliased line that can be thicker than
+        one pixel
+
+    Args:
+        'surface' (pygame.Surface): the surface where to draw the line
+        'color' (list, tuple): the color of the line
+        'start_pos' (pgt.Pos): the position of the first point
+        'end_pos' (pgt.Pos): the position of the second point
+        'width' (int): the width of the line (can only be an odd number)
+
+    Return type: None
+    """
+    if width <= 0: return
+    # The line doesn't look good with an even width
+    if not width % 2: width += 1
+
+    start_pos = Pos(start_pos)
+    end_pos = Pos(end_pos)
+    horizontal = abs(start_pos.x - end_pos.x) <= abs(start_pos.y - end_pos.y)
+
+    pygame.draw.line(surface, color, start_pos, end_pos, width)
+    line_offset = (width / 2, 0) if horizontal else (0, width / 2)
+    pygame.draw.aaline(surface, color, start_pos + line_offset, end_pos + line_offset)
+    pygame.draw.aaline(surface, color, start_pos - line_offset, end_pos - line_offset)

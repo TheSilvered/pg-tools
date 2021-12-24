@@ -3,6 +3,7 @@ from pgt.element import Element, AniElement
 from pgt.type_hints import _col_type
 from typing import Union, Optional
 from .font import Font
+from pgt.pos_size import Pos
 
 
 class Label(Element):
@@ -55,7 +56,6 @@ class Label(Element):
 
         if color is None: color = (1, 1, 1)
         self.color = color
-        if bg_color is None: bg_color = (0, 0, 0)
         self.bg_color = bg_color
 
         if self.alignment not in ("left", "right", "center", "centre"):
@@ -74,6 +74,9 @@ class Label(Element):
 
     @text.setter
     def text(self, text):
+        def check_size(this_text):
+            return self.font.size(this_text)[0] > self.size.w
+
         self.__text = str(text)
 
         self.lines = self.__text.split("\n")
@@ -85,14 +88,32 @@ class Label(Element):
                 words = l.split(" ")
                 current_text = words[0]
                 prev_text = words[0]
+
+                while check_size(prev_text) and len(prev_text) > 1:
+                    new_line = prev_text[0]
+                    prev_text = prev_text[1:]
+                    while prev_text and not check_size(new_line + prev_text[0]):
+                        new_line += prev_text[0]
+                        prev_text = prev_text[1:]
+                    new_lines.append(new_line)
+
                 for word in words[1:]:
-                    current_text = current_text + " " + word
-                    if self.font.size(current_text)[0] > self.size.w:
+                    current_text += " " + word
+                    if check_size(current_text):
                         new_lines.append(prev_text)
+                        while check_size(word) and len(word) > 1:
+                            new_line = word[0]
+                            word = word[1:]
+                            while word and not check_size(new_line + word[0]):
+                                new_line += word[0]
+                                word = word[1:]
+                            new_lines.append(new_line)
                         current_text = word
                         prev_text = word
                         continue
+
                     prev_text = current_text
+
                 if self.font.size(current_text)[0] > self.size.w:
                     new_lines.append(prev_text)
                 else:
@@ -121,6 +142,13 @@ class Label(Element):
             else:
                 x = (new_image.get_width() - self.font.size(i)[0]) // 2
                 new_image.blit(line, (x, y))
+
+        if self.alignment == "left":
+            self.img_offset = Pos(0)
+        elif self.alignment == "right":
+            self.img_offset = Pos(self.size.w - new_image.get_width(), 0)
+        else:
+            self.img_offset = Pos((self.size.w - new_image.get_width()) / 2, 0)
 
         self.change_image(new_image)
 

@@ -508,7 +508,7 @@ class ScaleAni(FuncAniBase):
     Description: animation that scales the element
 
     Args:
-        'smooth' (bool): if the animation should use 
+        'smooth' (bool): if the animation should use
         pygame.transform.smoothscale instead of pygame.transform.scale
 
     Attrs:

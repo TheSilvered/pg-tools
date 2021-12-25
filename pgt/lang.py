@@ -74,7 +74,7 @@ class Lang(Node):
 
     Any text following that line will be set as the value of the
     attribute (new lines included). To make a one-line attribute write
-    @attribute_name: attribute_value
+    @attribute_name:attribute_value
 
     Local References are used to set the value of an attribute to the
     value of another one in the same set. The attribute you're taking
@@ -95,7 +95,7 @@ class Lang(Node):
     &This is line 1
     this is also line 1
 
-    The value of attribute1 is 'This is line 1this is also line 1\n'
+    The value of attribute1 is 'This is line 1this is also line 1\\n'
 
     Spaces and tabs at the start of a line are ignored.
     To escape special characters or instructions ($, @, ~@, .~@, &, ::)
@@ -107,7 +107,7 @@ class Lang(Node):
     be put before any set or attribute declaration
 
     @attribute2
-    \  the indent is kept
+    \\ the indent is kept
 
     Value attribute2: '  the indent is kept'
 

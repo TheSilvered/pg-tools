@@ -1,10 +1,11 @@
+%=utf-8
 :: Set
 $set1_l1
   @attr1_set1_l1:In-line assignment
   $$set1_l2_under_set1_l1
     @attr1_set1_l2_under_set1_l1
     Multi-line
-    &assignment
+    assignment
   $$!
   .~@attr2_set1_l1;attr1_set1_l1
   @attr2_set1_l1

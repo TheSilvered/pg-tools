@@ -28,10 +28,10 @@ def calc_alpha(new_color: _col_type, prev_color: _col_type, alpha: Real) -> List
     return [alpha * c1 + (1 - alpha) * c2 for c1, c2 in zip(new_color, prev_color)]
 
 
-GRAY = lambda c: (clamp(c, 0, 255), clamp(c, 0, 255), clamp(c, 0, 255))
+GRAY = lambda c: (clamp(c, 0, 255), clamp(c, 0, 255), clamp(c, 0, 255), 255)
 
-R = lambda c: (clamp(c, 0, 255), 0, 0)
+R = lambda c: (clamp(c, 0, 255), 0, 0, 255)
 
-G = lambda c: (0, clamp(c, 0, 255), 0)
+G = lambda c: (0, clamp(c, 0, 255), 0, 255)
 
-B = lambda c: (0, 0, clamp(c, 0, 255))
+B = lambda c: (0, 0, clamp(c, 0, 255), 255)

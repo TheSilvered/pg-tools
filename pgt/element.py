@@ -291,10 +291,10 @@ class Element(pygame.sprite.Sprite):
         self.image.set_colorkey(colorkey)
 
         if abs_:
-            self.image = pygame.transform.rotate(self.image, angle)
+            self.image = pygame.transform.rotozoom(self.image, angle, 1)
             self._rot = angle
         else:
-            self.image = pygame.transform.rotate(self.image, self._rot + angle)
+            self.image = pygame.transform.rotozoom(self.image, self._rot + angle, 1)
             self._rot += angle
 
         self._rot %= 360

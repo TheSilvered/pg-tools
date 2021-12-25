@@ -8,14 +8,15 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 
-image = pgt.load_image("test_files/image.png")
+image = pgt.load_image("test_files/image.png", True)
 
 e = pgt.Element(
     pos=(100, 100),
     size=(100, 100),
     image=image,
-    pos_point=pgt.Anc.CC
-)
+    pos_point=pgt.Anc.CC,
+    img_offset=-1  # To keep the edges smooth, the image
+)                  # has a transparent line on each side
 
 speed = 0.1
 

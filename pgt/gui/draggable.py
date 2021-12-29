@@ -29,24 +29,24 @@ class Draggable(MouseInteractionAniElement):
         return self.clicked[self.button]
 
     def fix_pos(self):
-        if self.b_top and self.u < self.b_top:
+        if self.b_top is not None and self.u < self.b_top:
             self.u = self.b_top
-        if self.b_bottom and self.d > self.b_bottom:
+        if self.b_bottom is not None and self.d > self.b_bottom:
             self.d = self.b_bottom
-        if self.b_left and self.l < self.b_left:
+        if self.b_left is not None and self.l < self.b_left:
             self.l = self.b_left
-        if self.b_right and self.r > self.b_right:
+        if self.b_right is not None and self.r > self.b_right:
             self.r = self.b_right
 
     def draw(self, *args, **kwargs):
         if not self.dragging and self.button_clicked and not self.locked:
             self.dragging = True
-            self.drag_point = Pos(pygame.mouse.get_pos()) - self.pos
+            self.drag_point = self.get_mouse_pos() - self.pos
         elif not pygame.mouse.get_pressed(3)[self.button]:
             self.dragging = False
 
         if self.dragging:
-            self.pos = Pos(pygame.mouse.get_pos()) - self.drag_point
+            self.pos = self.get_mouse_pos() - self.drag_point
 
         self.fix_pos()
 

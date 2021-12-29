@@ -290,12 +290,15 @@ class Element(pygame.sprite.Sprite):
 
         self.image.set_colorkey(colorkey)
 
-        if abs_:
-            self.image = pygame.transform.rotozoom(self.image, angle, 1)
+        angle += self._rot if not abs_ else 0
+
+        if angle != 0:
+            if not angle % 90:
+                self.image = pygame.transform.rotate(self.image, angle)
+            else:
+                self.image = pygame.transform.rotozoom(self.image, angle, 1)
+                self.image.set_alpha(self._alpha)
             self._rot = angle
-        else:
-            self.image = pygame.transform.rotozoom(self.image, self._rot + angle, 1)
-            self._rot += angle
 
         self._rot %= 360
 
@@ -490,11 +493,14 @@ class MouseInteractionElement(Element):
         self.__keep_clicked = False
         self.transform_mouse_pos = transform_mouse_pos
 
+    def get_mouse_pos(self):
+        return self.transform_mouse_pos(Pos(pygame.mouse.get_pos()))
+
     @property
     def hovered(self):
         if self.hidden: return False
 
-        new_pos = self.transform_mouse_pos(Pos(pygame.mouse.get_pos()))
+        new_pos = self.get_mouse_pos()
         in_area = self.collide_point(new_pos)
 
         if not any(pygame.mouse.get_pressed()) and in_area:
@@ -510,7 +516,7 @@ class MouseInteractionElement(Element):
     def clicked(self):
         if not self.hovered: return False, False, False
 
-        if not self.ul < Pos(pygame.mouse.get_pos()) < self.dr:
+        if not self.ul < self.get_mouse_pos() < self.dr:
             return False, False, False
 
         if not (self.__prev_hovered or self.__keep_clicked):

@@ -156,8 +156,8 @@ from .constants import *
 from . import draw
 from .element import Element, AniElement, Anc, MouseInteractionElement, MouseInteractionAniElement
 from .exceptions import *
-from .lang import Lang
 from . import gui
+from . import lang
 from .mathf import *
 from .pos_size import Pos, Size
 from .stack import Stack

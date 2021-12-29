@@ -16,11 +16,11 @@ e = pgt.gui.Draggable(
     image=image,
     pos_point=pgt.Anc.CC,
     img_offset=-1,
-    boundary_top=100,
+    boundary_top=0,
     boundary_left=100,
     boundary_right=500,
     boundary_bottom=500,
-    locked=False    
+    locked=False
 )
 
 while True:

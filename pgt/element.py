@@ -147,6 +147,7 @@ class Element(pygame.sprite.Sprite):
                  rotation: int = 0,
                  hidden: bool = False):
         pygame.sprite.Sprite.__init__(self)
+        size = Size(size)
         self.rect = pygame.Rect((0, 0), size)
         self.image = image
         self.__backup_image = None if rotation == 0 else image

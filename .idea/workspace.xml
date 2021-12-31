@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d99aefd-cb9c-425b-92fa-007ec23f9d69" name="Default Changelist" comment="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value">
+      <change afterPath="$PROJECT_DIR$/tests/pos_size.pos.quad_bezier.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/pos_size.pos.slerp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/element.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/lang.Lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/lang.load.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/mathf.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/mathf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgt/pos_size.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/pos_size.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,28 +62,7 @@
       </console-settings>
     </option>
   </component>
-  <component name="RunManager" selected="Python.lang.load">
-    <configuration name="element.Element.rotate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Pygame tools" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/element.Element.rotate.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.pos_size.pos.quad_bezier">
     <configuration name="gui.Draggable" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Pygame tools" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -144,18 +126,62 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pos_size.pos.quad_bezier" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/pos_size.pos.quad_bezier.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pos_size.pos.slerp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Pygame tools" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="E:\Python\pygame-tools\tests\pos_size.pos.slerp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Python.element.Element.rotate" />
       <item itemvalue="Python.gui.Draggable" />
       <item itemvalue="Python.gui.SurfaceElement" />
       <item itemvalue="Python.lang.load" />
+      <item itemvalue="Python.pos_size.pos.slerp" />
+      <item itemvalue="Python.pos_size.pos.quad_bezier" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.pos_size.pos.quad_bezier" />
+        <item itemvalue="Python.pos_size.pos.slerp" />
         <item itemvalue="Python.lang.load" />
         <item itemvalue="Python.gui.Draggable" />
         <item itemvalue="Python.gui.SurfaceElement" />
-        <item itemvalue="Python.element.Element.rotate" />
       </list>
     </recent_temporary>
   </component>

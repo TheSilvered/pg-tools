@@ -43,6 +43,8 @@ get_c = lambda i, c: sqrt(i*i - c*c)
 distance = lambda p1, p2: get_i(*(p2 - p1).list())
 abs_distance = lambda p1, p2: abs(distance(p1, p2))
 
+sign = lambda x: -1 if x < 0 else 1
+
 ############################### Easing functions ###############################
 e_in_sin = lambda x: 1 - cos((x * pi) / 2)
 e_out_sin = lambda x: sin((x * pi) / 2)

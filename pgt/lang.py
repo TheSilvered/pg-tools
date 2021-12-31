@@ -136,7 +136,7 @@ class LangNode:
     def get(self, s):
         try:
             return eval(f"self.{s}")
-        except AttributeError:
+        except Exception:
             return s
 
     def __repr__(self):

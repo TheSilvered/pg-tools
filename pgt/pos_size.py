@@ -10,6 +10,8 @@ Classes:
     - Pos
     - Size
 """
+from math import atan2, sin, cos, pi, tau
+from .mathf import abs_distance
 
 
 class Pos:
@@ -267,6 +269,62 @@ class Pos:
 
     def copy(self):
         return self.c(self.x, self.y)
+
+    def dot(self, other):
+        product = self * other
+        return product.x + product.y
+
+    def lerp(self, other, t):
+        return self * (1 - t) + other * t
+
+    def slerp(self, other, t, c=0):
+        c = Pos(c)
+        pos1 = self.copy() - c
+        pos2 = Pos(other) - c
+
+        mid = (pos1 + pos2) / 2
+        diff = pos2 - pos1
+        try:
+            m = diff.x / diff.y
+        except ZeroDivisionError:
+            centre = Pos(mid.x, 0)
+        else:
+            try:
+                q = mid.y + m * mid.x
+                centre = Pos(q / m, 0)
+            except ZeroDivisionError:
+                centre = Pos(0, (pos1.y + pos2.y) * 0.5)
+
+        radius = abs_distance(pos1, centre)
+
+        try:
+            pos1 = (pos1 - centre) / radius
+            pos2 = (pos2 - centre) / radius
+        except ZeroDivisionError:
+            pos1 = pos2 = Pos(0)
+
+        angle1 = atan2(pos1.y, pos1.x)
+        angle2 = atan2(pos2.y, pos2.x)
+        ang_diff = abs(angle1 - angle2)
+
+        # if ang_diff > 180°, use the other arc
+        if ang_diff > pi:
+            t *= -(tau - ang_diff) / ang_diff
+        angle = angle1 * (1 - t) + angle2 * t
+        return self.c(cos(angle), sin(angle)) * radius + centre + c
+
+    def quad_bezier(self, other, p1, p2, t):
+        p1 = Pos(p1)
+        p2 = Pos(p2)
+        other = Pos(other)
+
+        ab = self.lerp(p1, t)
+        bc = p1.lerp(p2, t)
+        cd = p2.lerp(other, t)
+
+        abbc = ab.lerp(bc, t)
+        bccd = bc.lerp(cd, t)
+        return abbc.lerp(bccd, t)
 
     @classmethod
     def c(cls, *args):

@@ -1,9 +1,11 @@
-import pygame
-from pgt.element import Element, AniElement
-from pgt.type_hints import _col_type
 from typing import Union, Optional
+
+import pygame
+
 from .font import Font
-from pgt.pos_size import Pos
+from pgt.element import Element, AniElement
+from pgt.mathf import Pos
+from pgt.type_hints import _col_type
 
 
 class Label(Element):
@@ -143,7 +145,7 @@ class Label(Element):
                 x = (new_image.get_width() - self.font.size(i)[0]) // 2
                 new_image.blit(line, (x, y))
 
-        if self.alignment == "left":
+        if self.alignment == "left" or self.auto_size:
             self.img_offset = Pos(0)
         elif self.alignment == "right":
             self.img_offset = Pos(self.size.w - new_image.get_width(), 0)

@@ -47,3 +47,13 @@ COBALT      = (127, 127, 255, 255)
 LEMON       = (255, 255, 127, 255)
 SKY_BLUE    = (127, 255, 255, 255)
 PINK        = (255, 127, 255, 255)
+
+UL = "ul"
+UC = "uc"
+UR = "ur"
+CL = "cl"
+CC = "cc"
+CR = "cr"
+DL = "dl"
+DC = "dc"
+DR = "dr"

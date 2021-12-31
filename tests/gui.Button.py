@@ -15,13 +15,13 @@ font_info = pgt.parse_json_file("test_files/font_info.json")
 b = pgt.gui.Button(
     pos=(400, 300),
     size=(100, 100),
-    pos_point=pgt.Anc.CC,
+    pos_point=pgt.CC,
     image=image,
     text_label=pgt.gui.Label(
         pos=(0, 0),
-        pos_point=pgt.Anc.CC,
+        pos_point=pgt.CC,
         auto_size=True,
-        text="print('AHello')\n        ",
+        text="print('Hello')",
         font=pgt.gui.Font(font_image, **font_info, size=22),
         color=pgt.RED,
         alignment="center"
@@ -79,6 +79,6 @@ while True:
     b.auto_run()
 
     screen.fill(pgt.GRAY(50))
-    b.draw(screen)
+    b.draw(screen, show_rect=True)
     info.draw(screen)
     pygame.display.update()

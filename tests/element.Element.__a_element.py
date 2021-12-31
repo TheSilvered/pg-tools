@@ -19,12 +19,12 @@ e1 = pgt.Element(
     pos=(100, 100),
     size=(100, 100),
     image=image1,
-    pos_point=pgt.Anc.CC
+    pos_point=pgt.CC
 )
 
 e2 = pgt.Element(
     anchor_element=e1,
-    anchor_point=pgt.Anc.CC,
+    anchor_point=pgt.CC,
     size=(100, 100),
     image=image2,
     alpha=127

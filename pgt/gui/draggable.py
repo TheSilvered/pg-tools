@@ -1,7 +1,6 @@
-import pygame.mouse
 from typing import Optional
+import pygame.mouse
 from pgt.element import MouseInteractionAniElement
-from pgt.pos_size import Pos
 
 
 class Draggable(MouseInteractionAniElement):

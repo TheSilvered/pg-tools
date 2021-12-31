@@ -1,10 +1,10 @@
-"""
+r"""
 Pygame Tools by TheSilvered
 This package requires pygame
 
 Classes:
-    - Pos  (pgt.pos_size.Pos)
-    - Size (pgt.pos_size.Size)
+    - Pos  (pgt.mathf.Pos)
+    - Size (pgt.mathf.Size)
 
     - Element                    (pgt.element.Element)
     - AniElement                 (pgt.element.AniElement)
@@ -118,25 +118,29 @@ Constants:
     - SKY_BLUE    (pgt.constants.SKY_BLUE)
     - PINK        (pgt.constants.PINK)
 
-    - Anc.UL (pgt.element.Anc.UL)
-    - Anc.UC (pgt.element.Anc.UC)
-    - Anc.UR (pgt.element.Anc.UR)
-    - Anc.CL (pgt.element.Anc.CL)
-    - Anc.CC (pgt.element.Anc.CC)
-    - Anc.CR (pgt.element.Anc.CR)
-    - Anc.DL (pgt.element.Anc.DL)
-    - Anc.DC (pgt.element.Anc.DC)
-    - Anc.DR (pgt.element.Anc.DR)
+    - UL (pgt.constants.UL)
+    - UC (pgt.constants.UC)
+    - UR (pgt.constants.UR)
+    - CL (pgt.constants.CL)
+    - CC (pgt.constants.CC)
+    - CR (pgt.constants.CR)
+    - DL (pgt.constants.DL)
+    - DC (pgt.constants.DC)
+    - DR (pgt.constants.DR)
 
-    - ani.PERC         (pgt.constants.PERC)
-    - ani.PREV_VAL     (pgt.constants.PREV_VAL)
-    - ani.STARTING_VAL (pgt.constants.STARTING_VAL)
-    - ani.FRAME        (pgt.constants.FRAME)
-    - ani.ANIMATION    (pgt.constants.ANIMATION)
+    - PERC         (pgt.constants.PERC)
+    - PREV_VAL     (pgt.constants.PREV_VAL)
+    - STARTING_VAL (pgt.constants.STARTING_VAL)
+    - FRAME        (pgt.constants.FRAME)
+    - ANIMATION    (pgt.constants.ANIMATION)
 
-    - draw.ODD_CIRCLE_CACHE  (pgt.constants.ODD_CIRCLE_CACHE)
-    - draw.EVEN_CIRCLE_CACHE (pgt.constants.EVEN_CIRCLE_CACHE)
-    - draw.RECT_CACHE        (pgt.constants.RECT_CACHE)
+    - ODD_CIRCLE_CACHE  (pgt.constants.ODD_CIRCLE_CACHE)
+    - EVEN_CIRCLE_CACHE (pgt.constants.EVEN_CIRCLE_CACHE)
+    - RECT_CACHE        (pgt.constants.RECT_CACHE)
+
+    - BUTTON_NORMAL (pgt.constants.BUTTON_NORMAL)
+    - BUTTON_HOVER  (pgt.constants.BUTTON_HOVER)
+    - BUTTON_CLICK  (pgt.constants.BUTTON_CLICK)
 
 Variables:
     - draw.even_circle_cache (pgt.draw.even_circle_cache)
@@ -154,12 +158,11 @@ from . import ani
 from .color import *
 from .constants import *
 from . import draw
-from .element import Element, AniElement, Anc, MouseInteractionElement, MouseInteractionAniElement
+from .element import Element, AniElement, MouseInteractionElement, MouseInteractionAniElement
 from .exceptions import *
 from . import gui
 from . import lang
 from .mathf import *
-from .pos_size import Pos, Size
 from .stack import Stack
 from .utils import *
 

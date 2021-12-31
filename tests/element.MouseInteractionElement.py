@@ -15,7 +15,7 @@ e = pgt.MouseInteractionElement(
     pos=(100, 100),
     size=(100, 100),
     image=image,
-    pos_point=pgt.Anc.CC
+    pos_point=pgt.CC
 )
 
 prev_state = None

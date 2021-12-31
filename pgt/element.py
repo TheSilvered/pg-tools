@@ -1,25 +1,12 @@
 import pygame
 import time
 from typing import Optional, Iterable, Callable
-from .pos_size import Pos, Size
 from .exceptions import InvalidPosError
-from .mathf import clamp
+from .mathf import clamp, Pos, Size
 from .type_hints import _pos, _size, _col_type
+from .constants import UL
 
 pygame.init()
-
-
-class Anc:
-    UL = "ul"
-    UC = "uc"
-    UR = "ur"
-    CL = "cl"
-    CC = "cc"
-    CR = "cr"
-    DL = "dl"
-    DC = "dc"
-    DR = "dr"
-
 
 attr_correspondence = {
     "ul": "topleft",
@@ -138,9 +125,9 @@ class Element(pygame.sprite.Sprite):
                  pos: _pos = None,
                  size: _size = Size(0),
                  image: Optional[pygame.Surface] = None,
-                 pos_point: str = Anc.UL,
+                 pos_point: str = UL,
                  anchor_element=None,
-                 anchor_point: str = Anc.UL,
+                 anchor_point: str = UL,
                  offset: _pos = Pos(0),
                  img_offset: _pos = Pos(0),
                  alpha: int = 255,
@@ -360,7 +347,7 @@ class Element(pygame.sprite.Sprite):
     def draw(self,
              surface: pygame.Surface,
              pos: _pos = None,
-             point: str = Anc.UL,
+             point: str = UL,
              offset: Optional[_pos] = None,
              flags: int = 0,
              show_rect: bool = False,

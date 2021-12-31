@@ -68,6 +68,7 @@ class PosAni(FuncAniBase):
 from abc import ABC, abstractmethod
 import time as t
 from typing import Callable, Optional, Any, Sequence
+
 from .element import AniElement
 from .constants import PERC, PREV_VAL, STARTING_VAL, FRAME, ANIMATION
 

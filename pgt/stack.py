@@ -1,5 +1,5 @@
-from .exceptions import EmptyStackError
 from typing import Any
+from .exceptions import EmptyStackError
 
 
 class Node:

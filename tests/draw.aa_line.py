@@ -30,5 +30,5 @@ while True:
         line_ascending = True
 
     screen.fill(pgt.GRAY(50))
-    pgt.draw.aa_line(screen, pgt.SALMON, (100, line_y), (400, 400), 1)
+    pgt.draw.aa_line(screen, pgt.SALMON, (100, line_y), (400, 400), 10)
     pygame.display.update()

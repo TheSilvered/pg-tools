@@ -1,5 +1,5 @@
 import pygame
-from pgt.pos_size import Size
+from pgt.mathf import Size
 from pgt.color import GRAY
 pygame.init()
 

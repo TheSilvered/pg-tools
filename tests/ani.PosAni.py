@@ -15,7 +15,7 @@ image.fill(pgt.SALMON)
 e = pgt.AniElement(
     pos=(100, 100),
     size=(100, 100),
-    pos_point=pgt.Anc.CC,
+    pos_point=pgt.CC,
     image=image,
     animations=[
         pgt.ani.PosAni(
@@ -34,7 +34,7 @@ e = pgt.AniElement(
 
 def change_ani_func(new_pos, func):
     pos = e.pos.copy()
-    e.move.frames._func = lambda p: (pgt.Pos(new_pos) - pos) * func(p) + pos
+    e.move.frames._func = lambda p: pos.slerp(new_pos, func(p))
     e.move.restart(e.pos)
 
 

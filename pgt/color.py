@@ -1,7 +1,8 @@
+from numbers import Real
+from typing import List
+
 from .mathf import clamp
 from .type_hints import _col_type
-from typing import List
-from numbers import Real
 
 
 def add_col(col1: _col_type, col2: _col_type) -> List[int]:

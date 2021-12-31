@@ -1,7 +1,9 @@
 from typing import Iterable, Any
-from pgt.type_hints import _col_type
+
 import pygame
+
 from pgt.element import Element, AniElement
+from pgt.type_hints import _col_type
 
 
 class SurfaceElement(Element):

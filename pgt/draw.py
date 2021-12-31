@@ -1,10 +1,12 @@
-import pygame
-from .color import calc_alpha
-from .mathf import get_i
-from .type_hints import _pos, _col_type
 from typing import Optional
-from .pos_size import Pos
+
+import pygame
+
+from .color import calc_alpha
 from .constants import ODD_CIRCLE_CACHE, EVEN_CIRCLE_CACHE, RECT_CACHE
+from .mathf import get_i, Pos
+from .type_hints import _pos, _col_type
+
 pygame.init()
 
 even_circle_cache = []

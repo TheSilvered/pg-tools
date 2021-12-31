@@ -25,7 +25,7 @@ e1 = pgt.AniElement(
     pos=(100, 100),
     size=(100, 100),
     image=image1,
-    pos_point=pgt.Anc.CC,
+    pos_point=pgt.CC,
     animations=[
         pgt.ani.TextureAni(
             name="flash",
@@ -45,7 +45,7 @@ e2 = pgt.Element(
 s_e = pgt.gui.SurfaceElement(
     pos=(200, 200),
     size=(250, 250),
-    pos_point=pgt.Anc.CC,
+    pos_point=pgt.CC,
     elements=[e1, e2],
     bg_color=pgt.GRAY(50),
     alpha=127,

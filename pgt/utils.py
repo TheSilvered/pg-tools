@@ -1,8 +1,9 @@
-from pygame.image import load
-from pygame import Surface
 from typing import Optional, Union
 from os import PathLike
 import json
+
+from pygame import Surface
+from pygame.image import load
 
 
 def parse_json_file(path: Union[str, PathLike],

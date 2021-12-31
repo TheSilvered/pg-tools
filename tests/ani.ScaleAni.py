@@ -13,7 +13,7 @@ image = pgt.load_image("test_files/image.png")
 e = pgt.AniElement(
     pos=(100, 100),
     size=(100, 100),
-    pos_point=pgt.Anc.CC,
+    pos_point=pgt.CC,
     image=image,
     animations=[
         pgt.ani.ScaleAni(

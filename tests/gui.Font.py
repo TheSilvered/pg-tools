@@ -16,7 +16,7 @@ font = pgt.gui.Font(image, size=44, **chars_info)
 l1 = pgt.gui.Label(
     pos=(400, 100),
     auto_size=True,
-    pos_point=pgt.Anc.CC,
+    pos_point=pgt.CC,
     text="Hi, my name is TheSilvered and I'm 15.\nUnknown chars: <>àèéìùòùç",
     font=font,
     color=pgt.LIGHT_BLUE,
@@ -27,7 +27,7 @@ l1 = pgt.gui.Label(
 l2 = pgt.gui.Label(
     pos=(400, 400),
     auto_size=True,
-    pos_point=pgt.Anc.CC,
+    pos_point=pgt.CC,
     text="Hi, my name is TheSilvered and I'm 15.\nUnknown chars: <>àèéìùòùç",
     font=font,
     color=pgt.RED,

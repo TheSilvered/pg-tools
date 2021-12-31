@@ -1,9 +1,11 @@
-from pgt.element import MouseInteractionAniElement, Anc
-from pgt.ani import AniBase
-from .label import Label
-import pygame.mixer
 from typing import Optional, Callable, Iterable
-from pgt.constants import BUTTON_NORMAL, BUTTON_CLICK, BUTTON_HOVER
+
+import pygame.mixer
+
+from .label import Label
+from pgt.ani import AniBase
+from pgt.constants import BUTTON_NORMAL, BUTTON_CLICK, BUTTON_HOVER, CC
+from pgt.element import MouseInteractionAniElement
 
 
 class Button(MouseInteractionAniElement):
@@ -74,7 +76,7 @@ class Button(MouseInteractionAniElement):
        repeat_hover_ani: bool = False,
        repeat_click_ani: bool = False,
        text_label: Optional[Label] = None,
-       text_label_point: str = Anc.CC,
+       text_label_point: str = CC,
        func: Optional[Callable] = None,
        func_args: Optional[Iterable] = None,
        func_kwargs: Optional[dict] = None,

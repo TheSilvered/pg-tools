@@ -13,7 +13,7 @@ current_text = 0
 
 l = pgt.gui.Label(
     pos=(800, 600),
-    pos_point=pgt.Anc.DR,
+    pos_point=pgt.DR,
     auto_size=True,
     text=texts[0],
     font="consolas",

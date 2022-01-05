@@ -1,14 +1,16 @@
+import time
 from typing import Optional, Callable, Iterable
 
 import pygame.mixer
 
 from .label import Label
+from .gui_element import GUIElement
 from pgt.ani import AniBase
-from pgt.constants import BUTTON_NORMAL, BUTTON_CLICK, BUTTON_HOVER, CC
-from pgt.element import MouseInteractionAniElement
+from pgt.constants import BUTTON_NORMAL, BUTTON_CLICK, BUTTON_HOVER
+from pgt.element import MouseInteractionAniElement, Element
 
 
-class Button(MouseInteractionAniElement):
+class Button(MouseInteractionAniElement, GUIElement):
     """
     Button(MouseInteractionAniElement)
 
@@ -32,7 +34,11 @@ class Button(MouseInteractionAniElement):
             started each frame or only once
         'text_label' (Label?): a Label that gets drawn in front of
             the button
-        'text_label_point' (Anc): element_point of the label
+        'hint_bg' (Element?): background of the hint shown when the
+            mouse is hovering the button
+        'hint_label' (Label?): text of the hint
+        'hint_delay' (float): time in seconds to wait before showing
+            the hint
         'func' (Callable): function to run when the button is pressed
         'func_args' (Iterable?): *args of the function
         'func_kwargs' (dict?): **kwargs of the function
@@ -69,23 +75,24 @@ class Button(MouseInteractionAniElement):
             when the button is pressed and plays the sound
     """
     def __init__(self,
-       normal_ani: Optional[AniBase] = None,
-       on_hover_ani: Optional[AniBase] = None,
-       on_click_ani: Optional[AniBase] = None,
-       repeat_normal_ani: bool = False,
-       repeat_hover_ani: bool = False,
-       repeat_click_ani: bool = False,
-       text_label: Optional[Label] = None,
-       text_label_point: str = CC,
-       func: Optional[Callable] = None,
-       func_args: Optional[Iterable] = None,
-       func_kwargs: Optional[dict] = None,
-       button: int = 0,
-       sound: Optional[pygame.mixer.Sound] = None,
-       *args, **kwargs):
+                 normal_ani: Optional[AniBase] = None,
+                 on_hover_ani: Optional[AniBase] = None,
+                 on_click_ani: Optional[AniBase] = None,
+                 repeat_normal_ani: bool = False,
+                 repeat_hover_ani: bool = False,
+                 repeat_click_ani: bool = False,
+                 text_label: Optional[Label] = None,
+                 hint_bg: Optional[Element] = None,
+                 hint_label: Optional[Label] = None,
+                 hint_delay: float = 1,
+                 func: Optional[Callable] = None,
+                 func_args: Optional[Iterable] = None,
+                 func_kwargs: Optional[dict] = None,
+                 button: int = 0,
+                 sound: Optional[pygame.mixer.Sound] = None,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Animation setup
         if normal_ani is not None:
             normal_ani.name = "normal_ani"
             normal_ani.id = -1
@@ -110,26 +117,27 @@ class Button(MouseInteractionAniElement):
 
         self.__started_ani = None
 
-        # Function setup
         self.func = func
         if func_args is None: func_args = []
         self.fargs = func_args
         if func_kwargs is None: func_kwargs = {}
         self.fkwargs = func_kwargs
 
-        # Other
         self.button = button
         self.sound = sound
 
         self.__pressed = False
         self.force_state = None
 
-        # Label setup
         self.label = text_label
-        if not self.label: return
+        if self.label: self.label.anchor(self)
 
-        self.label._Element__a_element = self
-        self.label._a_point = text_label_point
+        self.hint_bg = hint_bg
+        self.hint_label = hint_label
+        if self.hint_bg and self.hint_label:
+            self.hint_label.anchor(self.hint_bg)
+        self.start_hover = None
+        self.hint_delay = hint_delay
 
     @property
     def button_clicked(self):
@@ -182,6 +190,26 @@ class Button(MouseInteractionAniElement):
                 self.__started_ani = "n"
 
         if self.hidden: return
+
+        if self.hovered and self.start_hover is None:
+            self.start_hover = time.perf_counter()
+        elif not self.hovered or self.button_clicked:
+            self.start_hover = None
+
+        if self.hint_bg \
+           and self.hint_label \
+           and self.start_hover is not None \
+           and time.perf_counter() - self.start_hover > self.hint_delay:
+            self.layout.current_button_hint = (
+                id(self),
+                self.hint_bg,
+                self.hint_label
+            )
+
+        # Uses id to hide only its own hint
+        elif self.layout.current_button_hint is not None \
+             and self.layout.current_button_hint[0] == id(self):
+            self.layout.button_hint = None
 
         super().draw(*args, **kwargs)
         if self.label:

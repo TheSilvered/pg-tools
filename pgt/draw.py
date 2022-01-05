@@ -77,7 +77,7 @@ def even_circle(surface: pygame.Surface,
     """
 
     blit_pos = (center[0] - radius, center[1] - radius)
-
+    radius = round(radius)
     if radius - border < 0: border = radius
 
     try:
@@ -169,6 +169,7 @@ def odd_circle(surface: pygame.Surface,
     Return type: None
     """
     blit_pos = (center[0] - radius, center[1] - radius)
+    radius = round(radius)
     try:
         i = odd_circle_cache.index([radius, color, border, border_color])
         surface.blit(odd_circle_srufs[i], blit_pos)
@@ -267,6 +268,7 @@ def aa_rect(surface: pygame.Surface,
 
     Return type: None
     """
+    corner_radius = round(corner_radius)
     if corner_radius > min(rect.width, rect.height) / 2:
         corner_radius = int(min(rect.width, rect.height) / 2)
 

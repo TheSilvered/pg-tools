@@ -2,11 +2,12 @@ from typing import Iterable, Any
 
 import pygame
 
-from pgt.element import Element, AniElement
+from .gui_element import GUIElement
+from pgt.element import AniElement
 from pgt.type_hints import _col_type
 
 
-class SurfaceElement(Element):
+class SurfaceElement(GUIElement):
     def __init__(self,
                  elements: Iterable = None,
                  bg_color: _col_type = None,

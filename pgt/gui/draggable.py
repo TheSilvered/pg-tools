@@ -37,7 +37,7 @@ class Draggable(MouseInteractionAniElement):
         if self.b_right is not None and self.r > self.b_right:
             self.r = self.b_right
 
-    def draw(self, *args, **kwargs):
+    def update(self):
         if not self.dragging and self.button_clicked and not self.locked:
             self.dragging = True
             self.drag_point = self.get_mouse_pos() - self.pos
@@ -47,6 +47,8 @@ class Draggable(MouseInteractionAniElement):
         if self.dragging:
             self.pos = self.get_mouse_pos() - self.drag_point
 
+    def draw(self, *args, **kwargs):
+        self.update()
         self.fix_pos()
 
         super().draw(*args, **kwargs)

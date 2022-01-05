@@ -394,7 +394,10 @@ class Pos:
         else:
             try:
                 q = mid.y + m * mid.x
-                centre = Pos(q / m, 0)
+                if q / m > q:
+                    centre = Pos(q / m, 0)
+                else:
+                    centre = Pos(0, q)
             except ZeroDivisionError:
                 centre = Pos(0, (pos1.y + pos2.y) * 0.5)
 

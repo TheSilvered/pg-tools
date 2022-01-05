@@ -158,11 +158,12 @@ from . import ani
 from .color import *
 from .constants import *
 from . import draw
-from .element import Element, AniElement, MouseInteractionElement, MouseInteractionAniElement
+from .element import *
 from .exceptions import *
 from . import gui
 from . import lang
 from .mathf import *
+from .particle_manager import ParticleManager
 from .stack import Stack
 from .utils import *
 

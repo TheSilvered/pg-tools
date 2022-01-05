@@ -8,6 +8,7 @@ __test_name__ = "lang.load"
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
+fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
 
 start_time = time.perf_counter()
 lang = pgt.lang.load("test_files/lang_test.lang")
@@ -31,6 +32,7 @@ label = pgt.gui.Label(
 
 while True:
     clock.tick()
+    fps.text = int(clock.get_fps())
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -38,5 +40,6 @@ while True:
             sys.exit()
 
     screen.fill(pgt.GRAY(50))
+    fps.draw(screen)
     label.draw(screen)
     pygame.display.update()

@@ -3,12 +3,13 @@ from typing import Union, Optional
 import pygame
 
 from .font import Font
-from pgt.element import Element, AniElement
+from .gui_element import GUIElement
+from pgt.element import AniElement
 from pgt.mathf import Pos
 from pgt.type_hints import _col_type
 
 
-class Label(Element):
+class Label(GUIElement):
     def __init__(self,
        text: str = "",
        text_size: int = 20,

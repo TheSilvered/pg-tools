@@ -7,6 +7,7 @@ __test_name__ = "gui.Button"
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
+fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
 
 image = pgt.load_image("test_files/image.png")
 font_image = pgt.load_image("test_files/font_image.png")
@@ -61,7 +62,7 @@ b = pgt.gui.Button(
 )
 
 info = pgt.gui.Label(
-    pos=(0, 0),
+    pos=(0, 20),
     color=pgt.WHITE,
     text="",
     font="consolas"
@@ -69,6 +70,7 @@ info = pgt.gui.Label(
 
 while True:
     clock.tick()
+    fps.text = int(clock.get_fps())
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -79,6 +81,7 @@ while True:
     b.auto_run()
 
     screen.fill(pgt.GRAY(50))
+    fps.draw(screen)
     b.draw(screen, show_rect=True)
     info.draw(screen)
     pygame.display.update()

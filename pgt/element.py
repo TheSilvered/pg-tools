@@ -8,18 +8,6 @@ from .constants import UL
 
 pygame.init()
 
-attr_correspondence = {
-    "ul": "topleft",
-    "uc": "midtop",
-    "ur": "topright",
-    "cl": "midleft",
-    "cc": "center",
-    "cr": "midright",
-    "dl": "bottomleft",
-    "dc": "midbottom",
-    "dr": "bottomright"
-}
-
 
 class Element(pygame.sprite.Sprite):
     """
@@ -144,23 +132,23 @@ class Element(pygame.sprite.Sprite):
 
         self.__offset = Pos(offset)
         self.img_offset = Pos(img_offset)
+        self._pos_point = pos_point
 
         if pos is not None:
-            setattr(self, pos_point, pos + self.__offset)
             self.__a_element = None
-            self._a_point = None
+            self._a_point = anchor_point
+            self.pos = pos + self.__offset
         elif anchor_element is not None:
             self.__a_element = anchor_element
             self._a_point = anchor_point
-            setattr(self, pos_point,
-                    getattr(self.__a_element, self._a_point) + self.__offset)
+            self.pos = getattr(self.__a_element, self._a_point) + self.__offset
+
         else:
             raise InvalidPosError(f"Element {id(self)} needs a position")\
                   from None
 
         self.hidden = hidden
 
-        self._pos_point = pos_point
         self._rot = 0
         if rotation != 0:
             if self.image is not None:
@@ -344,6 +332,12 @@ class Element(pygame.sprite.Sprite):
     def hide(self) -> None:
         self.hidden = True
 
+    def anchor(self, anchor_element, anchor_point=UL):
+        self.__a_element = anchor_element
+        self._a_point = anchor_point
+        setattr(self, self._pos_point,
+                getattr(self.__a_element, self._a_point) + self.__offset)
+
     def draw(self,
              surface: pygame.Surface,
              pos: _pos = None,
@@ -408,6 +402,9 @@ class AniElement(Element):
 
     Notes:
         - if the element is hidden all the animations are still updated
+        - animations with the names '_show' and '_hide' will start when
+          calling the show() or hide() methods, the element is hidden
+          at the end of the '_hide' animation
     """
     def __init__(self,
        animations: Optional[Iterable] = None,
@@ -417,14 +414,28 @@ class AniElement(Element):
         if animations is None: animations = ()
 
         for i in animations:
-            setattr(self, i.name, i)
-            i.e = self
+            self.add_ani(i)
 
         self.current_ani = []
+        self.is_hiding = False
+
+    def show(self):
+        self.hidden = False
+        try:
+            self._show.start()
+        except AttributeError:
+            pass
+
+    def hide(self):
+        try:
+            self._hide.start()
+            self.is_hiding = True
+        except AttributeError:
+            self.hidden = True
 
     def add_ani(self, ani):
         setattr(self, ani.name, ani)
-        ani.e = self
+        ani.set_new_element(self)
 
     def update_ani(self, global_time: int = None) -> None:
         if global_time is None:
@@ -432,9 +443,15 @@ class AniElement(Element):
         for i in self.current_ani:
             getattr(self, i[0]).update(global_time)
 
-        # Doesn't run if the update method stops the animation
+        hide = self.is_hiding
+
         for i in self.current_ani:
+            if self.is_hiding and i[0] == "_hide": hide = False
             getattr(self, i[0]).set_element()
+
+        if hide:
+            self.hidden = True
+            self.is_hiding = False
 
     def draw(self, *args, **kwargs) -> None:
         if "update_ani" in kwargs:

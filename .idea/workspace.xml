@@ -2,37 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d99aefd-cb9c-425b-92fa-007ec23f9d69" name="Default Changelist" comment="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value">
+      <change afterPath="$PROJECT_DIR$/pgt/gui/gui_element.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pgt/gui/gui_layout.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pgt/particle_manager.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/particle_manager.ParticleManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/ani.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/ani.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/color.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/draw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/element.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/button.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/gui/draggable.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/draggable.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/gui/font.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/font.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/label.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/label.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgt/gui/surface_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/gui/surface_element.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/mathf.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/mathf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/pos_size.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/stack.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/type_hints.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/type_hints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgt/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgt/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ani.PosAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.PosAni.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ani.ScaleAni.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ani.ScaleAni.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/draw.aa_line.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.aa_line.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/draw.odd_circle.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/draw.odd_circle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/element.Element.__a_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/element.Element.__a_element.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/element.Element.draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/element.Element.draw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/element.Element.rotate.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/element.Element.rotate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/element.MouseInteractionElement.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/element.MouseInteractionElement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/gui.Button.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gui.Button.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/gui.Draggable.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gui.Draggable.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/gui.Font.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gui.Font.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/gui.Label.auto_size.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gui.Label.auto_size.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/gui.SurfaceElement.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gui.SurfaceElement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/stack.Stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/stack.Stack.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,11 +50,15 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="21jSIA6SwZFKyvfeg00ajdBD87s" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -87,8 +72,8 @@
       </console-settings>
     </option>
   </component>
-  <component name="RunManager" selected="Python.stack.Stack">
-    <configuration name="lang.load" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.particle_manager.ParticleManager">
+    <configuration name="ani.PosAni" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Pygame tools" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -100,7 +85,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/lang.load.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/ani.PosAni.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -109,7 +94,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="mathf.e_in_out" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="particle_manager.ParticleManager" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Pygame tools" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -121,7 +106,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/mathf.e_in_out.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/particle_manager.ParticleManager.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -194,19 +179,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.lang.load" />
-      <item itemvalue="Python.mathf.e_in_out" />
       <item itemvalue="Python.pos_size.pos.quad_bezier" />
       <item itemvalue="Python.pos_size.pos.slerp" />
       <item itemvalue="Python.stack.Stack" />
+      <item itemvalue="Python.ani.PosAni" />
+      <item itemvalue="Python.particle_manager.ParticleManager" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.particle_manager.ParticleManager" />
+        <item itemvalue="Python.ani.PosAni" />
         <item itemvalue="Python.stack.Stack" />
         <item itemvalue="Python.pos_size.pos.slerp" />
         <item itemvalue="Python.pos_size.pos.quad_bezier" />
-        <item itemvalue="Python.mathf.e_in_out" />
-        <item itemvalue="Python.lang.load" />
       </list>
     </recent_temporary>
   </component>
@@ -233,6 +218,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value" />
     <option name="LAST_COMMIT_MESSAGE" value="Added a border to the circles and allowed the border and the inside of both the rectangles and the circles to have an independent alpha value" />
   </component>

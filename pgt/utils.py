@@ -2,7 +2,7 @@ from typing import Optional, Union
 from os import PathLike
 import json
 
-from pygame import Surface
+from pygame import Surface, PixelArray
 from pygame.image import load
 
 from .type_hints import _col_type, _size
@@ -82,7 +82,7 @@ def replace_color(surface: Surface, col1: _col_type, col2: _col_type) -> Surface
         'col1' (pygame.Color): the color to replace
         'col2' (pygame.Color): the color that replaces the old one
     """
-    pixel_arr = pygame.PixelArray(surface.copy())
+    pixel_arr = PixelArray(surface.copy())
     pixel_arr.replace(col1, col2)
     new_img = pixel_arr.surface.copy()
     new_img.unlock()

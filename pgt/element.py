@@ -1,6 +1,6 @@
-import pygame
 import time
 from typing import Optional, Iterable, Callable
+import pygame
 from .exceptions import InvalidPosError
 from .mathf import clamp, Pos, Size
 from .type_hints import _pos, _size, _col_type
@@ -144,8 +144,9 @@ class Element(pygame.sprite.Sprite):
             self.pos = getattr(self.__a_element, self._a_point) + self.__offset
 
         else:
-            raise InvalidPosError(f"Element {id(self)} needs a position")\
-                  from None
+            raise InvalidPosError("Element "
+                                 f"{self.__class__.__name__} needs a position")\
+                                  from None
 
         self.hidden = hidden
 
@@ -319,7 +320,7 @@ class Element(pygame.sprite.Sprite):
             return self.rect.colliderect(other)
         else:
             raise TypeError("Expected 'other' to be pygame.Rect or "
-                           f"pygame.sprite.Sprite, got '{type(other)}'"
+                           f"pygame.sprite.Sprite, got '{other.__class__.__name__}'"
                             " instead") from None
 
     def collide_point(self, point: _pos) -> bool:
@@ -332,9 +333,10 @@ class Element(pygame.sprite.Sprite):
     def hide(self) -> None:
         self.hidden = True
 
-    def anchor(self, anchor_element, anchor_point=UL):
+    def anchor(self, anchor_element, anchor_point=None):
         self.__a_element = anchor_element
-        self._a_point = anchor_point
+        if anchor_point is not None:
+            self._a_point = anchor_point
         setattr(self, self._pos_point,
                 getattr(self.__a_element, self._a_point) + self.__offset)
 
@@ -347,10 +349,10 @@ class Element(pygame.sprite.Sprite):
              show_rect: bool = False,
              rect_color: _col_type = (255, 0, 255)) -> None:
 
-        if self.hidden or self.image is None: return
-
         if pos is None and self.__a_element is not None:
             self.pos = getattr(self.__a_element, self._a_point) + self.__offset
+
+        if self.hidden or self.image is None: return
 
         if pos is None:
             pos = self.ul

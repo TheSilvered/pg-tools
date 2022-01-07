@@ -1,4 +1,4 @@
-from pgt.element import Element
+from pgt.element import Element, AniElement
 
 
 class GUIElement(Element):
@@ -9,3 +9,7 @@ class GUIElement(Element):
     def set_layout(self, new_layout):
         self.layout = new_layout
         self.anchor(new_layout, self._a_point)
+
+
+class GUIAniElement(GUIElement, AniElement):
+    pass

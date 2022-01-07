@@ -13,8 +13,11 @@ fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
 image = pygame.Surface((100, 100))
 image.fill(pgt.SALMON)
 
+anchor = pgt.Element(pos=0)
+
 e = pgt.AniElement(
-    pos=(100, 100),
+    # pos=(100, 100),
+    anchor_element=anchor,
     size=(100, 100),
     pos_point=pgt.CC,
     image=image,

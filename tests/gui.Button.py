@@ -21,6 +21,7 @@ b = pgt.gui.Button(
     text_label=pgt.gui.Label(
         pos=(0, 0),
         pos_point=pgt.CC,
+        anchor_point=pgt.CC,
         auto_size=True,
         text="print('Hello')",
         font=pgt.gui.Font(font_image, **font_info, size=22),

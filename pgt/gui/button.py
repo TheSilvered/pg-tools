@@ -151,6 +151,7 @@ class Button(MouseInteractionAniElement, GUIElement):
             if not self.__pressed and self.sound is not None:
                 pygame.mixer.Sound.play(self.sound)
             self.__pressed = True
+            return True
         elif self.hovered:
             if self.__pressed:
                 self.run()
@@ -196,6 +197,12 @@ class Button(MouseInteractionAniElement, GUIElement):
         elif not self.hovered or self.button_clicked:
             self.start_hover = None
 
+        super().draw(*args, **kwargs)
+        if self.label:
+            self.label.draw(*args, **kwargs)
+
+        if self.layout is None: return
+
         if self.hint_bg \
            and self.hint_label \
            and self.start_hover is not None \
@@ -209,8 +216,4 @@ class Button(MouseInteractionAniElement, GUIElement):
         # Uses id to hide only its own hint
         elif self.layout.current_button_hint is not None \
              and self.layout.current_button_hint[0] == id(self):
-            self.layout.button_hint = None
-
-        super().draw(*args, **kwargs)
-        if self.label:
-            self.label.draw(*args, **kwargs)
+            self.layout.current_button_hint = None

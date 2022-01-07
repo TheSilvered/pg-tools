@@ -1,15 +1,16 @@
 from pygame import mouse, Surface
 
 from .button import Button
+from .gui_element import GUIElement
 from pgt.mathf import Pos
 from pgt.element import Element
-from pgt.type_hints import _col_type
+from pgt.type_hints import _col_type, _pos
 
 
-class GUILayout(Element):
+class GUILayout(GUIElement):
     def __init__(self,
-                 elements,
-                 elements_order,
+                 elements: dict[str: Element],
+                 elements_order: list[str],
                  bg_color: _col_type = None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,17 +37,52 @@ class GUILayout(Element):
         for i in elements_order:
             setattr(self, i, elements[i])
             self.elements.append(elements[i])
-            elements[i].set_layout(self, elements[i]._a_point)
+            if isinstance(elements[i], GUIElement):
+                elements[i].set_layout(self)
+            else:
+                elements[i].anchor(self)
+
+        self.buttons = list(filter(lambda x: isinstance(x, Button | GUILayout),
+                                   self.elements))
+
+    def collide_point(self, point: _pos) -> bool:
+        for i in self.elements:
+            if i.collide_point(point):
+                return True
+        return False
+
+    def auto_run(self):
+        for i in self.buttons:
+            if i.auto_run(): return True
+        return False
+
+    def show(self):
+        for i in self.elements:
+            i.show()
+        self.hidden = False
+
+    def hide(self):
+        for i in self.elements:
+            i.hide()
+        self.hidden = True
+
+    def set_layout(self, new_layout):
+        self.anchor(new_layout)
+        self.layout = new_layout
+        for i in self.elements:
+            if isinstance(i, GUIElement):
+                i.layout = new_layout
 
     def draw(self, *args, **kwargs):
-        if self.hidden: return
         super().draw(*args, **kwargs)
 
         for i in self.elements:
             i.draw(*args, **kwargs)
 
-        for i in reversed(self.elements):
-            if isinstance(i, Button) and i.auto_run():
+        if self.hidden: return
+
+        for i in reversed(self.buttons):
+            if i.auto_run():
                 return
 
         if self.current_button_hint:

@@ -190,7 +190,9 @@ class Button(MouseInteractionAniElement, GUIElement):
                 self.normal_ani.start()
                 self.__started_ani = "n"
 
-        if self.hidden: return
+        if self.hidden:
+            self.start_hover = None
+            return
 
         if self.hovered and self.start_hover is None:
             self.start_hover = time.perf_counter()

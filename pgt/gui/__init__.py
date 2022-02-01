@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from .button import Button
 from .draggable import Draggable
 from .font import Font

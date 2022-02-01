@@ -1,6 +1,9 @@
 r"""
 Pygame Tools by TheSilvered
-This package requires pygame
+
+This package is created to make pygame easier to use.
+It introduces an entity system, math functions, a gui system and much
+more.
 
 Classes:
     - Pos  (pgt.mathf.Pos)
@@ -142,13 +145,22 @@ Constants:
     - BUTTON_HOVER  (pgt.constants.BUTTON_HOVER)
     - BUTTON_CLICK  (pgt.constants.BUTTON_CLICK)
 
+    - NO_AA     (pgt.constants.NO_AA)
+    - BOLD      (pgt.constants.BOLD)
+    - ITALIC    (pgt.constants.ITALIC)
+    - UNDERLINE (pgt.constants.UNDERLINE)
+
+    - LEFT   (pgt.constants.LEFT)
+    - RIGHT  (pgt.constants.RIGHT)
+    - CENTER (pgt.constants.CENTER)
+
+    - ABSOLUTE  (pgt.constants.ABSOLUTE)
+    - AUTOMATIC (pgt.constants.AUTOMATIC)
+
 Variables:
     - draw.even_circle_cache (pgt.draw.even_circle_cache)
-    - draw.even_circle_srufs (pgt.draw.even_circle_srufs)
     - draw.odd_circle_cache  (pgt.draw.odd_circle_cache)
-    - draw.odd_circle_srufs  (pgt.draw.odd_circle_srufs)
     - draw.rect_cache        (pgt.draw.rect_cache)
-    - draw.rect_srufs        (pgt.draw.rect_srufs)
 """
 
 __author__ = "TheSilvered"

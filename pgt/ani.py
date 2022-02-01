@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 pgt.ani
 
@@ -28,10 +30,13 @@ To make a custom animation you need to:
 class MyAnimation(pgt.AniBase):
 
     # in the start method add a statement to save the initial value of
-    # the attribute or property the animation changes.
+    # the attribute or property the animation changes
+
+    # make sure to set it before calling super().start because this
+    # method calls set_element()
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         self.element_val = self.e.[ELEMENT_ATTRIBUTE]
+        super().start(*args, **kwargs)
 
     def set_element(self):
         # here goes any operation that the animation should do when
@@ -150,15 +155,15 @@ class AniBase(ABC):
         'frames' (iterable): see 'frames' in arguments
         'element_val' (Any): used to store the starting state of the
             animation to restore the original value
+        'func_args' (int): see 'func_args' in arguments
+        'starting_val' (Any): see 'starting_val' in arguments
         '_loop' (bool): see 'loop' in arguments
         '_current_frame' (int): the index of the frame currently
             displayed by the animation, if the animation was stopped
             or has ended, returns the index of the last shown frame
-        '_tot_frames' (int): the total number of frames of the animation
         '_last_frame' (float): the time that the last frame was shown
         '_ending' (bool): if the animation is going to stop before
             showing the next frame
-        '_AniBase__running': if the animation is currently playing
         '_start_time' (float): when the animation started
         'e' (AniElement): the element of the animation
         '_reset_on_end' (bool): see 'reset_on_end' in arguments
@@ -168,9 +173,9 @@ class AniBase(ABC):
             a list of frames predefined
         '__pending' (int): how many times the function should be called
             to keep up with the expected frame
-        'starting_val' (Any): see 'starting_val' in arguments
+        '__running': if the animation is currently playing
         '__prev_val' (Any): the previous value returned by the function
-        'func_args' (int): see 'func_args' in arguments
+        '__tot_frames' (int): the total number of frames of the animation
 
     Methods:
         'start(frame=0, start_time=None)' (None): starts the animation.
@@ -182,6 +187,8 @@ class AniBase(ABC):
             'frame_time' (float): value that marks the current time for
                 the animation, AniElement.update_ani() sets it to be
                 the current time
+            'set_element' (bool): if the set_element method should be
+                called, defaults to True
         'stop()' (None): starts the stopping process of the animation,
             note that the animation stops only at the end of the current
             frame
@@ -233,7 +240,7 @@ class AniBase(ABC):
         self._loop = loop
         self._reset_on_end = reset_on_end
         self._start_time = 0
-        self._tot_frames = len(frames)
+        self.__tot_frames = len(frames)
 
         self.__pending = 0
         self.__prev_val = starting_val
@@ -245,14 +252,19 @@ class AniBase(ABC):
             self.__queued_ani.set_new_element(element)
 
         if tot_time != 0:
-            self._time = tot_time / self._tot_frames
+            self._time = tot_time / self.__tot_frames
         else:
             self._time = time
 
     def __repr__(self):
-        return_string = f"name: {self.name}, frames: {self._tot_frames}"
+        return_string = f"name: {self.name}, frames: {self.__tot_frames}, "\
+                        f"time: {self._time}, loop: {self._loop}"
         if self.id: return_string += f", id: {self.id}"
-        return return_string
+        return f"{self.__class__.__name__}({return_string})"
+
+    @property
+    def running(self):
+        return self.__running
 
     def start(self,
               starting_val: Any = None,
@@ -282,8 +294,9 @@ class AniBase(ABC):
             except ValueError:
                 self.e.current_ani.append((self.name, self.id))
         self.__running = True
+        self.set_element()
 
-    def update(self, frame_time: float):
+    def update(self, frame_time: float, set_element: bool = True):
         elapsed_time = frame_time - self._last_frame
 
         if elapsed_time < self._time: return
@@ -302,22 +315,23 @@ class AniBase(ABC):
                 self.__pending += 1
             else:
                 self._current_frame += 1
-
         if self.__using_func: self._current_frame += self.__pending
 
         if self._loop:
-            if self._current_frame >= self._tot_frames:
-                self._start_time += self._time * self._tot_frames
-            self._current_frame %= self._tot_frames
-        elif self._current_frame >= self._tot_frames:
+            if self._current_frame >= self.__tot_frames:
+                self._start_time += self._time * self.__tot_frames
+            self._current_frame %= self.__tot_frames
+        elif self._current_frame >= self.__tot_frames:
             if self.__using_func:
-                self.__pending -= self._current_frame % self._tot_frames
-                self._current_frame = self._tot_frames
+                self.__pending -= self._current_frame % self.__tot_frames
+                self._current_frame = self.__tot_frames
                 self._ending = True
             else:
                 self.force_stop()
+                return
 
         self._last_frame = self._start_time + self._time * self._current_frame
+        if set_element: self.set_element()
 
     def stop(self):
         self._ending = True
@@ -352,7 +366,7 @@ class AniBase(ABC):
         if return_val is None and self.__pending == 0: return self.element_val
         for i in range(self.__pending):
             frame = self._current_frame - (self.__pending - i) + 1
-            perc = frame / self._tot_frames
+            perc = frame / self.__tot_frames
             args = []
             if self.func_args & PERC:         args.append(perc)
             if self.func_args & PREV_VAL:     args.append(return_val)
@@ -365,12 +379,12 @@ class AniBase(ABC):
         return return_val
 
     def set_frames(self, frames: Sequence):
-        self._tot_frames = len(frames)
+        self.__tot_frames = len(frames)
         self.frames = frames
         self.__using_func = isinstance(self.frames, FuncAniFrames)
 
     def __len__(self):
-        return self._time * self._tot_frames
+        return self._time * self.__tot_frames
 
     def set_new_element(self, element):
         self.e = element
@@ -400,8 +414,8 @@ class TextureAni(AniBase):
     Description: animation that changes the texture of the element
     """
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         self.element_val = self.e.image
+        super().start(*args, **kwargs)
 
     def set_element(self):
         self.e.change_image(self.get_frame())
@@ -419,8 +433,8 @@ class PosAni(AniBase):
     Description: animation that changes the position of the element
     """
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         self.element_val = self.e.pos.copy()
+        super().start(*args, **kwargs)
 
     def set_element(self):
         self.e.pos = self.get_frame()
@@ -438,8 +452,8 @@ class TextAni(AniBase):
     Description: animation that changes the text of a label
     """
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         self.element_val = self.e.text
+        super().start(*args, **kwargs)
 
     def set_element(self):
         self.e.text = self.get_frame()
@@ -457,8 +471,8 @@ class RotAni(AniBase):
     Description: animation that changes the rotation of the element
     """
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         self.element_val = self.e._rot
+        super().start(*args, **kwargs)
 
     def set_element(self):
         self.e.rotate(self.get_frame(), True)
@@ -487,8 +501,8 @@ class ScaleAni(AniBase):
         super().__init__(*args, **kwargs)
 
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         self.element_val = self.e.size
+        super().start(*args, **kwargs)
 
     def set_element(self):
         self.e.scale(self.get_frame(), self.smooth)

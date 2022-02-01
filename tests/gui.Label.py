@@ -22,9 +22,10 @@ l = pgt.gui.Label(
     text=text,
     font="consolas",
     adapt_to_width=True,
-    alignment="center",
+    alignment=pgt.CENTER,
     color=pgt.SALMON,
     bg_color=pgt.BLACK,
+    style=pgt.UNDERLINE | pgt.ITALIC,
     exceed_size=True,
     text_size=22
 )

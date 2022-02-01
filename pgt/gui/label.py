@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
+
 from typing import Union, Optional
 
 import pygame
 
 from .font import Font
 from .gui_element import GUIElement
+from pgt.constants import LEFT, RIGHT, CENTER, NO_AA, BOLD, ITALIC, UNDERLINE
 from pgt.element import AniElement
 from pgt.mathf import Pos
 from pgt.type_hints import _col_type
@@ -16,8 +19,8 @@ class Label(GUIElement):
        color: _col_type = None,
        bg_color: _col_type = None,
        font: Union[Font, pygame.font.Font] = None,
-       style: str = "",
-       alignment: str = "left",
+       style: int = 0,
+       alignment: int = LEFT,
        line_height: Optional[int] = None,
        adapt_to_width: bool = False,
        exceed_size: bool = True,
@@ -26,9 +29,7 @@ class Label(GUIElement):
 
         super().__init__(*args, **kwargs)
 
-        style = style.split(" ")
-        self._aa = "no_aa" not in style
-        if not self._aa: style.remove("no_aa")
+        self._aa = not (style & NO_AA)
 
         if isinstance(font, pygame.font.Font):
             self.font = font
@@ -43,11 +44,11 @@ class Label(GUIElement):
                 self.font = pygame.font.SysFont(font, text_size)
             self.pygame_font = True
 
-        if "bold" in style and self.pygame_font:
+        if BOLD & style and self.pygame_font:
             self.font.set_bold(True)
-        if "italic" in style and self.pygame_font:
+        if ITALIC & style and self.pygame_font:
             self.font.set_italic(True)
-        if "underline" in style and self.pygame_font:
+        if UNDERLINE & style and self.pygame_font:
             self.font.set_underline(True)
 
         self.__text = text
@@ -61,8 +62,8 @@ class Label(GUIElement):
         self.color = color
         self.bg_color = bg_color
 
-        if self.alignment not in ("left", "right", "center", "centre"):
-            self.alignment = "left"
+        if not (0 <= self.alignment <= CENTER):
+            self.alignment = LEFT
 
         if line_height is None:
             self._line_h = self.font.get_linesize()
@@ -137,18 +138,18 @@ class Label(GUIElement):
             line = self.font.render(i, self._aa, self.color, self.bg_color)
 
             y = self._line_h * l_no
-            if self.alignment == "left":
+            if self.alignment == LEFT:
                 new_image.blit(line, (0, y))
-            elif self.alignment == "right":
+            elif self.alignment == RIGHT:
                 x = new_image.get_width() - self.font.size(i)[0]
                 new_image.blit(line, (x, y))
             else:
                 x = (new_image.get_width() - self.font.size(i)[0]) // 2
                 new_image.blit(line, (x, y))
 
-        if self.alignment == "left" or self.auto_size:
+        if self.alignment == LEFT or self.auto_size:
             self.img_offset = Pos(0)
-        elif self.alignment == "right":
+        elif self.alignment == RIGHT:
             self.img_offset = Pos(self.size.w - new_image.get_width(), 0)
         else:
             self.img_offset = Pos((self.size.w - new_image.get_width()) / 2, 0)

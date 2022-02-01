@@ -26,7 +26,7 @@ b = pgt.gui.Button(
         text="print('Hello')",
         font=pgt.gui.Font(font_image, **font_info, size=22),
         color=pgt.RED,
-        alignment="center"
+        alignment=pgt.CENTER
     ),
     func=print,
     func_args=["Hello"],

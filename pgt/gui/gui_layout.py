@@ -1,10 +1,14 @@
+#!/usr/bin/env python3
+
 from pygame import mouse, Surface
 
 from .button import Button
 from .gui_element import GUIElement
+from pgt.constants import ABSOLUTE, AUTOMATIC
 from pgt.mathf import Pos
 from pgt.element import Element
 from pgt.type_hints import _col_type, _pos
+from pgt.utils import filled_surface
 
 
 class GUILayout(GUIElement):
@@ -15,9 +19,7 @@ class GUILayout(GUIElement):
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         if bg_color is not None:
-            new_image = Surface(self.size)
-            new_image.fill(bg_color)
-            self.change_image(new_image)
+            self.change_image(filled_surface(self.size, bg_color))
         self.current_button_hint = None
 
         self.elements = []
@@ -32,15 +34,36 @@ class GUILayout(GUIElement):
                     elements_order.append(i)
             else:
                 raise TypeError(
-                    f"elements_order got {set_eo - set_e} names not defined"
+                    f"elements_order doesn't define {set_eo - set_e}"
                 )
+
+        max_h = 0
+        curr_y = 0
+        curr_x = 0
+
         for i in elements_order:
-            setattr(self, i, elements[i])
-            self.elements.append(elements[i])
-            if isinstance(elements[i], GUIElement):
-                elements[i].set_layout(self)
+            element = elements[i]
+            setattr(self, i, element)
+            self.elements.append(element)
+            if not isinstance(element, GUIElement):
+                element.anchor(self)
+                continue
+
+            element.set_layout(self)
+            if element.position_mode != AUTOMATIC: continue
+
+            offset = Pos(0, curr_y)
+            if curr_x + element.w <= self.w or element.w > self.w and curr_x == 0:
+                offset.x += curr_x
+                curr_x += element.w
+                if element.h > max_h:
+                    max_h = element.h
             else:
-                elements[i].anchor(self)
+                offset.y += max_h
+                curr_y += max_h
+                max_h = element.h
+                curr_x = element.w
+            element.offset = offset
 
         self.buttons = list(filter(lambda x: isinstance(x, Button | GUILayout),
                                    self.elements))

@@ -16,7 +16,7 @@ image.fill(pgt.SALMON)
 anchor = pgt.Element(pos=0)
 
 e = pgt.AniElement(
-    # pos=(100, 100),
+    pos=(100, 100),
     anchor_element=anchor,
     size=(100, 100),
     pos_point=pgt.CC,
@@ -35,10 +35,9 @@ e = pgt.AniElement(
     ]
 )
 
-
 def change_ani_func(new_pos, func):
     pos = e.pos.copy()
-    e.move.frames._func = lambda p: pos.slerp(new_pos, func(p))
+    e.move.frames._func = lambda p: pos.lerp(new_pos, func(p))
     e.move.restart(e.pos)
 
 

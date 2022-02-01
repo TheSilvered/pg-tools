@@ -10,12 +10,9 @@ pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
 
-t1 = pygame.Surface((100, 100))
-t2 = pygame.Surface((100, 100))
-t3 = pygame.Surface((100, 100))
-t1.fill(pgt.RED)
-t2.fill(pgt.GREEN)
-t3.fill(pgt.BLUE)
+t1 = pgt.filled_surface((100, 100), pgt.RED)
+t2 = pgt.filled_surface((100, 100), pgt.GREEN)
+t3 = pgt.filled_surface((100, 100), pgt.BLUE)
 
 base = pygame.Surface((100, 100))
 base.fill(pgt.SALMON)
@@ -32,7 +29,7 @@ e = pgt.AniElement(
             loop=False,
             queued_ani=pgt.ani.TextureAni(
                     name="queued_flash",
-                    frames=[t3, t2, t1],
+                    frames=[t1, t2, t3],
                     time=1
                 )
         )

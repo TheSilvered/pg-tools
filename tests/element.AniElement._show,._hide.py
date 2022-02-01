@@ -21,8 +21,8 @@ image.fill(pgt.SALMON)
 
 class AlphaAni(pgt.ani.AniBase):
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         self.element_val = self.e.alpha
+        super().start(*args, **kwargs)
 
     def set_element(self):
         self.e.alpha = pgt.clamp(self.get_frame(), 0, 1) * 255

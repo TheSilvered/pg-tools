@@ -1,0 +1,68 @@
+# Syntax highlight of language files for Sublime Text
+%YAML 1.2
+---
+file_extensions:
+  - lang
+scope: source.lang
+
+variables:
+  name: '[a-zA-Z0-9_]'
+  indent: ^[ \t]*
+
+contexts:
+  main:
+    - include: keywords
+    - include: comments
+    - include: escapes
+
+  keywords:
+    - match: '{{indent}}\$+({{name}}+|!)$'
+      scope: keyword.control.lang
+    - match: '{{indent}}@'
+      scope: variable.function
+      push: attribute
+    - match: '{{indent}}(~@|\.~@)'
+      scope: variable.function
+      push: attribute_reference
+    - match: '{{indent}}%='
+      scope: entity.name.tag
+      push: encoding
+
+  attribute:
+    - match: '{{name}}'
+      scope: variable.parameter
+    - match: '(:|\n|$)'
+      scope: keyword.operator.assignment
+      pop: true
+
+  attribute_reference:
+    - match: '{{name}}'
+      scope: variable.parameter
+    - match: '(\n|$)'
+      pop: true
+    - match: ':'
+      scope: keyword.operator.assignment
+      pop: true
+      push: reference
+
+  reference:
+    - match: '\.'
+      scope: punctuation.separator
+    - match: '[a-zA-Z0-9_]'
+      scope: variable.parameter
+    - match: '(\n|$)'
+      pop: true
+
+  encoding:
+    - match: .
+      scope: entity.name.tag
+    - match: '(\n|$)'
+      pop: true
+
+  escapes:
+    - match: '{{indent}}*(\\(&|\$|@|\.~@|~@|::|\\)?|&)'
+      scope: constant.character.escape
+
+  comments:
+    - match: '^ *::.*'
+      scope: punctuation.definition.comment.lang

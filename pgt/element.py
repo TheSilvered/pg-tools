@@ -1,10 +1,14 @@
+#!/usr/bin/env python3
+
 import time
 from typing import Optional, Iterable, Callable
+
 import pygame
+
+from .constants import UL
 from .exceptions import InvalidPosError
 from .mathf import clamp, Pos, Size
 from .type_hints import _pos, _size, _col_type
-from .constants import UL
 
 pygame.init()
 
@@ -142,7 +146,6 @@ class Element(pygame.sprite.Sprite):
             self.__a_element = anchor_element
             self._a_point = anchor_point
             self.pos = getattr(self.__a_element, self._a_point) + self.__offset
-
         else:
             raise InvalidPosError("Element "
                                  f"{self.__class__.__name__} needs a position")\
@@ -161,7 +164,8 @@ class Element(pygame.sprite.Sprite):
         return self.size == other.size \
                and self.image == other.image \
                and self._rot == other._rot \
-               and self._alpha == other._alpha
+               and self._alpha == other._alpha \
+               and self.pos == other.pos
 
     @property
     def u(self): return self.rect.top
@@ -226,12 +230,40 @@ class Element(pygame.sprite.Sprite):
         setattr(self, self._pos_point, value)
 
     @property
+    def x(self):
+        return self.pos.x
+    @property
+    def y(self):
+        return self.pos.y
+
+    @x.setter
+    def x(self, value):
+        self.pos = (round(value), self.y)
+    @x.setter
+    def x(self, value):
+        self.pos = (self.x, round(value))
+
+    @property
     def size(self):
         return Size(self.rect.size)
 
     @size.setter
     def size(self, value):
         self.rect.size = round(Size(value))
+
+    @property
+    def w(self):
+        return self.size.w
+    @property
+    def h(self):
+        return self.size.h
+
+    @w.setter
+    def w(self, value):
+        self.size = (round(value), self.h)
+    @h.setter
+    def h(self, value):
+        self.size = (self.w, round(value))
 
     @property
     def offset(self):
@@ -253,6 +285,10 @@ class Element(pygame.sprite.Sprite):
     def alpha(self, value):
         if self.image: self.image.set_alpha(clamp(value, 0, 255))
         self._alpha = value
+
+    @property
+    def is_anchored(self):
+        return self.__a_element is not None
 
     def rotate(self,
                angle: int,
@@ -442,14 +478,13 @@ class AniElement(Element):
     def update_ani(self, global_time: int = None) -> None:
         if global_time is None:
             global_time = time.perf_counter()
-        for i in self.current_ani:
-            getattr(self, i[0]).update(global_time)
 
         hide = self.is_hiding
 
-        for i in self.current_ani:
-            if self.is_hiding and i[0] == "_hide": hide = False
-            getattr(self, i[0]).set_element()
+        for i in self.current_ani.copy():
+            getattr(self, i[0]).update(global_time)
+            if self.is_hiding and i[0] == "_hide" and getattr(self, i[0]).running:
+                hide = False
 
         if hide:
             self.hidden = True

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pygame
 from pgt.mathf import Size
 from pgt.color import GRAY
@@ -11,6 +13,7 @@ class Font:
                              "the same length") from None
 
         self.chars = {}
+        self.cache = {}
 
         if size is not None and size != 0:
             size_mul = size / image.get_height()
@@ -30,64 +33,58 @@ class Font:
 
         nochar_x = int(sum(chars_widths) * size_mul)
         nochar_w = image.get_width() - nochar_x
-        self.nochar = (image.subsurface(nochar_x, y, nochar_w, h), nochar_w)
+        self.chars["nochar"] = (image.subsurface(nochar_x, y, nochar_w, h), nochar_w)
         self.line_size = h
 
     def get_linesize(self): return self.line_size
 
     def size(self, text):
-        tot_width = sum(self.chars.get(i, self.nochar)[1] for i in str(text))
+        tot_width = sum(self.chars.get(i, self.chars["nochar"])[1] for i in str(text))
 
         return tot_width, self.line_size
 
-    def render(self, text, aa_colors=False, text_c=(1, 1, 1), bg_c=None):
-        if bg_c is None: bg_c = (0, 0, 0)
-        image = pygame.Surface(self.size(text), flags=pygame.SRCALPHA)
-        image.set_colorkey((0, 0, 0))
-        text = str(text)
-        current_x = 0
+    def __get_charset(self, aa_colors=False, text_c=(1, 1, 1), bg_c=None):
+        key = (aa_colors, text_c, bg_c)
+        if chars := self.cache.get(key, None):
+            return chars
 
-        BG_COLOR = (0, 0, 0)
-        COLOR = (255, 255, 255)
+        if bg_c is None: bg_c = (0, 0, 0)
 
         text_c = pygame.Color(text_c)
         bg_c = pygame.Color(bg_c)
 
-        # Creates a temporary char map if it's convenient
-        temp_chars = self.chars
-        if aa_colors and len(text) > len(self.chars):
-            for i in temp_chars:
-                surf = temp_chars[i][0].convert_alpha(image)
-                char_pixel_arr = pygame.PixelArray(surf.copy())
+        new_chars = self.chars.copy()
+
+        for i in new_chars:
+            surf = new_chars[i][0].convert_alpha()
+            char_pixel_arr = pygame.PixelArray(surf.copy())
+            if aa_colors:
                 for j in range(255, -1, -1):
                     if bg_c == (0, 0, 0):
                         text_c.a = j
                         char_pixel_arr.replace(GRAY(j), text_c)
                         continue
                     char_pixel_arr.replace(GRAY(j), bg_c.lerp(text_c, j / 255))
-                char_img = char_pixel_arr.surface.copy()
-                char_img.unlock()
-                temp_chars[i] = (char_img, temp_chars[i][1])
+            else:
+                char_pixel_arr.replace((0, 0, 0), bg_c)
+                char_pixel_arr.replace((255, 255, 255), text_c)
+            char_img = char_pixel_arr.surface.copy()
+            char_img.unlock()
+            new_chars[i] = (char_img, new_chars[i][1])
+        self.cache[key] = new_chars
+        return new_chars
+
+    def render(self, text, aa_colors=False, text_c=(1, 1, 1), bg_c=None):
+        image = pygame.Surface(self.size(text), flags=pygame.SRCALPHA)
+        image.set_colorkey((0, 0, 0))
+        text = str(text)
+        current_x = 0
+
+        charset = self.__get_charset(aa_colors, text_c, bg_c)
 
         for ch in text:
-            if aa_colors and len(text) > len(self.chars) and ch in self.chars:
-                char_img = temp_chars[ch][0]
-            else:
-                surf = self.chars.get(ch, self.nochar)[0].convert_alpha(image)
-                char_pixel_arr = pygame.PixelArray(surf.copy())
-                if aa_colors:
-                    for i in range(255, -1, -1):
-                        if bg_c == (0, 0, 0):
-                            text_c.a = i
-                            char_pixel_arr.replace(GRAY(i), text_c)
-                            continue
-                        char_pixel_arr.replace(GRAY(i), bg_c.lerp(text_c, i / 255))
-                else:
-                    char_pixel_arr.replace(BG_COLOR, bg_c)
-                    char_pixel_arr.replace(COLOR, text_c)
-                char_img = char_pixel_arr.surface.copy()
-                char_img.unlock()
+            char_img = charset.get(ch, charset["nochar"])[0]
             image.blit(char_img, (current_x, 0))
-            current_x += self.chars.get(ch, self.nochar)[1]
+            current_x += self.chars.get(ch, self.chars["nochar"])[1]
 
         return image

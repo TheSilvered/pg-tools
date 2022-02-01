@@ -21,7 +21,8 @@ l1 = pgt.gui.Label(
     text="Hi, my name is TheSilvered and I'm 15.\nUnknown chars: <>àèéìùòùç",
     font=font,
     color=pgt.LIGHT_BLUE,
-    # style="no_aa",
+    bg_color=pgt.BLUE
+    # style=pgt.NO_AA,
     # bg_color=pgt.GRAY(50)
 )
 
@@ -32,7 +33,7 @@ l2 = pgt.gui.Label(
     text="Hi, my name is TheSilvered and I'm 15.\nUnknown chars: <>àèéìùòùç",
     font=font,
     color=pgt.RED,
-    # style="no_aa",
+    # style=pgt.NO_AA,
     # bg_color=pgt.GRAY(50)
 )
 

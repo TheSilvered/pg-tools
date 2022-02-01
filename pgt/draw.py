@@ -1,23 +1,22 @@
+#!/usr/bin/env python3
+
 from typing import Optional
 
 import pygame
 
 from .color import calc_alpha
-from .constants import ODD_CIRCLE_CACHE, EVEN_CIRCLE_CACHE, RECT_CACHE
+from .constants import ODD_CIRCLE_CACHE, EVEN_CIRCLE_CACHE, RECT_CACHE, ALL_CACHES
 from .mathf import get_i, Pos
 from .type_hints import _pos, _col_type
 
 pygame.init()
 
-even_circle_cache = []
-even_circle_srufs = []
-odd_circle_cache = []
-odd_circle_srufs = []
-rect_cache = []
-rect_srufs = []
+even_circle_cache = {}
+odd_circle_cache = {}
+rect_cache = {}
 
 
-def clear_cache(caches: int = RECT_CACHE | EVEN_CIRCLE_CACHE | ODD_CIRCLE_CACHE) -> None:
+def clear_cache(caches: int = ALL_CACHES) -> None:
     """
     clear_cache(caches: int)
 
@@ -35,21 +34,18 @@ def clear_cache(caches: int = RECT_CACHE | EVEN_CIRCLE_CACHE | ODD_CIRCLE_CACHE)
     """
     if caches & ODD_CIRCLE_CACHE:
         odd_circle_cache.clear()
-        odd_circle_srufs.clear()
     if caches & EVEN_CIRCLE_CACHE:
         even_circle_cache.clear()
-        even_circle_srufs.clear()
     if caches & RECT_CACHE:
         rect_cache.clear()
-        rect_srufs.clear()
 
 
-def even_circle(surface: pygame.Surface,
+def even_circle(surface: Optional[pygame.Surface],
                 center: _pos,
                 radius: int,
                 color: _col_type,
                 border: int = 0,
-                border_color: Optional[_col_type] = None) -> None:
+                border_color: Optional[_col_type] = None) -> pygame.Surface:
     """
     even_circle(surface: pygame.Surface,
                 center: _pos,
@@ -60,10 +56,12 @@ def even_circle(surface: pygame.Surface,
 
     Type: function
 
-    Description: draws a circle with a 2x2 center
+    Description: draws a circle with a 2x2 center and returns a surface
+        containing it, the same surface is blit onto the target surface
+        if given
 
     Args:
-        'surface' (pygame.Surface): where the circle should be drawn
+        'surface' (pygame.Surface?): where the circle should be drawn
         'center' (pgt.Pos): where the top-left pixel of the center should
             be on the surface
         'radius' (int): radius of the circle
@@ -73,18 +71,19 @@ def even_circle(surface: pygame.Surface,
         'border_color' (tuple, list): the color of the border, can be
             omitted if border == 0
 
-    Return type: None
+    Return type: pygame.Surface
     """
 
     blit_pos = (center[0] - radius, center[1] - radius)
     radius = round(radius)
     if radius - border < 0: border = radius
 
-    try:
-        i = even_circle_cache.index([radius, color])
-        surface.blit(even_circle_srufs[i], blit_pos)
-        return
-    except ValueError: pass
+    key = (radius, color, border, border_color)
+
+    surf = even_circle_cache.get(key, None)
+    if surface is not None and surf is not None:
+        surface.blit(surf, blit_pos)
+        return surf
 
     new_surf = pygame.Surface((radius*2, radius*2), flags=pygame.SRCALPHA)
     new_surf.set_colorkey((0, 0, 0))
@@ -133,17 +132,17 @@ def even_circle(surface: pygame.Surface,
                 new_surf.set_at((x, inv_y), new_color)
                 new_surf.set_at((inv_x, inv_y), new_color)
 
-    surface.blit(new_surf, blit_pos)
-    even_circle_cache.append([radius, color])
-    even_circle_srufs.append(new_surf)
+    if surface is not None: surface.blit(new_surf, blit_pos)
+    even_circle_cache[key] = new_surf
+    return new_surf
 
 
-def odd_circle(surface: pygame.Surface,
+def odd_circle(surface: Optional[pygame.Surface],
                center: _pos,
                radius: int,
                color: _col_type,
                border: int = 0,
-               border_color: Optional[_col_type] = None) -> None:
+               border_color: Optional[_col_type] = None) -> pygame.Surface:
     """
     odd_circle(surface: pygame.Surface,
                center: _pos,
@@ -154,10 +153,12 @@ def odd_circle(surface: pygame.Surface,
 
     Type: function
 
-    Description: draws a circle with a 1x1 center
+    Description: draws a circle with a 1x1 center and returns a surface
+        containing it, the same surface is blit onto the target surface
+        if given
 
     Args:
-        'surface' (pygame.Surface): where the circle should be drawn
+        'surface' (pygame.Surface?): where the circle should be drawn
         'center' (pgt.Pos): where the center should be on the surface
         'radius' (int): radius of the circle
         'color' (tuple, list): the color of the circle
@@ -166,15 +167,18 @@ def odd_circle(surface: pygame.Surface,
         'border_color' (tuple, list): the color of the border, can be
             omitted if border == 0
 
-    Return type: None
+    Return type: pygame.Surface
     """
     blit_pos = (center[0] - radius, center[1] - radius)
     radius = round(radius)
-    try:
-        i = odd_circle_cache.index([radius, color, border, border_color])
-        surface.blit(odd_circle_srufs[i], blit_pos)
-        return
-    except ValueError: pass
+    if radius - border < 0: border = radius
+
+    key = (radius, color, border, border_color)
+
+    surf = odd_circle_cache.get(key, None)
+    if surface is not None and surf is not None:
+        surface.blit(surf, blit_pos)
+        return surf
 
     size = ((radius+1)*2, (radius+1)*2)
 
@@ -231,17 +235,17 @@ def odd_circle(surface: pygame.Surface,
     pygame.draw.line(new_surf, color, (radius, border), (radius, radius*2 - border))
     pygame.draw.line(new_surf, color, (border, radius), (radius*2 - border, radius))
 
-    surface.blit(new_surf, blit_pos)
-    odd_circle_cache.append([radius, color, border, border_color])
-    odd_circle_srufs.append(new_surf)
+    if surface is not None: surface.blit(new_surf, blit_pos)
+    odd_circle_cache[key] = new_surf
+    return new_surf
 
 
-def aa_rect(surface: pygame.Surface,
+def aa_rect(surface: Optional[pygame.Surface],
             rect: pygame.Rect,
             color: _col_type,
             corner_radius: int = 0,
             border: int = 0,
-            border_color: Optional[_col_type] = None) -> None:
+            border_color: Optional[_col_type] = None) -> pygame.Surface:
     """
     aa_rect(surface: pygame.Surface,
             rect: pygame.Rect,
@@ -253,10 +257,11 @@ def aa_rect(surface: pygame.Surface,
     Type: function
 
     Description: draws a rect like pygame.draw.rect but anti-aliasing
-        the corners
+        the corners and returns a surface containing it, the same
+        surface is blit onto the target surface if given
 
     Args:
-        'surface' (pygame.Surface): where the rect should be drawn
+        'surface' (pygame.Surface?): where the rect should be drawn
         'rect' (pygame.Rect): the rectangle to draw
         'color' (list, tuple): the color of the rectangle
         'corner_radius' (int): the radius of the curvature of the
@@ -266,7 +271,7 @@ def aa_rect(surface: pygame.Surface,
         'border_color' (tuple, list): the color of the border, can be
             omitted if border == 0
 
-    Return type: None
+    Return type: pygame.Surface
     """
     corner_radius = round(corner_radius)
     if corner_radius > min(rect.width, rect.height) / 2:
@@ -275,11 +280,12 @@ def aa_rect(surface: pygame.Surface,
     if border > min(rect.width, rect.height) / 2:
         border = int(min(rect.width, rect.height) / 2)
 
-    try:
-        i = rect_cache.index([rect.size, color, corner_radius, border, border_color])
-        surface.blit(rect_srufs[i], rect.topleft)
-        return
-    except ValueError: pass
+    key = (rect.size, color, corner_radius, border, border_color)
+
+    surf = rect_cache.get(key, None)
+    if surface is not None and surf is not None:
+        surface.blit(surf, rect.topleft)
+        return surf
 
     new_surf = pygame.Surface(rect.size, flags=pygame.SRCALPHA)
     new_surf.set_colorkey((0, 0, 0))
@@ -335,9 +341,9 @@ def aa_rect(surface: pygame.Surface,
                 new_surf.set_at((x, inv_y), new_color)
                 new_surf.set_at((inv_x, inv_y), new_color)
 
-    surface.blit(new_surf, rect.topleft)
-    rect_cache.append([rect.size, color, corner_radius, border, border_color])
-    rect_srufs.append(new_surf)
+    if surface is not None: surface.blit(new_surf, rect.topleft)
+    rect_cache[key] = new_surf
+    return new_surf
 
 
 def aa_line(surface: pygame.Surface,

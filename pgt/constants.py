@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Ani
 PERC         = 0b00001
 PREV_VAL     = 0b00010
@@ -14,6 +16,7 @@ BUTTON_CLICK  = 3
 ODD_CIRCLE_CACHE  = 0b001
 EVEN_CIRCLE_CACHE = 0b010
 RECT_CACHE        = 0b100
+ALL_CACHES        = 0b111
 
 # Colors
 BLACK       = (1  , 1  , 1  , 255)
@@ -48,6 +51,7 @@ LEMON       = (255, 255, 127, 255)
 SKY_BLUE    = (127, 255, 255, 255)
 PINK        = (255, 127, 255, 255)
 
+# Anchor points
 UL = "ul"
 UC = "uc"
 UR = "ur"
@@ -57,3 +61,18 @@ CR = "cr"
 DL = "dl"
 DC = "dc"
 DR = "dr"
+
+# Label styles
+NO_AA     = 0b0001
+BOLD      = 0b0010
+ITALIC    = 0b0100
+UNDERLINE = 0b1000
+
+# Label alignments
+LEFT = 0
+RIGHT = 1
+CENTER = 2
+
+# Position options
+ABSOLUTE = 0
+AUTOMATIC = 1

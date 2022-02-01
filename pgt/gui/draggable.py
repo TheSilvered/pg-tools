@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from typing import Optional
 import pygame.mouse
 from pgt.element import MouseInteractionAniElement

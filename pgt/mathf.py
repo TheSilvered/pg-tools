@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 pgt.mathf
 
@@ -27,8 +29,10 @@ Additional functions:
     'clamp(value, min_, max_)': keeps value between min_ and max_
     'get_i(c1, c2)': returns the hypotenuse given the two catheti
     'get_c(i, c)': returns a cathetus given the hypotenuse and the other
-                   cathetus
+        cathetus
     'sign(x)': returns -1 if x is negative, 1 if it's positive
+    'quad_bezier(x, p0, p1, p2, p3)': a quadratic bezier curve with p0
+        being the start, p3 the end and p1 and p2 the two control points
 
 Classes:
     - Pos
@@ -43,6 +47,11 @@ get_i = lambda c1, c2: sqrt(c1*c1 + c2*c2)
 get_c = lambda i, c: sqrt(i*i - c*c)
 
 sign = lambda x: -1 if x < 0 else 1
+
+quad_bezier = lambda x, p0, p1, p2, p3: p0 * (1 - x)**3 + \
+                                        p1 * 3 * x * (1 - x)**2 + \
+                                        p2 * 3 * x**2 * (1 - x) + \
+                                        p3 * x**3
 
 # Sin
 e_in_sin = lambda x: 1 - cos((x * pi) / 2)
@@ -343,6 +352,9 @@ class Pos:
 
     def __len__(self): return 2
 
+    def __hash__(self):
+        return self.tuple().__hash__()
+
     def __eq__(self, other):
         return self.x == other[0] and self.y == other[1]
 
@@ -420,17 +432,17 @@ class Pos:
         return self.c(cos(angle), sin(angle)) * radius + centre + c
 
     def quad_bezier(self, other, p1, p2, t):
-        p1 = Pos(p1)
-        p2 = Pos(p2)
-        other = Pos(other)
+        # p1 = Pos(p1)
+        # p2 = Pos(p2)
+        # other = Pos(other)
 
-        ab = self.lerp(p1, t)
-        bc = p1.lerp(p2, t)
-        cd = p2.lerp(other, t)
+        # ab = self.lerp(p1, t)
+        # bc = p1.lerp(p2, t)
+        # cd = p2.lerp(other, t)
 
-        abbc = ab.lerp(bc, t)
-        bccd = bc.lerp(cd, t)
-        return abbc.lerp(bccd, t)
+        # abbc = ab.lerp(bc, t)
+        # bccd = bc.lerp(cd, t)
+        return quad_bezier(t, self, p1, p2, other)
 
     @classmethod
     def c(cls, *args):

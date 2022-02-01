@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from typing import Union, List, Tuple
 from pygame.color import Color
 from .mathf import Pos, Size

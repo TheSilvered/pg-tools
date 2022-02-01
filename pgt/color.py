@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from numbers import Real
 from typing import List
 

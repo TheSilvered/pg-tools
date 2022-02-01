@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from typing import Optional, Union
 from os import PathLike
 import json
@@ -66,7 +68,7 @@ def filled_surface(size: _size, color: _col_type, flags: int = 0) -> Surface:
     """
     surf = Surface(size, flags)
     surf.fill(color)
-    return surf
+    return surf.convert()
 
 
 def replace_color(surface: Surface, col1: _col_type, col2: _col_type) -> Surface:

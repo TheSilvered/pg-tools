@@ -6,6 +6,7 @@ import pygame
 
 from .gui_element import GUIElement
 from pgt.element import AniElement
+from pgt.mathf import Size
 from pgt.type_hints import _col_type
 
 
@@ -17,6 +18,9 @@ class SurfaceElement(GUIElement):
         super().__init__(*args, **kwargs)
         if elements is None: elements = []
         self.__elements = elements
+        self.__current_index = 0
+        self.__tot_len = len(self.__elements)
+        self.__size = self.rect.size
 
         self.image = pygame.Surface(self.size)
         self.image.set_alpha(self._alpha)
@@ -26,10 +30,6 @@ class SurfaceElement(GUIElement):
 
         if bg_color is None: bg_color = (0, 0, 0)
         self.bg_color = bg_color
-
-        self.__current_index = 0
-        self.__tot_len = len(self.__elements)
-        self.__size = self.rect.size
 
     def __getitem__(self, index):
         return self.__elements[index]

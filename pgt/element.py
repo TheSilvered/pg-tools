@@ -167,6 +167,11 @@ class Element(pygame.sprite.Sprite):
                and self._alpha == other._alpha \
                and self.pos == other.pos
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}(pos={self.pos}, size={self.size}, " \
+               f"anchor_element={self.__a_element}, rotation={self._rot}, " \
+               f"alpha={self.alpha})"
+
     @property
     def u(self): return self.rect.top
     @property
@@ -239,8 +244,8 @@ class Element(pygame.sprite.Sprite):
     @x.setter
     def x(self, value):
         self.pos = (round(value), self.y)
-    @x.setter
-    def x(self, value):
+    @y.setter
+    def y(self, value):
         self.pos = (self.x, round(value))
 
     @property

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-from pygame import mouse, Surface
+from pygame import mouse, Surface, transform
 
 from .button import Button
 from .gui_element import GUIElement
 from pgt.constants import ABSOLUTE, AUTOMATIC
-from pgt.mathf import Pos
+from pgt.mathf import Pos, Size
 from pgt.element import Element
 from pgt.type_hints import _col_type, _pos
 from pgt.utils import filled_surface
@@ -14,59 +14,75 @@ from pgt.utils import filled_surface
 class GUILayout(GUIElement):
     def __init__(self,
                  elements: dict[str: Element],
-                 elements_order: list[str],
                  bg_color: _col_type = None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if bg_color is not None:
-            self.change_image(filled_surface(self.size, bg_color))
+        self.bg_color = bg_color
+        if self.bg_color is not None:
+            self.image = filled_surface(self.size, self.bg_color)
         self.current_button_hint = None
 
         self.elements = []
-        set_e = set(elements)
-        set_eo = set(elements_order)
 
-        # Any element that is not in elements_order but is in
-        # elements is added without a specific order
-        if set_e != set_eo:
-            if set_e - set_eo:
-                for i in set_e - set_eo:
-                    elements_order.append(i)
-            else:
-                raise TypeError(
-                    f"elements_order doesn't define {set_eo - set_e}"
-                )
-
-        max_h = 0
-        curr_y = 0
-        curr_x = 0
-
-        for i in elements_order:
-            element = elements[i]
-            setattr(self, i, element)
+        for name, element in elements.items():
+            setattr(self, name, element)
             self.elements.append(element)
             if not isinstance(element, GUIElement):
                 element.anchor(self)
                 continue
 
             element.set_layout(self)
-            if element.position_mode != AUTOMATIC: continue
+        self._calculate_autopos_offsets()
+        self.buttons = list(filter(lambda x: isinstance(x, Button | GUILayout),
+                                   self.elements))
 
-            offset = Pos(0, curr_y)
-            if curr_x + element.w <= self.w or element.w > self.w and curr_x == 0:
+    def _calculate_autopos_offsets(self):
+        max_h = 0
+        curr_y = 0
+        curr_x = 0
+
+        for e in self.elements:
+            if not isinstance(e, GUIElement) or e.position_mode != AUTOMATIC:
+                continue
+
+            offset = e.padding_ul + Pos(0, curr_y)
+            if curr_x + e.w <= self.w or e.w > self.w and curr_x == 0:
                 offset.x += curr_x
-                curr_x += element.w
-                if element.h > max_h:
-                    max_h = element.h
+                curr_x += e.w
+                if e.h > max_h:
+                    max_h = e.h
             else:
                 offset.y += max_h
                 curr_y += max_h
-                max_h = element.h
-                curr_x = element.w
-            element.offset = offset
+                max_h = e.h
+                curr_x = e.w
+            e.offset = offset
 
-        self.buttons = list(filter(lambda x: isinstance(x, Button | GUILayout),
-                                   self.elements))
+    @property
+    def size(self):
+        size = Size(self.rect.size)
+        size += self.padding_ul
+        size += self.padding_dr
+        return size
+
+    @size.setter
+    def size(self, value):
+        value = round(Size(value))
+        value -= self.padding_ul
+        value -= self.padding_dr
+        self.rect.size = value
+        if self.bg_color is None: return
+        self.image = filled_surface(self.size, self.bg_color)
+        self._calculate_autopos_offsets()
+
+    def rotate(self, *args, **kwargs):
+        raise NotImplemented("Rotating GUILayout is not supported")
+
+    def scale(self, *args, **kwargs):
+        raise NotImplemented("Scaling GUILayout is not supported")
+
+    def change_image(self, surface):
+        self.image = transform.scale(surface, self.true_size)
 
     def collide_point(self, point: _pos) -> bool:
         for i in self.elements:
@@ -82,12 +98,12 @@ class GUILayout(GUIElement):
     def show(self):
         for i in self.elements:
             i.show()
-        self.hidden = False
+        super().show()
 
     def hide(self):
         for i in self.elements:
             i.hide()
-        self.hidden = True
+        super().hide()
 
     def set_layout(self, new_layout):
         self.anchor(new_layout)

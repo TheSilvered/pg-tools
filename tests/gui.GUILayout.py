@@ -149,15 +149,15 @@ lyt = pgt.gui.GUILayout({
                 )
             )
         },
-        ["hi_button", "other_button"],
         pos=0,
         size=(200, 150),
         pos_point=pgt.DL,
         anchor_point=pgt.DL,
-        bg_color=pgt.WHITE
+        bg_color=pgt.WHITE,
+        rel_size=(0.5, 0.5)
     )
 
-}, ["hi_button", "other_button", "layout_in_layout"], pos=0, size=(800, 600))
+}, pos=0, size=(800, 600))
 
 while True:
     clock.tick()

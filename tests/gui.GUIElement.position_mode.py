@@ -4,7 +4,7 @@ import pgt
 pygame.init()
 
 __test_name__ = "gui.GUIElement.position_mode"
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
@@ -41,6 +41,7 @@ button1 = pgt.gui.Button(
     image=button_image1,
     size=(150, 40),
     position_mode=pgt.AUTOMATIC,
+    padding_top=50,
     text_label=pgt.gui.Label(
         pos=0,
         font="consolas",
@@ -96,17 +97,13 @@ button3 = pgt.gui.Button(
 layout = pgt.gui.GUILayout(
     pos=pgt.Pos(100),
     size=(90, 400),
+    rel_size=(0.5, None),
     bg_color=pgt.GRAY(60),
     elements={
         "button1": button1,
         "button2": button2,
         "button3": button3
-    },
-    elements_order=[
-        "button1",
-        "button2",
-        "button3"
-    ]
+    }
 )
 
 while True:

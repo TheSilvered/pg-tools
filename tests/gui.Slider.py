@@ -4,14 +4,14 @@ import pgt
 pygame.init()
 
 __test_name__ = "gui.HSlider"
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
 
 hruler = pgt.gui.Button(
-    pos=(0, 5),
-    size=(300, 10),
+    pos=(0, 0),
+    size=(300, 40),
     image=pgt.filled_surface((300, 10), pgt.WHITE)
 )
 
@@ -36,7 +36,8 @@ vcursor = pgt.gui.SliderCursor(
 hslider = pgt.gui.HSlider(
     pos=100,
     ruler=hruler,
-    cursor=hcursor
+    cursor=hcursor,
+    rel_size=(0.8, None)
 )
 
 vslider = pgt.gui.VSlider(
@@ -65,6 +66,9 @@ while True:
             slider.value = 0.5
 
     info.text = (hslider.value, vslider.value)
+
+    if hslider.ruler.size != hslider.ruler.image.get_size():
+        hslider.ruler.change_image(pgt.filled_surface(hslider.ruler.size, pgt.WHITE))
 
     screen.fill(pgt.GRAY(50))
     fps.draw(screen)

@@ -40,7 +40,9 @@ class _SliderBase(SurfaceElement, ABC):
 
     def draw(self, *args, **kwargs):
         if self.hidden: return
-        if self.ruler.button_clicked and not self.cursor.dragging:
+        if self.ruler.button_clicked \
+           and not self.cursor.dragging \
+           and not self.cursor.hovered:
             self.cursor.dragging = True
             self.cursor.drag_point = Pos(0, 0)
 
@@ -50,6 +52,8 @@ class _SliderBase(SurfaceElement, ABC):
             self.cursor.force_state = BUTTON_HOVER
         else:
             self.cursor.force_state = BUTTON_NORMAL
+
+        self._SurfaceElement__size = self.size
         super().draw(*args, **kwargs)
 
 
@@ -80,6 +84,15 @@ class HSlider(_SliderBase):
     def value(self, new_value):
         self.cursor.l = self.max_x * new_value
 
+    def draw(self, *args, **kwargs):
+        prev_val = self.value
+        self.ruler.w = self.true_size.w
+        self.max_x = self.ruler.w - self.cursor.w
+        self.cursor.b_right = self.ruler.w
+        if not self.cursor.dragging:
+            self.value = prev_val
+        super().draw(*args, **kwargs)
+
 
 class VSlider(_SliderBase):
     def __init__(self, *args, **kwargs):
@@ -107,3 +120,12 @@ class VSlider(_SliderBase):
     @value.setter
     def value(self, new_value):
         self.cursor.u = self.max_y * new_value
+
+    def draw(self, *args, **kwargs):
+        prev_val = self.value
+        self.ruler.h = self.true_size.h
+        self.max_y = self.ruler.h - self.cursor.h
+        self.cursor.b_bottom = self.ruler.h
+        if not self.cursor.dragging:
+            self.value = prev_val
+        super().draw(*args, **kwargs)

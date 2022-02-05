@@ -31,7 +31,7 @@ Additional functions:
     'get_c(i, c)': returns a cathetus given the hypotenuse and the other
         cathetus
     'sign(x)': returns -1 if x is negative, 1 if it's positive
-    'quad_bezier(x, p0, p1, p2, p3)': a quadratic bezier curve with p0
+    'quad_bezier(x, p0, p1, p2, p3)': a quadratic Bézier curve with p0
         being the start, p3 the end and p1 and p2 the two control points
 
 Classes:

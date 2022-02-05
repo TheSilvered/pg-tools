@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
-from pygame import mouse, Surface, transform
+from pygame import mouse, transform
 
 from .button import Button
 from .gui_element import GUIElement
-from pgt.constants import ABSOLUTE, AUTOMATIC
+from pgt.constants import AUTOMATIC
 from pgt.mathf import Pos, Size
 from pgt.element import Element
 from pgt.type_hints import _col_type, _pos
@@ -105,7 +106,7 @@ class GUILayout(GUIElement):
             i.hide()
         super().hide()
 
-    def set_layout(self, new_layout):
+    def set_layout(self, new_layout: Layout):
         self.anchor(new_layout)
         self.layout = new_layout
         for i in self.elements:

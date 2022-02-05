@@ -8,6 +8,7 @@ from pygame import Surface, PixelArray
 from pygame.image import load
 
 from .type_hints import _col_type, _size
+from .ani import TextureAni
 
 
 def parse_json_file(path: Union[str, PathLike],
@@ -89,3 +90,30 @@ def replace_color(surface: Surface, col1: _col_type, col2: _col_type) -> Surface
     new_img = pixel_arr.surface.copy()
     new_img.unlock()
     return new_img
+
+
+def change_image_ani(image: Surface,
+                     name: str,
+                     id_: Optional[int] = None) -> TextureAni:
+    """
+    change_image_ani(image: Surface, name: str, id_: Optional[int])
+
+    Type: function
+
+    Description: returns a TextureAni that simply changes the image of
+        an AniElement
+
+    Args:
+        'image' (pygame.Surface): the image to change the element to
+        'name' (str): the name of the animation
+        'id_' (int?): the ID of the animation, defaults to None
+
+    Return type: TextureAni
+    """
+    return TextureAni(
+        name=name,
+        frames=[image],
+        time=0,
+        id_=id_,
+        reset_on_end=False
+    )

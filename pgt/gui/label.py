@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import Union, Optional
+from typing import Union, Optional, Any
 
 import pygame
 
@@ -77,7 +77,7 @@ class Label(GUIElement):
         return self.__text
 
     @text.setter
-    def text(self, text):
+    def text(self, text: Any):
         def check_size(this_text):
             return self.font.size(this_text)[0] > self.size.w
 

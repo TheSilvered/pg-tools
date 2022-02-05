@@ -6,7 +6,6 @@ import pygame
 
 from .gui_element import GUIElement
 from pgt.element import AniElement
-from pgt.mathf import Size
 from pgt.type_hints import _col_type
 
 

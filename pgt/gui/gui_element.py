@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
+from typing import Optional
 
 from pygame import display
 
-from pgt.constants import ABSOLUTE, AUTOMATIC
+from pgt.constants import ABSOLUTE
 from pgt.element import Element, AniElement
-from pgt.mathf import Pos, Size, clamp
+from pgt.mathf import Pos, Size
+from pgt.type_hints import _size
 
 
 class GUIElement(Element):
     def __init__(self,
-                 layout=None,
-                 position_mode=ABSOLUTE,
-                 rel_size=Size(None),
-                 padding_top=0,
-                 padding_bottom=0,
-                 padding_left=0,
-                 padding_right=0,
+                 layout: Optional["Layout"] =None,
+                 position_mode: int = ABSOLUTE,
+                 rel_size: _size = Size(None),
+                 padding_top: float = 0,
+                 padding_bottom: float = 0,
+                 padding_left: float = 0,
+                 padding_right: float = 0,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -43,7 +45,7 @@ class GUIElement(Element):
     def true_size(self):
         return Size(self.rect.size)
 
-    def set_layout(self, new_layout):
+    def set_layout(self, new_layout: "Layout"):
         self.layout = new_layout
         if not self.is_anchored:
             self.anchor(new_layout, self._a_point)
@@ -59,6 +61,7 @@ class GUIElement(Element):
         if self.rel_size.h is not None:
             self.h = max_size.h * self.rel_size.h
         super().draw(*args, **kwargs)
+
 
 class GUIAniElement(GUIElement, AniElement):
     pass

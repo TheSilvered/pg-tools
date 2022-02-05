@@ -3,9 +3,44 @@
 from typing import Optional
 import pygame.mouse
 from pgt.element import MouseInteractionAniElement
+from pgt.mathf import Pos
 
 
 class Draggable(MouseInteractionAniElement):
+    """
+    Draggable(MouseInteractionAniElement)
+
+    Type: class
+
+    Description: an element that can be dragged around
+
+    Args:
+        'button' (int): which mouse button should activate the button
+            1 - left, 2 - middle, 3 - right
+        'locked' (bool): if the element can be dragged or not
+        'boundary_top' (int?): the top boundary that the element can
+            never surpass
+        'boundary_left' (int?): the left boundary
+        'boundary_right' (int?): the right boundary
+        'boundary_bottom' (int?): the bottom boundary
+
+    Attrs:
+        'button' (int): see 'button' in args
+        'dragging' (bool): whether the element is being dragged or not
+        'drag_point' (Pos): the click point of the mouse relative to
+            Draggable.pos
+        'locked' (bool): see 'locked' in args
+        'b_top' (int?): see 'boundary_top' in args
+        'b_right' (int?): see 'boundary_right' in args
+        'b_left' (int?): see 'boundary_left' in args
+        'b_bottom' (int?): see 'boundary_bottom' in args
+        'button_clicked' (bool): whether the element is being clicked by
+            the button assigned with 'button'
+
+    Methods:
+        'update()' (None): updates the position when it's being dragged
+        'fix_pos()' (None): puts the element back inside the boundaries
+    """
     def __init__(self,
                  button: int = 0,
                  locked: bool = False,
@@ -18,7 +53,7 @@ class Draggable(MouseInteractionAniElement):
         super().__init__(*args, **kwargs)
         self.button = button
         self.dragging = False
-        self.drag_point = (0, 0)
+        self.drag_point = Pos(0, 0)
         self.locked = locked
         self.b_top = boundary_top
         self.b_right = boundary_right

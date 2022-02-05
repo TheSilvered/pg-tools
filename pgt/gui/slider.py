@@ -1,4 +1,4 @@
-from abc import ABC, abstractproperty
+from abc import ABC
 
 from pgt.constants import CC, BUTTON_CLICK, BUTTON_HOVER, BUTTON_NORMAL
 from pgt.mathf import Pos, Size
@@ -34,9 +34,9 @@ class _SliderBase(SurfaceElement, ABC):
         self.cursor.transform_mouse_pos = transform_func
         self.cursor._pos_point = CC
 
-    @abstractproperty
+    @property
     def value(self):
-        pass
+        return None
 
     def draw(self, *args, **kwargs):
         if self.hidden: return

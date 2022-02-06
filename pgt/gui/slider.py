@@ -9,6 +9,14 @@ from .surface_element import SurfaceElement
 
 
 class SliderCursor(Button, Draggable):
+    """
+    SliderCursor(Button, Draggable)
+
+    Type: class
+
+    Description: this class should be used to create the cursor of the
+        slider
+    """
     pass
 
 
@@ -58,6 +66,24 @@ class _SliderBase(SurfaceElement, ABC):
 
 
 class HSlider(_SliderBase):
+    """
+    HSlider(_SliderBase)
+
+    Type: class
+
+    Description: horizontal slider that returns a value between 0 and 1
+
+    Args:
+        'ruler' (Button): the ruler where the cursor slides
+        'cursor' (SliderCursor): the cursor that can be dragged around
+
+    Attrs:
+        'ruler' (Button): see 'ruler' in args
+        'cursor' (SliderCursor): see 'cursor' in args
+        'max_x' (int): the maximum x position of the cursor
+        'value' (float): the value that the slider is set to, if changed
+            the position of the slider is changed accordingly
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         new_size = Size(self.ruler.w, max(self.ruler.h, self.cursor.h))
@@ -95,6 +121,24 @@ class HSlider(_SliderBase):
 
 
 class VSlider(_SliderBase):
+    """
+    HSlider(_SliderBase)
+
+    Type: class
+
+    Description: vertical slider that returns a value between 0 and 1
+
+    Args:
+        'ruler' (Button): the ruler where the cursor slides
+        'cursor' (SliderCursor): the cursor that can be dragged around
+
+    Attrs:
+        'ruler' (Button): see 'ruler' in args
+        'cursor' (SliderCursor): see 'cursor' in args
+        'max_y' (int): the maximum y position of the cursor
+        'value' (float): the value that the slider is set to, if changed
+            the position of the slider is changed accordingly
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         new_size = Size(max(self.ruler.w, self.cursor.w), self.ruler.h)

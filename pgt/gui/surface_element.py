@@ -10,6 +10,33 @@ from pgt.type_hints import _col_type
 
 
 class SurfaceElement(GUIElement):
+    """
+    SurfaceElement(GUIElement)
+
+    Type: class
+
+    Description: a surface with all the flexibility of an element where
+        you can draw other elements
+
+    Args:
+        'elements' (list): the elements to draw
+        'bg_color' (pygame.color.Color): the background color
+
+    Attrs:
+        'elements' (list): see 'elements' in args
+        'bg_color' (pygame.color.Color): see 'bg_color' in args
+
+    Methods:
+        it implements all methods of a list to manage 'elements',
+        meaning that 'append', 'remove', 'index', 'insert', 'clear',
+        'pop', '__getitem__', '__setitem__', '__delitem__', '__len__',
+        '__iter__' and '__next__' are all implemented
+        'draw(*args, **kwargs)': draw adds a new keyword (not positional
+            argument) 'elements_args', a list of lists or dictionaries
+            containing the arguments to pass to the draw call. The
+            surface cannot be overwritten and mustn't be put when
+            passing a list
+    """
     def __init__(self,
                  elements: Iterable = None,
                  bg_color: _col_type = None,

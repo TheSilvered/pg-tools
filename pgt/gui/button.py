@@ -211,13 +211,13 @@ class Button(MouseInteractionAniElement, GUIElement):
            and self.hint_label \
            and self.start_hover is not None \
            and time.perf_counter() - self.start_hover > self.hint_delay:
-            self.layout.current_button_hint = (
+            self.layout._curr_button_hint = (
                 id(self),
                 self.hint_bg,
                 self.hint_label
             )
 
         # Uses id to hide only its own hint
-        elif self.layout.current_button_hint is not None \
-             and self.layout.current_button_hint[0] == id(self):
-            self.layout.current_button_hint = None
+        elif self.layout._curr_button_hint is not None \
+             and self.layout._curr_button_hint[0] == id(self):
+            self.layout._curr_button_hint = None

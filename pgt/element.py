@@ -423,8 +423,6 @@ class AniElement(Element):
             the element (the 'element' argument of the animations is
             set automatically)
 
-        *args, **kwargs: see help(pgt.Element)
-
     Attrs:
         'current_ani' (list[str]): the names of the animations that are
             currently running

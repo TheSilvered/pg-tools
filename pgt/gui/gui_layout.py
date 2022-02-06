@@ -7,12 +7,44 @@ from .button import Button
 from .gui_element import GUIElement
 from pgt.constants import AUTOMATIC
 from pgt.mathf import Pos, Size
-from pgt.element import Element
+from pgt.element import Element, MouseInteractionElement
 from pgt.type_hints import _col_type, _pos
 from pgt.utils import filled_surface
 
 
-class GUILayout(GUIElement):
+class GUILayout(GUIElement, MouseInteractionElement):
+    """
+    GUILayout(GUIElement, MouseInteractionElement)
+
+    Type: class
+
+    Description: a container for GUIElement (therefore also other
+        GUILayout elements) that allows you to show the hits of the
+        buttons, position element automatically and hide or show them
+        all at once
+
+    Args:
+        'elements' (dict[str: Element]): a dictionary that contains the
+            element and its name, the name is later set as an attribute
+            allowing you to access it more easily
+        'bg_color' (pygame.color.Color): the background color of the
+            layout
+
+    Attrs:
+        'bg_color' (pygame.color.Color): see 'bg_color' in args
+        'elements' (list): a list containing the elements
+
+    Methods:
+        'auto_run()' (bool): if the element hovered is a button or
+            another layout calls 'auto_run' on that element
+        'set_layout(new_layout)' (None): anchors itself to the new
+            layout and sets the 'layout' attribute of its elements to
+            the new layout without changing their anchor
+        'rotate' and 'scale' raise NotImplement and 'change_image'
+            changes the 'image' attribute
+        'collide_point(point)' (bool): collides each element with a
+            point and if there is a bg_color also itself
+    """
     def __init__(self,
                  elements: dict[str: Element],
                  bg_color: _col_type = None,
@@ -21,7 +53,7 @@ class GUILayout(GUIElement):
         self.bg_color = bg_color
         if self.bg_color is not None:
             self.image = filled_surface(self.size, self.bg_color)
-        self.current_button_hint = None
+        self._curr_button_hint = None
 
         self.elements = []
 
@@ -34,8 +66,6 @@ class GUILayout(GUIElement):
 
             element.set_layout(self)
         self._calculate_autopos_offsets()
-        self.buttons = list(filter(lambda x: isinstance(x, Button | GUILayout),
-                                   self.elements))
 
     def _calculate_autopos_offsets(self):
         max_h = 0
@@ -58,6 +88,7 @@ class GUILayout(GUIElement):
                 max_h = e.h
                 curr_x = e.w
             e.offset = offset
+            e._pos_point = "ul"
 
     @property
     def size(self):
@@ -89,12 +120,15 @@ class GUILayout(GUIElement):
         for i in self.elements:
             if i.collide_point(point):
                 return True
+        if self.bg_color is not None:
+            return super().collide_point(point)
         return False
 
     def auto_run(self):
-        for i in self.buttons:
-            if i.auto_run(): return True
-        return False
+        for i in reversed(self.elements):
+            if i.collide_point(self.get_mouse_pos()):
+                if isinstance(i, Button): return i.auto_run()
+                return False
 
     def show(self):
         for i in self.elements:
@@ -119,25 +153,21 @@ class GUILayout(GUIElement):
         for i in self.elements:
             i.draw(*args, **kwargs)
 
-        if self.hidden: return
+        if self.hidden or self.auto_run(): return
 
-        for i in reversed(self.buttons):
-            if i.auto_run():
-                return
-
-        if self.current_button_hint:
+        if self._curr_button_hint:
             mouse_pos = Pos(mouse.get_pos())
-            if mouse_pos.y - self.current_button_hint[1].size.h < 0:
+            if mouse_pos.y - self._curr_button_hint[1].size.h < 0:
                 attr = "u"
             else:
                 attr = "d"
 
-            if self.current_button_hint[1].size.w + mouse_pos.x > self.size.w:
+            if self._curr_button_hint[1].size.w + mouse_pos.x > self.size.w:
                 attr += "r"
             else:
                 attr += "l"
 
-            setattr(self.current_button_hint[1], attr, mouse_pos)
+            setattr(self._curr_button_hint[1], attr, mouse_pos)
 
-            self.current_button_hint[1].draw(*args, **kwargs)
-            self.current_button_hint[2].draw(*args, **kwargs)
+            self._curr_button_hint[1].draw(*args, **kwargs)
+            self._curr_button_hint[2].draw(*args, **kwargs)

@@ -13,6 +13,54 @@ from pgt.type_hints import _col_type
 
 
 class Label(GUIElement):
+    """
+    Label(GUIElement)
+
+    Type: class
+
+    Description: flexible text label that supports both
+        pygame.font.Font and pgt.gui.Font, new lines and alignments
+
+    Args:
+        'text' (str): the text of the label
+        'text_size' (int): the size of the text, applied only if the
+            font is given by the name
+        'color' (pygame.color.Color): the color of the text
+        'bg_color' (pygame.color.Color): the color of the background of
+            the text
+        'font' (pgt.gui.Font, pygame.font.Font, str): if given a string
+            pygame.font.SysFont is called and 'text_size' is applied
+        'style' (int): any combination of pgt.NO_AA (no anti aliasing),
+            pgt.BOLD, pgt.UNDERLINE and pgt.ITALIC. Only the firs one
+            works with pgt.font.Font
+        'alignment' (int): alignment of the text, can be pgt.LEFT,
+            pgt.RIGHT and pgt.CENTER
+        'line_height' (int): the height of a single line of text, if not
+            set get_linesize() is used
+        'adapt_to_width' (bool): if the text should be adapted to the
+            width of the label. If a line is too long it's broken up
+            into words, if the firts word is too long, it's broken up
+            into the single characters
+        'exceed_size' (bool): if the image with the text should exceed
+            the size of the label
+        'auto_size' (bool): if the size of the label should be changed
+            to match the size of the text
+
+    Attrs:
+        'font' (pygame.font.Font, pgt.gui.Font): the label's font
+        'pygame_font' (bool): whether the the label is using
+            pygame.font.Font or not
+        'adapth_width' (bool): see 'adapt_width' in args
+        'exceed_size' (bool): see 'exceed_size' in args
+        'alignment' (int): see 'alignment' in args
+        'auto_size' (bool): see 'auto_size' in args
+        'color' (pygame.color.Color): see 'color' in args
+        'bg_color' (pygame.color.Color): see 'bg_color' in args
+        'bold' (bool): whether the text is bold or not
+        'italic' (bool): whether the text is italic or not
+        'underlined' (bool): whether the text is underlined or not
+        'text' (str): the text of the label
+    """
     def __init__(self,
        text: str = "",
        text_size: int = 20,
@@ -55,7 +103,6 @@ class Label(GUIElement):
         self.adapt_width = adapt_to_width
         self.exceed_size = exceed_size
         self.alignment = alignment
-        self.lines = None
         self.auto_size = auto_size
 
         if color is None: color = (1, 1, 1)
@@ -73,6 +120,33 @@ class Label(GUIElement):
         self.text = text
 
     @property
+    def bold(self):
+        if not self.pygame_font: return False
+        return self.font.get_bold()
+    @bold.setter
+    def bold(self, value):
+        if not self.pygame_font: return
+        self.font.set_bold(value)
+
+    @property
+    def italic(self):
+        if not self.pygame_font: return False
+        return self.font.get_italic()
+    @italic.setter
+    def italic(self, value):
+        if not self.pygame_font: return
+        self.font.set_italic(value)
+
+    @property
+    def underline(self):
+        if not self.pygame_font: return False
+        return self.font.get_underline()
+    @underline.setter
+    def underline(self, value):
+        if not self.pygame_font: return
+        self.font.set_underline(value)
+
+    @property
     def text(self):
         return self.__text
 
@@ -83,12 +157,12 @@ class Label(GUIElement):
 
         self.__text = str(text)
 
-        self.lines = self.__text.split("\n")
-        if self.lines[-1] == "": del self.lines[-1]
+        lines = self.__text.split("\n")
+        if lines[-1] == "": del lines[-1]
 
         if self.adapt_width:
             new_lines = []
-            for l in self.lines:
+            for l in lines:
                 words = l.split(" ")
                 current_text = words[0]
                 prev_text = words[0]
@@ -122,19 +196,19 @@ class Label(GUIElement):
                     new_lines.append(prev_text)
                 else:
                     new_lines.append(current_text)
-            self.lines = new_lines
+            lines = new_lines
 
-        if not self.lines: self.lines = [""]
+        if not lines: lines = [""]
 
         if self.exceed_size:
-            width = max([self.font.size(i)[0] for i in self.lines])
-            height = self._line_h * len(self.lines)
+            width = max([self.font.size(i)[0] for i in lines])
+            height = self._line_h * len(lines)
             new_image = pygame.Surface((width, height), flags=pygame.SRCALPHA)
         else:
             new_image = pygame.Surface(self.size, flags=pygame.SRCALPHA)
         new_image.set_colorkey((0, 0, 0))
 
-        for l_no, i in enumerate(self.lines):
+        for l_no, i in enumerate(lines):
             line = self.font.render(i, self._aa, self.color, self.bg_color)
 
             y = self._line_h * l_no

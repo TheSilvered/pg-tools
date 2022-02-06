@@ -93,7 +93,7 @@ def replace_color(surface: Surface, col1: _col_type, col2: _col_type) -> Surface
 
 
 def change_image_ani(image: Surface,
-                     name: str,
+                     name: Optional[str] = None,
                      id_: Optional[int] = None) -> TextureAni:
     """
     change_image_ani(image: Surface, name: str, id_: Optional[int])
@@ -105,7 +105,7 @@ def change_image_ani(image: Surface,
 
     Args:
         'image' (pygame.Surface): the image to change the element to
-        'name' (str): the name of the animation
+        'name' (str?): the name of the animation, defaults to None
         'id_' (int?): the ID of the animation, defaults to None
 
     Return type: TextureAni

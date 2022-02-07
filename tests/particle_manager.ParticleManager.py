@@ -1,9 +1,8 @@
-import time
-
 import pygame
 import sys; sys.path.insert(0, "..")
 import pgt
 import random
+import time
 pygame.init()
 
 __test_name__ = "particle_manager.ParticleManager"

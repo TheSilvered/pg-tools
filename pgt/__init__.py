@@ -170,7 +170,7 @@ Variables:
     - draw.rect_cache        (pgt.draw.rect_cache)
 """
 
-__author__ = "Taffarello Davide"
+__author__ = "Davide Taffarello - TheSilvered"
 __version__ = "0.1.0"
 
 from . import ani

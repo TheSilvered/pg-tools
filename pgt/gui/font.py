@@ -112,7 +112,9 @@ class Font:
 
     def __get_charset(self, aa=False, text_c=(1, 1, 1), bg_c=None):
         key = (aa, text_c, bg_c)
-        if chars := self.cache.get(key, None):
+        chars = self.cache.get(key, None)
+
+        if chars is not None:
             return chars
 
         if bg_c is None: bg_c = (0, 0, 0)

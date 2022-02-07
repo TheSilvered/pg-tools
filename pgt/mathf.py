@@ -5,11 +5,11 @@ pgt.mathf
 
 Type: module
 
-Description: A module that contains some useful math and easing
+Description: A module that contains some useful math and ea_sing
     functions, and custom Pos and Size classes
 
-Easing functions (taken and adapted from https://easings.net/):
-    e_in_sin,     e_out_sin,     e_in_out_sin
+Ea_sing functions (taken and adapted from https://ea_sings.net/):
+    e_in__sin,     e_out__sin,     e_in_out__sin
     e_in_quad,    e_out_quad,    e_in_out_quad
     e_in_cubic,   e_out_cubic,   e_in_out_cubic
     e_in_quart,   e_out_quart,   e_in_out_quart
@@ -20,7 +20,7 @@ Easing functions (taken and adapted from https://easings.net/):
     e_in_elastic, e_out_elastic, e_in_out_elastic
     e_in_bounce,  e_out_bounce,  e_in_out_bounce
 
-    Every easing function takes one argument (x) that is a floating
+    Every ea_sing function takes one argument (x) that is a floating
     point value between 0 (the start) and 1 (the end) and returns a
     value between 0 and 1 (elastic and back functions can return a
     value bigger than 1 or smaller than 0)
@@ -39,12 +39,21 @@ Classes:
     - Size
 """
 
-from math import sqrt, pi, sin, cos, atan2, tau, dist
+from math import (sqrt as _sqrt,
+                  pi as _pi,
+                  sin as _sin,
+                  cos as _cos,
+                  atan2 as _atan2,
+                  tau as _tau)
+try:
+    from math import _dist as _dist
+except ImportError:
+    _dist = lambda p, q: _sqrt(sum((px - qx) ** 2.0 for px, qx in zip(p, q)))
 
 clamp = lambda value, min_, max_: min(max(value, min_), max_)
 
-get_i = lambda c1, c2: sqrt(c1*c1 + c2*c2)
-get_c = lambda i, c: sqrt(i*i - c*c)
+get_i = lambda c1, c2: _sqrt(c1*c1 + c2*c2)
+get_c = lambda i, c: _sqrt(i*i - c*c)
 
 sign = lambda x: -1 if x < 0 else 1
 
@@ -54,9 +63,9 @@ quad_bezier = lambda x, p0, p1, p2, p3: p0 * (1 - x)**3 + \
                                         p3 * x**3
 
 # Sin
-e_in_sin = lambda x: 1 - cos((x * pi) / 2)
-e_out_sin = lambda x: sin((x * pi) / 2)
-e_in_out_sin = lambda x: -(cos(pi * x) - 1) / 2
+e_in__sin = lambda x: 1 - _cos((x * _pi) / 2)
+e_out__sin = lambda x: _sin((x * _pi) / 2)
+e_in_out__sin = lambda x: -(_cos(_pi * x) - 1) / 2
 
 # Quadratic
 e_in_quad = lambda x: x * x
@@ -84,8 +93,8 @@ e_out_exp = lambda x: 1 if x == 1 else 1 - 2 ** (-10 * x)
 e_in_out_exp = lambda x: e_in_exp(x * 2) / 2 if x < .5 else \
                          e_out_exp(x * 2 - 1) / 2 + .5
 # Circular
-e_in_circ = lambda x: 1 - sqrt(1 - x ** 2)
-e_out_circ = lambda x: sqrt(1 - (x - 1)**2)
+e_in_circ = lambda x: 1 - _sqrt(1 - x ** 2)
+e_out_circ = lambda x: _sqrt(1 - (x - 1)**2)
 e_in_out_circ = lambda x: e_in_circ(x * 2) / 2 if x < .5 else\
                           e_out_circ(x * 2 - 1) / 2 + .5
 # Back
@@ -98,12 +107,12 @@ e_in_out_back = lambda x: e_in_back(x * 2) / 2 if x < .5 else\
 # Elastic
 def e_in_elastic(x: float) -> float:
     if x in (0, 1): return x
-    return -2 ** (10 * x - 10) * sin((x * 10 - 10.75) * 2.09439)
+    return -2 ** (10 * x - 10) * _sin((x * 10 - 10.75) * 2.09439)
 
 
 def e_out_elastic(x: float) -> float:
     if x in (0, 1): return x
-    return 2**(-10 * x) * sin((x * 10 - 0.75) * 2.09439) + 1
+    return 2**(-10 * x) * _sin((x * 10 - 0.75) * 2.09439) + 1
 
 
 e_in_out_elastic = lambda x: e_in_elastic(x * 2) / 2 if x < .5 else\
@@ -413,7 +422,7 @@ class Pos:
             except ZeroDivisionError:
                 centre = Pos(0, (pos1.y + pos2.y) * 0.5)
 
-        radius = dist(pos1, centre)
+        radius = _dist(pos1, centre)
 
         try:
             pos1 = (pos1 - centre) / radius
@@ -421,15 +430,15 @@ class Pos:
         except ZeroDivisionError:
             pos1 = pos2 = Pos(0)
 
-        angle1 = atan2(pos1.y, pos1.x)
-        angle2 = atan2(pos2.y, pos2.x)
+        angle1 = _atan2(pos1.y, pos1.x)
+        angle2 = _atan2(pos2.y, pos2.x)
         ang_diff = abs(angle1 - angle2)
 
         # if ang_diff > 180°, use the other arc
-        if ang_diff > pi:
-            t *= -(tau - ang_diff) / ang_diff
+        if ang_diff > _pi:
+            t *= -(_tau - ang_diff) / ang_diff
         angle = angle1 * (1 - t) + angle2 * t
-        return self.c(cos(angle), sin(angle)) * radius + centre + c
+        return self.c(_cos(angle), _sin(angle)) * radius + centre + c
 
     def quad_bezier(self, other, p1, p2, t):
         # p1 = Pos(p1)

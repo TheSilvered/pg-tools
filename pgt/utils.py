@@ -5,7 +5,7 @@ from os import PathLike
 import json
 
 from pygame import Surface, PixelArray
-from pygame.image import load
+from pygame.image import load as _load
 
 from .type_hints import _col_type, _size
 from .ani import TextureAni
@@ -48,10 +48,10 @@ def load_image(path: Union[str, PathLike],
             defaults to the window, only works with alpha values
     """
     if has_alpha:
-        if surface: return load(path).convert_alpha(surface)
-        return load(path).convert_alpha()
+        if surface: return _load(path).convert_alpha(surface)
+        return _load(path).convert_alpha()
     else:
-        return load(path).convert()
+        return _load(path).convert()
 
 
 def filled_surface(size: _size, color: _col_type, flags: int = 0) -> Surface:

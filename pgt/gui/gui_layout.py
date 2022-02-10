@@ -58,6 +58,8 @@ class GUILayout(GUIElement, MouseInteractionElement):
         self.elements = []
 
         for name, element in elements.items():
+            if name in self.__dict__:
+                raise NameError(f"name '{name}' already exists in the layout")
             setattr(self, name, element)
             self.elements.append(element)
             if not isinstance(element, GUIElement):
@@ -141,11 +143,10 @@ class GUILayout(GUIElement, MouseInteractionElement):
         super().hide()
 
     def set_layout(self, new_layout: Layout):
-        self.anchor(new_layout)
-        self.layout = new_layout
         for i in self.elements:
             if isinstance(i, GUIElement):
                 i.layout = new_layout
+        super().set_layout(new_layout)
 
     def draw(self, *args, **kwargs):
         super().draw(*args, **kwargs)

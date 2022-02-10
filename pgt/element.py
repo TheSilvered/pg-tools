@@ -71,6 +71,10 @@ class Element(pygame.sprite.Sprite):
         'dr' (pgt.Pos): down-right
         'pos' (pgt.Pos): position of the '_pos_point' of the element
         'size' (pgt.Size): size of the element
+        'x' (int): x position of the element
+        'y' (int): y position of the element
+        'w' (int): width of the element
+        'h' (int): height of the element
 
     Methods:
         'rotate(angle, abs_=False, colorkey=pgt.BLACK)' (None):
@@ -346,6 +350,9 @@ class Element(pygame.sprite.Sprite):
             setattr(self, point, prev_pos)
 
     def change_image(self, surface: pygame.Surface) -> None:
+        if not isinstance(surface, pygame.Surface):
+            raise TypeError("Expected 'surface' to be pygame.Surface, "
+                           f"got '{surface.__class__.__name__}' instead")
         self.image = surface
         self.image.set_alpha(self._alpha)
         if self.__backup_image is not None:
@@ -362,7 +369,7 @@ class Element(pygame.sprite.Sprite):
         else:
             raise TypeError("Expected 'other' to be pygame.Rect or "
                            f"pygame.sprite.Sprite, got '{other.__class__.__name__}'"
-                            " instead") from None
+                            " instead")
 
     def collide_point(self, point: _pos) -> bool:
         if self.hidden: return False
@@ -375,6 +382,9 @@ class Element(pygame.sprite.Sprite):
         self.hidden = True
 
     def anchor(self, anchor_element, anchor_point=None):
+        if not isinstance(anchor_element, Element):
+            raise TypeError("Expected an instance of Element, got "\
+                           f"'{anchor_element.__class__.__name__}' instead")
         self.__a_element = anchor_element
         if anchor_point is not None:
             self._a_point = anchor_point

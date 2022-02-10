@@ -171,7 +171,7 @@ Variables:
 """
 
 __author__ = "Davide Taffarello - TheSilvered"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from . import ani
 from .color import *

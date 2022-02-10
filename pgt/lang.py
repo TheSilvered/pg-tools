@@ -9,7 +9,6 @@ Description: a parser for a filetype that makes it easier to implement
     various languages in a game
 
 Classes:
-    - LangError
     - LangNode
     - LangEval
 
@@ -119,16 +118,10 @@ whitespace, $, @, ~@, .~@, &, ::, %=, and itself (\\).
 """
 import re
 from .stack import Stack
+from .exceptions import LangError
 
 # With re.ASCII \w matches only [a-zA-Z0-9_]
 name_expr = re.compile(r"[a-zA-Z_]\w*", re.ASCII)
-
-
-class LangError(Exception):
-    def __init__(self, l_no, msg, file):
-        if file != "<string>": file = f'"{file}"'
-        _msg = f"File {file}, line {l_no + 1} - {msg}"
-        super().__init__(_msg)
 
 
 class LangNode:
@@ -294,7 +287,23 @@ def _make_lang_dict(s, encoding, file):
     return root
 
 
-def load(path, encoding="utf-8", as_dict=False):
+def load(path: str, encoding: str = "utf-8", as_dict: bool = False):
+    """
+    load(path: str, encoding: str, as_dict: bool)
+
+    Type: function
+
+    Description: opens and parses a lang file
+
+    Args:
+        'path' (str): the path of the file
+        'encoding' (str): the encoding to use when opening the file,
+            defaults to utf-8
+        'as_dict' (bool): if the function should return a dictionary
+            instead of a LangEval object
+
+    Return type: dict | LangEval
+    """
     try:
         with open(path, encoding=encoding) as f:
             return loads(f.read(), encoding, as_dict, path)
@@ -303,7 +312,27 @@ def load(path, encoding="utf-8", as_dict=False):
             return loads(f.read(), e.args[0], as_dict, path)
 
 
-def loads(s, encoding="utf-8", as_dict=False, file="<string>"):
+def loads(s: str,
+          encoding: str = "utf-8",
+          as_dict: bool = False,
+          file: str = "<string>"):
+    """
+    loads(s: str, encoding: str, as_dict: bool, file: str)
+
+    Type: function
+
+    Description: parses a lang string
+
+    Args:
+        's' (str): the string to parse
+        'encoding' (str): the encoding to use when opening the file,
+            defaults to utf-8
+        'as_dict' (bool): if the function should return a dictionary
+            instead of a LangEval object
+        'file' (str): the file of the string
+
+    Return type: dict | LangEval
+    """
     d = _make_lang_dict(s, encoding, file)
     if as_dict: return d
     return _make_lang_obj(d)

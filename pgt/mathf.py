@@ -177,6 +177,12 @@ class Pos:
         'tuple()' (tuple): converts the position into a tuple
         'int()' (Pos): makes integers x and y
         'copy()' (Pos): returns a copy of itself
+        'dot(other)' (int): returns the dot product between two positions
+        'lerp(other, t)' (Pos): linear interpolation to 'other'
+        'slerp(other, t, c=0)' (Pos): spherical interpolation to 'other'
+            with 'c' being the center of the plane, defaults to (0, 0)
+        'quad_bezier(other, p1, p2, t)' (Pos): quadratic Bézier curve to
+            other with p1 and p2 being the two control points
 
     How operations work: if given an iterable with size 2 (Pos is an
         iterable) it will make the operation between x and the first
@@ -216,8 +222,13 @@ class Pos:
             x = self.x + other[0]
             y = self.y + other[1]
         except (TypeError, ValueError):
-            x = self.x + other
-            y = self.y + other
+            try:
+                x = self.x + other
+                y = self.y + other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for +: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __sub__(self, other):
@@ -225,8 +236,13 @@ class Pos:
             x = self.x - other[0]
             y = self.y - other[1]
         except (TypeError, ValueError):
-            x = self.x - other
-            y = self.y - other
+            try:
+                x = self.x - other
+                y = self.y - other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for -: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __mul__(self, other):
@@ -234,8 +250,13 @@ class Pos:
             x = self.x * other[0]
             y = self.y * other[1]
         except (TypeError, ValueError):
-            x = self.x * other
-            y = self.y * other
+            try:
+                x = self.x * other
+                y = self.y * other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for *: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __truediv__(self, other):
@@ -243,8 +264,13 @@ class Pos:
             x = self.x / other[0]
             y = self.y / other[1]
         except (TypeError, ValueError):
-            x = self.x / other
-            y = self.y / other
+            try:
+                x = self.x / other
+                y = self.y / other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for /: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __floordiv__(self, other):
@@ -252,8 +278,13 @@ class Pos:
             x = self.x // other[0]
             y = self.y // other[1]
         except (TypeError, ValueError):
-            x = self.x // other
-            y = self.y // other
+            try:
+                x = self.x // other
+                y = self.y // other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for //: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __mod__(self, other):
@@ -261,8 +292,13 @@ class Pos:
             x = self.x % other[0]
             y = self.y % other[1]
         except (TypeError, ValueError):
-            x = self.x % other
-            y = self.y % other
+            try:
+                x = self.x % other
+                y = self.y % other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for %: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __pow__(self, other):
@@ -270,8 +306,13 @@ class Pos:
             x = self.x ** other[0]
             y = self.y ** other[1]
         except (TypeError, ValueError):
-            x = self.x ** other
-            y = self.y ** other
+            try:
+                x = self.x ** other
+                y = self.y ** other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for **: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __lshift__(self, other):
@@ -279,8 +320,13 @@ class Pos:
             x = self.x << other[0]
             y = self.y << other[1]
         except (TypeError, ValueError):
-            x = self.x << other
-            y = self.y << other
+            try:
+                x = self.x << other
+                y = self.y << other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for <<: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __rshift__(self, other):
@@ -288,8 +334,13 @@ class Pos:
             x = self.x >> other[0]
             y = self.y >> other[1]
         except (TypeError, ValueError):
-            x = self.x >> other
-            y = self.y >> other
+            try:
+                x = self.x >> other
+                y = self.y >> other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for >>: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __and__(self, other):
@@ -297,8 +348,13 @@ class Pos:
             x = self.x & other[0]
             y = self.y & other[1]
         except (TypeError, ValueError):
-            x = self.x & other
-            y = self.y & other
+            try:
+                x = self.x & other
+                y = self.y & other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for &: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __or__(self, other):
@@ -306,8 +362,13 @@ class Pos:
             x = self.x | other[0]
             y = self.y | other[1]
         except (TypeError, ValueError):
-            x = self.x | other
-            y = self.y | other
+            try:
+                x = self.x | other
+                y = self.y | other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for |: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __xor__(self, other):
@@ -315,8 +376,13 @@ class Pos:
             x = self.x ^ other[0]
             y = self.y ^ other[1]
         except (TypeError, ValueError):
-            x = self.x ^ other
-            y = self.y ^ other
+            try:
+                x = self.x ^ other
+                y = self.y ^ other
+            except Exception:
+                raise TypeError("unsupported operand type(s) for ^: "
+                                f"'{self.__class__.__name__}' "
+                                f"and '{other.__class__.__name__}'")
         return self.c(x, y)
 
     def __invert__(self):

@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 setup(
     name="tools-for-pygame",
-    version="0.1.2",
+    version="0.1.3",
     description="Tools to make using pygame easier",
     long_description=long_desc,
     long_description_content_type="text/markdown",

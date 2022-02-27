@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
-from typing import Optional, Union
-from os import PathLike
 import json
+from math import sin as _sin, cos as _cos, radians as _rad
+from os import PathLike
+from typing import Optional, Union
 
 from pygame import Surface, PixelArray
 from pygame.image import load as _load
 
-from .type_hints import _col_type, _size
 from .ani import TextureAni
+from .mathf import Size, Pos
+from .type_hints import _col_type, _size
 
 
 def parse_json_file(path: Union[str, PathLike],
@@ -67,7 +69,7 @@ def filled_surface(size: _size, color: _col_type, flags: int = 0) -> Surface:
         'color' (pygame.Color): the color of the surface
         'flags' (int): additional flags for the surface
     """
-    surf = Surface(size, flags)
+    surf = Surface(Size(size), flags)
     surf.fill(color)
     return surf.convert()
 
@@ -117,3 +119,23 @@ def change_image_ani(image: Surface,
         id_=id_,
         reset_on_end=False
     )
+
+
+def transform_func(element):
+    def func(x):
+        x = Pos(x)
+
+        if element._rot == 0:
+            return x - element.ul
+
+        s = _sin(_rad(element._rot))
+        c = _cos(_rad(element._rot))
+
+        p = x - element.cc
+
+        p = Pos(p.x * c - p.y * s,
+                p.x * s + p.y * c)
+
+        return element._size / 2 + p
+
+    return func

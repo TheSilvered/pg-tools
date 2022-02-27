@@ -5,7 +5,10 @@ from typing import Iterable, Any
 import pygame
 
 from .gui_element import GUIElement
+
+
 from pgt.element import AniElement
+from pgt.mathf import Size
 from pgt.type_hints import _col_type
 
 
@@ -31,11 +34,11 @@ class SurfaceElement(GUIElement):
         meaning that 'append', 'remove', 'index', 'insert', 'clear',
         'pop', '__getitem__', '__setitem__', '__delitem__', '__len__',
         '__iter__' and '__next__' are all implemented
-        'draw(*args, **kwargs)': draw adds a new keyword (not positional
-            argument) 'elements_args', a list of lists or dictionaries
-            containing the arguments to pass to the draw call. The
-            surface cannot be overwritten and mustn't be put when
-            passing a list
+        'draw(*args, **kwargs)': draw adds a new keyword (not positional)
+            argument 'elements_args', a list of lists or dictionaries
+            containing the arguments to pass to the draw call of the
+            individual element. The surface cannot be overwritten
+            and mustn't be considered when passing a list
     """
     def __init__(self,
                  elements: Iterable = None,
@@ -46,7 +49,6 @@ class SurfaceElement(GUIElement):
         self.__elements = elements
         self.__current_index = 0
         self.__tot_len = len(self.__elements)
-        self.__size = self.rect.size
 
         self.image = pygame.Surface(self.size)
         self.image.set_alpha(self._alpha)
@@ -125,7 +127,7 @@ class SurfaceElement(GUIElement):
         else:
             elements_args = []
 
-        new_image = pygame.Surface(self.__size)
+        new_image = pygame.Surface(self._size)
         new_image.fill(self.bg_color)
 
         for i, e in enumerate(self.__elements):
@@ -148,4 +150,11 @@ class SurfaceElement(GUIElement):
 
 
 class AniSurfaceElement(SurfaceElement, AniElement):
+    """
+    AniSurfaceElement(SurfaceElement, AniElement)
+
+    Type: class
+
+    Description: a SurfaceElement that supports animations
+    """
     pass

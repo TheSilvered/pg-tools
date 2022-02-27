@@ -79,6 +79,7 @@ button3 = pgt.gui.Button(
     pos=0,
     image=button_image3,
     size=(100, 50),
+    padding_bottom=30,
     position_mode=pgt.AUTOMATIC,
     text_label=pgt.gui.Label(
         pos=0,
@@ -99,6 +100,7 @@ layout = pgt.gui.GUILayout(
     size=(90, 400),
     rel_size=(0.5, None),
     bg_color=pgt.GRAY(60),
+    adapt_height=True,
     elements={
         "button1": button1,
         "button2": button2,

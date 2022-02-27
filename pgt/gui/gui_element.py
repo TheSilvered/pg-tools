@@ -63,7 +63,7 @@ class GUIElement(Element):
         super().__init__(*args, **kwargs)
 
         self.rel_size = Size(rel_size)
-        self.base_size = super().size
+        self.base_size = self._size
         self.layout = layout
         self.position_mode = position_mode
         self.padding_ul = round(Pos(padding_left,  padding_top))
@@ -97,12 +97,12 @@ class GUIElement(Element):
 
         if self.rel_size.w is not None:
             self.w = max_size.w * self.rel_size.w
-            if self.w < self.base_size.w:
-                self.w = self.base_size.w
+            if self.w < self._size.w:
+                self.w = self._size.w
         if self.rel_size.h is not None:
             self.h = max_size.h * self.rel_size.h
-            if self.h < self.base_size.h:
-                self.h = self.base_size.h
+            if self.h < self._size.h:
+                self.h = self._size.h
         super().draw(*args, **kwargs)
 
 

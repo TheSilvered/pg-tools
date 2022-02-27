@@ -28,8 +28,6 @@ def draw_func(particle, surface):
         particle[0],
         round(particle[2]),
         pgt.WHITE[:3] + (alpha,))
-    # pygame.draw.circle(surface, pgt.WHITE, particle[0], round(particle[2]))
-    # pgt.draw.aa_rect(surface, rect, pgt.WHITE[:3] + (alpha,))
 
 
 def deletion_check(particle):

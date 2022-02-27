@@ -39,7 +39,7 @@ class Label(GUIElement):
             set get_linesize() is used
         'adapt_to_width' (bool): if the text should be adapted to the
             width of the label. If a line is too long it's broken up
-            into words, if the firts word is too long, it's broken up
+            into words, if the first word is too long, it's broken up
             into the single characters
         'exceed_size' (bool): if the image with the text should exceed
             the size of the label
@@ -48,9 +48,9 @@ class Label(GUIElement):
 
     Attrs:
         'font' (pygame.font.Font, pgt.gui.Font): the label's font
-        'pygame_font' (bool): whether the the label is using
+        'pygame_font' (bool): whether the label is using
             pygame.font.Font or not
-        'adapth_width' (bool): see 'adapt_width' in args
+        'adapt_width' (bool): see 'adapt_width' in args
         'exceed_size' (bool): see 'exceed_size' in args
         'alignment' (int): see 'alignment' in args
         'auto_size' (bool): see 'auto_size' in args
@@ -62,18 +62,18 @@ class Label(GUIElement):
         'text' (str): the text of the label
     """
     def __init__(self,
-       text: str = "",
-       text_size: int = 20,
-       color: _col_type = None,
-       bg_color: _col_type = None,
-       font: Union[Font, pygame.font.Font] = None,
-       style: int = 0,
-       alignment: int = LEFT,
-       line_height: Optional[int] = None,
-       adapt_to_width: bool = False,
-       exceed_size: bool = True,
-       auto_size: bool = False,
-       *args, **kwargs):
+                 text: str = "",
+                 text_size: int = 20,
+                 color: _col_type = None,
+                 bg_color: _col_type = None,
+                 font: Union[Font, pygame.font.Font, str] = None,
+                 style: int = 0,
+                 alignment: int = LEFT,
+                 line_height: Optional[int] = None,
+                 adapt_to_width: bool = False,
+                 exceed_size: bool = True,
+                 auto_size: bool = False,
+                 *args, **kwargs):
 
         super().__init__(*args, **kwargs)
 
@@ -162,8 +162,8 @@ class Label(GUIElement):
 
         if self.adapt_width:
             new_lines = []
-            for l in lines:
-                words = l.split(" ")
+            for line in lines:
+                words = line.split(" ")
                 current_text = words[0]
                 prev_text = words[0]
 

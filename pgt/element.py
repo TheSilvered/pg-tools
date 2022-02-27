@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 import time
 from typing import Optional, Iterable, Callable
@@ -71,6 +72,8 @@ class Element(pygame.sprite.Sprite):
         'dr' (pgt.Pos): down-right
         'pos' (pgt.Pos): position of the '_pos_point' of the element
         'size' (pgt.Size): size of the element
+        '_size' (pgt.Size): the original size of the element (without
+            rotation or scaling)
         'x' (int): x position of the element
         'y' (int): y position of the element
         'w' (int): width of the element
@@ -132,6 +135,7 @@ class Element(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         size = Size(size)
         self.rect = pygame.Rect((0, 0), size)
+        self._size = size
         self.image = image
         self.__backup_image = None if rotation == 0 else image
 
@@ -305,6 +309,7 @@ class Element(pygame.sprite.Sprite):
                colorkey: _col_type = (0, 0, 0)) -> None:
         prev_pos = self.pos.copy()
 
+        # Makes a backup to not lose quality
         if self.__backup_image is None:
             self.__backup_image = self.image.copy()
         elif self.__backup_image is not None:
@@ -314,6 +319,7 @@ class Element(pygame.sprite.Sprite):
 
         angle += self._rot if not abs_ else 0
 
+        # Rotates the image
         if angle != 0:
             if not angle % 90:
                 self.image = pygame.transform.rotate(self.image, angle)
@@ -333,17 +339,24 @@ class Element(pygame.sprite.Sprite):
               size: _size,
               smooth: bool = False,
               point: Optional[str] = None) -> None:
+
+        # Makes a backup to not lose quality
         if self.__backup_image is None:
             self.__backup_image = self.image.copy()
         else:
             self.image = self.__backup_image.copy()
         size = Size(size)
         prev_pos = self.pos.copy() if point is None else getattr(self, point)
+
+        # Scales the image
         if smooth:
             self.image = pygame.transform.smoothscale(self.image, size)
         else:
             self.image = pygame.transform.scale(self.image, size)
+
         self.size = size
+
+        # Updates the position
         if point is None:
             self.pos = prev_pos
         else:
@@ -353,7 +366,10 @@ class Element(pygame.sprite.Sprite):
         if not isinstance(surface, pygame.Surface):
             raise TypeError("Expected 'surface' to be pygame.Surface, "
                            f"got '{surface.__class__.__name__}' instead")
+
         self.image = surface
+
+        # Change the values to match the previous image
         self.image.set_alpha(self._alpha)
         if self.__backup_image is not None:
             self.__backup_image = self.image.copy()
@@ -362,6 +378,7 @@ class Element(pygame.sprite.Sprite):
     def collide(self, other: pygame.sprite.Sprite) -> bool:
         if self.hidden: return False
 
+        # An element is a subclass of pygame.sprite.Sprite
         if isinstance(other, pygame.sprite.Sprite):
             return self.rect.colliderect(other.rect)
         elif isinstance(other, pygame.Rect):
@@ -381,11 +398,14 @@ class Element(pygame.sprite.Sprite):
     def hide(self) -> None:
         self.hidden = True
 
-    def anchor(self, anchor_element, anchor_point=None):
+    def anchor(self, anchor_element: Element, anchor_point: Optional[str] = None):
         if not isinstance(anchor_element, Element):
             raise TypeError("Expected an instance of Element, got "\
                            f"'{anchor_element.__class__.__name__}' instead")
+
         self.__a_element = anchor_element
+
+        # anchor_point overwrites self._a_point
         if anchor_point is not None:
             self._a_point = anchor_point
         setattr(self, self._pos_point,
@@ -400,21 +420,27 @@ class Element(pygame.sprite.Sprite):
              show_rect: bool = False,
              rect_color: _col_type = (255, 0, 255)) -> None:
 
+        # If the element is anchored and there is no arbitrary position set,
+        # get the position of the element
         if pos is None and self.__a_element is not None:
             self.pos = getattr(self.__a_element, self._a_point) + self.__offset
 
         if self.hidden or self.image is None: return
 
+        # Sets the position based on the parameters given in the arguments
         if pos is None:
             pos = self.ul
         elif isinstance(pos, pygame.Rect):
             pos = pos.topleft
 
+        # Sets the offset
         if offset is not None: pos += offset
         else: pos += self.img_offset
 
+        # Draws the image
         surface.blit(self.image, pos, special_flags=flags)
 
+        # Draws the rectangle if requested
         if show_rect: pygame.draw.rect(surface, rect_color, self.rect, 1)
 
 

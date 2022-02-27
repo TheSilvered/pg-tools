@@ -29,10 +29,14 @@ class GUILayout(GUIElement, MouseInteractionElement):
             allowing you to access it more easily
         'bg_color' (pygame.color.Color): the background color of the
             layout
+        'adapt_height' (bool): whether the layout should resize
+            according to the bottom-most element with and automatic
+            position mode
 
     Attrs:
         'bg_color' (pygame.color.Color): see 'bg_color' in args
         'elements' (list): a list containing the elements
+        'adapt_height' (bool): see 'adapt_height' in args
 
     Methods:
         'auto_run()' (bool): if the element hovered is a button or
@@ -48,9 +52,12 @@ class GUILayout(GUIElement, MouseInteractionElement):
     def __init__(self,
                  elements: dict[str: Element],
                  bg_color: _col_type = None,
+                 adapt_height: bool = False,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.bg_color = bg_color
+        self.adapt_height = adapt_height
+
         if self.bg_color is not None:
             self.image = filled_surface(self.size, self.bg_color)
         self._curr_button_hint = None
@@ -91,6 +98,12 @@ class GUILayout(GUIElement, MouseInteractionElement):
                 curr_x = e.w
             e.offset = offset
             e._pos_point = "ul"
+
+        if not self.adapt_height: return
+
+        self.rect.h = max_h + curr_y
+        if self.bg_color is None: return
+        self.image = filled_surface(self.size, self.bg_color)
 
     @property
     def size(self):

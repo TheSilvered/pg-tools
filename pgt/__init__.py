@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 r"""
 Pygame Tools by TheSilvered
 
@@ -171,7 +172,7 @@ Variables:
 """
 
 __author__ = "Davide Taffarello - TheSilvered"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 from . import ani
 from .color import *

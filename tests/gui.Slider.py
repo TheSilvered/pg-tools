@@ -9,41 +9,43 @@ pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
 
-hruler = pgt.gui.Button(
-    pos=(0, 0),
-    size=(300, 40),
-    image=pgt.filled_surface((300, 10), pgt.WHITE)
-)
+hruler_size = (300, 10)
+hcursor_size = 20
 
-hcursor = pgt.gui.SliderCursor(
-    pos=0,
-    size=20,
-    image=pgt.filled_surface((20, 20), pgt.RED)
-)
-
-vruler = pgt.gui.Button(
-    pos=(0, 0),
-    size=(10, 300),
-    image=pgt.filled_surface((10, 300), pgt.WHITE)
-)
-
-vcursor = pgt.gui.SliderCursor(
-    pos=0,
-    size=(10, 50),
-    image=pgt.filled_surface((10, 50), pgt.RED)
-)
+vruler_size = (10, 300)
+vcursor_size = (20, 50)
 
 hslider = pgt.gui.HSlider(
-    pos=100,
-    ruler=hruler,
-    cursor=hcursor,
-    rel_size=(0.8, None)
+    pos=(0, 100),
+    ruler=pgt.gui.Button(
+        pos=(0, 0),
+        size=hruler_size,
+        image=pgt.filled_surface(hruler_size, pgt.WHITE)
+    ),
+    cursor=pgt.gui.SliderCursor(
+        pos=0,
+        size=hcursor_size,
+        image=pgt.filled_surface(hcursor_size, pgt.RED)
+    ),
+    rel_size=(0.8, None),
+    min_val=-1
 )
 
 vslider = pgt.gui.VSlider(
     pos=(100, 150),
-    ruler=vruler,
-    cursor=vcursor
+    ruler=pgt.gui.Button(
+        pos=(0, 0),
+        size=vruler_size,
+        image=pgt.filled_surface(vruler_size, pgt.WHITE)
+    ),
+    cursor=pgt.gui.SliderCursor(
+        pos=0,
+        size=vcursor_size,
+        image=pgt.filled_surface(vcursor_size, pgt.RED)
+    ),
+    min_val=100,
+    max_val=10,
+    rotation=20
 )
 
 
@@ -63,7 +65,7 @@ while True:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            slider.value = 0.5
+            hslider.value = 0.5
 
     info.text = (hslider.value, vslider.value)
 

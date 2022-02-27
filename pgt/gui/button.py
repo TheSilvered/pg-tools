@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import time
-from typing import Optional, Callable, Iterable
+from typing import Optional, Callable, Iterable, Any
 
 import pygame.mixer
 
@@ -48,6 +48,8 @@ class Button(MouseInteractionAniElement, GUIElement):
             1 - left, 2 - middle, 3 - right
         'sound' (pygame.mixer.Sound?): a sound to play when the
             button is clicked
+        'app' (Any): an attribute that should be used to link the button
+            with whatever application you're trying to create
 
     Attrs:
         'normal_ani' (AniBase?): see 'normal_ani' in args
@@ -66,6 +68,7 @@ class Button(MouseInteractionAniElement, GUIElement):
             The module provides three constants BUTTON_NORMAL,
             BUTTON_HOVER and BUTTON_CLICK
         'label' (Label?): see 'label' in args
+        'app' (Any): see 'app' in args
 
     Properties:
         'button_clicked' (bool, readonly): if the button is clicked
@@ -92,6 +95,7 @@ class Button(MouseInteractionAniElement, GUIElement):
                  func_kwargs: Optional[dict] = None,
                  button: int = 0,
                  sound: Optional[pygame.mixer.Sound] = None,
+                 app: Any = None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -140,6 +144,7 @@ class Button(MouseInteractionAniElement, GUIElement):
             self.hint_label.anchor(self.hint_bg)
         self.start_hover = None
         self.hint_delay = hint_delay
+        self.app = app
 
     @property
     def button_clicked(self):

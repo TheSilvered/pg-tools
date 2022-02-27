@@ -1,14 +1,26 @@
 import pygame
 import sys; sys.path.insert(0, "..")
 import pgt
-
 pygame.init()
 
-__test_name__ = "draw.odd_circle"
+__test_name__ = "utils.trasform_func"
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
+
+e_size = (200, 200)
+
+e = pgt.gui.SurfaceElement(
+    pos=250,
+    size=e_size,
+    bg_color=pgt.GRAY(70),
+    rotation=60
+)
+
+func = pgt.transform_func(e)
+
+expected_rect = pygame.Rect((0, 0), e_size)
 
 while True:
     clock.tick()
@@ -18,12 +30,10 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                pgt.draw.clear_cache(pgt.draw.ODD_CIRCLE_CACHE)
 
     screen.fill(pgt.GRAY(50))
     fps.draw(screen)
-    pygame.draw.rect(screen, pgt.WHITE, pygame.Rect(100, 0, 200, 800))
-    pgt.draw.odd_circle(screen, (100, 100), 50.5, pgt.SALMON, 10, pgt.GREEN[:3] + (100,))
+    e.draw(screen, show_rect=True)
+    pygame.draw.rect(screen, pgt.GRAY(70), expected_rect)
+    pgt.draw.odd_circle(screen, func(pygame.mouse.get_pos()), 1, pgt.MAGENTA)
     pygame.display.update()

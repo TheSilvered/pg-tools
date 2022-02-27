@@ -40,6 +40,53 @@ def clear_cache(caches: int = ALL_CACHES) -> None:
         rect_cache.clear()
 
 
+def _draw_quarters(surf, rad, col, border, b_col, w, h):
+    in_rad = rad - border
+    alpha_col = len(col) == 4
+    alpha_b_col = b_col and len(b_col) == 4
+
+    for x in range(rad):
+        for y in range(rad):
+            inv_x = w - x - 1
+            inv_y = h - y - 1
+
+            distance = get_i(x - rad, y - rad)
+
+            if distance < in_rad:
+                surf.set_at((x, y), col)
+                surf.set_at((inv_x, y), col)
+                surf.set_at((x, inv_y), col)
+                surf.set_at((inv_x, inv_y), col)
+
+            elif border and distance < in_rad + 1:
+                alpha = 1 - (distance - in_rad)
+                new_color = calc_alpha(col, b_col, alpha)
+                surf.set_at((x, y), new_color)
+                surf.set_at((inv_x, y), new_color)
+                surf.set_at((x, inv_y), new_color)
+                surf.set_at((inv_x, inv_y), new_color)
+
+            elif distance < rad:
+                surf.set_at((x, y), b_col)
+                surf.set_at((inv_x, y), b_col)
+                surf.set_at((x, inv_y), b_col)
+                surf.set_at((inv_x, inv_y), b_col)
+
+            elif distance < rad + 1:
+                if border:
+                    alpha = (b_col[3] if alpha_b_col else 255) * (1 - (distance - rad))
+                    new_color = list(b_col[:3])
+                else:
+                    alpha = (col[3] if alpha_col else 255) * (1 - (distance - rad))
+                    new_color = list(col[:3])
+                new_color.append(alpha)
+
+                surf.set_at((x, y), new_color)
+                surf.set_at((inv_x, y), new_color)
+                surf.set_at((x, inv_y), new_color)
+                surf.set_at((inv_x, inv_y), new_color)
+
+
 def even_circle(surface: Optional[pygame.Surface],
                 center: _pos,
                 radius: int,
@@ -87,50 +134,16 @@ def even_circle(surface: Optional[pygame.Surface],
 
     new_surf = pygame.Surface((radius*2, radius*2), flags=pygame.SRCALPHA)
     new_surf.set_colorkey((0, 0, 0))
-    alpha_col = len(color) == 4
-    alpha_b_col = border_color and len(border_color) == 4
-    inner_radius = radius - border
 
-    for x in range(radius):
-        for y in range(radius):
-            inv_x = radius*2 - x - 1
-            inv_y = radius*2 - y - 1
-
-            distance = get_i(x - radius, y - radius)
-
-            if distance < inner_radius:
-                new_surf.set_at((x, y), color)
-                new_surf.set_at((inv_x, y), color)
-                new_surf.set_at((x, inv_y), color)
-                new_surf.set_at((inv_x, inv_y), color)
-
-            elif border and distance < inner_radius + 1:
-                alpha = 1 - (distance-inner_radius)
-                new_color = calc_alpha(color, border_color, alpha)
-                new_surf.set_at((x, y), new_color)
-                new_surf.set_at((inv_x, y), new_color)
-                new_surf.set_at((x, inv_y), new_color)
-                new_surf.set_at((inv_x, inv_y), new_color)
-
-            elif distance < radius:
-                new_surf.set_at((x, y), border_color)
-                new_surf.set_at((inv_x, y), border_color)
-                new_surf.set_at((x, inv_y), border_color)
-                new_surf.set_at((inv_x, inv_y), border_color)
-
-            elif distance < radius + 1:
-                if border:
-                    alpha = (border_color[3] if alpha_b_col else 255) * (1 - (distance - radius))
-                    new_color = list(border_color[:3])
-                else:
-                    alpha = (color[3] if alpha_col else 255) * (1 - (distance - radius))
-                    new_color = list(color[:3])
-                new_color.append(alpha)
-
-                new_surf.set_at((x, y), new_color)
-                new_surf.set_at((inv_x, y), new_color)
-                new_surf.set_at((x, inv_y), new_color)
-                new_surf.set_at((inv_x, inv_y), new_color)
+    _draw_quarters(
+        new_surf,
+        radius,
+        color,
+        border,
+        border_color,
+        radius*2,
+        radius*2
+    )
 
     if surface is not None: surface.blit(new_surf, blit_pos)
     even_circle_cache[key] = new_surf
@@ -180,54 +193,20 @@ def odd_circle(surface: Optional[pygame.Surface],
         surface.blit(surf, blit_pos)
         return surf
 
-    size = ((radius+1)*2, (radius+1)*2)
+    size = (radius * 2 + 1, radius * 2 + 1)
 
     new_surf = pygame.Surface(size, flags=pygame.SRCALPHA)
     new_surf.set_colorkey((0, 0, 0))
-    alpha_col = len(color) == 4
-    alpha_b_col = border_color and len(border_color) == 4
-    inner_radius = radius - border
 
-    for x in range(radius):
-        for y in range(radius):
-            inv_x = radius*2 - x
-            inv_y = radius*2 - y
-
-            distance = get_i(x - radius, y - radius)
-
-            if distance < inner_radius:
-                new_surf.set_at((x, y), color)
-                new_surf.set_at((inv_x, y), color)
-                new_surf.set_at((x, inv_y), color)
-                new_surf.set_at((inv_x, inv_y), color)
-
-            elif border and distance < inner_radius + 1:
-                alpha = 1 - (distance-inner_radius)
-                new_color = calc_alpha(color, border_color, alpha)
-                new_surf.set_at((x, y), new_color)
-                new_surf.set_at((inv_x, y), new_color)
-                new_surf.set_at((x, inv_y), new_color)
-                new_surf.set_at((inv_x, inv_y), new_color)
-
-            elif distance < radius:
-                new_surf.set_at((x, y), border_color)
-                new_surf.set_at((inv_x, y), border_color)
-                new_surf.set_at((x, inv_y), border_color)
-                new_surf.set_at((inv_x, inv_y), border_color)
-
-            elif distance < radius + 1:
-                if border:
-                    alpha = (border_color[3] if alpha_b_col else 255) * (1 - (distance - radius))
-                    new_color = list(border_color[:3])
-                else:
-                    alpha = (color[3] if alpha_col else 255) * (1 - (distance - radius))
-                    new_color = list(color[:3])
-                new_color.append(alpha)
-
-                new_surf.set_at((x, y), new_color)
-                new_surf.set_at((inv_x, y), new_color)
-                new_surf.set_at((x, inv_y), new_color)
-                new_surf.set_at((inv_x, inv_y), new_color)
+    _draw_quarters(
+        new_surf,
+        radius,
+        color,
+        border,
+        border_color,
+        radius * 2 + 1,
+        radius * 2 + 1
+    )
 
     if border:
         pygame.draw.line(new_surf, border_color, (radius, 0), (radius, radius*2))
@@ -289,57 +268,23 @@ def aa_rect(surface: Optional[pygame.Surface],
 
     new_surf = pygame.Surface(rect.size, flags=pygame.SRCALPHA)
     new_surf.set_colorkey((0, 0, 0))
-    alpha_col = len(color) == 4
-    alpha_b_col = border_color and len(border_color) == 4
     line_rect = pygame.Rect(0, 0, rect.w, rect.h)
     inner_rect = pygame.Rect(border, border, rect.w - border*2, rect.h - border*2)
-
     inner_radius = corner_radius - border
 
     if border:
         pygame.draw.rect(new_surf, border_color, line_rect, 0, corner_radius)
     pygame.draw.rect(new_surf, color, inner_rect, 0, inner_radius)
 
-    for x in range(corner_radius):
-        for y in range(corner_radius):
-            inv_x = rect.w - x - 1
-            inv_y = rect.h - y - 1
-
-            distance = get_i(x - corner_radius, y - corner_radius)
-
-            if distance < inner_radius:
-                new_surf.set_at((x, y), color)
-                new_surf.set_at((inv_x, y), color)
-                new_surf.set_at((x, inv_y), color)
-                new_surf.set_at((inv_x, inv_y), color)
-
-            elif border and distance < inner_radius + 1:
-                alpha = 1 - (distance-inner_radius)
-                new_color = calc_alpha(color, border_color, alpha)
-                new_surf.set_at((x, y), new_color)
-                new_surf.set_at((inv_x, y), new_color)
-                new_surf.set_at((x, inv_y), new_color)
-                new_surf.set_at((inv_x, inv_y), new_color)
-
-            elif distance < corner_radius:
-                new_surf.set_at((x, y), border_color)
-                new_surf.set_at((inv_x, y), border_color)
-                new_surf.set_at((x, inv_y), border_color)
-                new_surf.set_at((inv_x, inv_y), border_color)
-
-            elif distance < corner_radius + 1:
-                if border:
-                    alpha = (border_color[3] if alpha_b_col else 255) * (1 - (distance - corner_radius))
-                    new_color = list(border_color[:3])
-                else:
-                    alpha = (color[3] if alpha_col else 255) * (1 - (distance - corner_radius))
-                    new_color = list(color[:3])
-                new_color.append(alpha)
-
-                new_surf.set_at((x, y), new_color)
-                new_surf.set_at((inv_x, y), new_color)
-                new_surf.set_at((x, inv_y), new_color)
-                new_surf.set_at((inv_x, inv_y), new_color)
+    _draw_quarters(
+        new_surf,
+        corner_radius,
+        color,
+        border,
+        border_color,
+        rect.w,
+        rect.h
+    )
 
     if surface is not None: surface.blit(new_surf, rect.topleft)
     rect_cache[key] = new_surf
@@ -376,11 +321,9 @@ def aa_line(surface: pygame.Surface,
     # The line doesn't look good with an even width
     if not width % 2: width += 1
 
-    start_pos = Pos(start_pos)
-    end_pos = Pos(end_pos)
-    horizontal = abs(start_pos.x - end_pos.x) <= abs(start_pos.y - end_pos.y)
+    horizontal = abs(start_pos[0] - end_pos[0]) <= abs(start_pos[1] - end_pos[1])
 
-    pygame.draw.line(surface, color, start_pos, end_pos, width)
+    pygame.draw.line(surface, color, start_pos, end_pos, round(width))
     line_offset = (width / 2, 0) if horizontal else (0, width / 2)
     pygame.draw.aaline(surface, color, start_pos + line_offset, end_pos + line_offset)
     pygame.draw.aaline(surface, color, start_pos - line_offset, end_pos - line_offset)

@@ -60,9 +60,9 @@ contexts:
       pop: true
 
   escapes:
-    - match: '{{indent}}*(\\(&|\$|@|\.~@|~@|::|\\)?|&)'
+    - match: '{{indent}}(\\(&|\$|@|\.~@|~@|::|\\)?|&)'
       scope: constant.character.escape
 
   comments:
-    - match: '^ *::.*'
+    - match: '{{indent}}::.*'
       scope: punctuation.definition.comment.lang

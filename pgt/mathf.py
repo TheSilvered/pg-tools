@@ -33,6 +33,8 @@ Additional functions:
     'sign(x)': returns -1 if x is negative, 1 if it's positive
     'quad_bezier(x, p0, p1, p2, p3)': a quadratic Bézier curve with p0
         being the start, p3 the end and p1 and p2 the two control points
+    'safe_div(x, y)': a division that instead of raising a ZeroDivisionError,
+        returns 0
 
 Classes:
     - Pos
@@ -62,10 +64,18 @@ quad_bezier = lambda x, p0, p1, p2, p3: p0 * (1 - x)**3 + \
                                         p2 * 3 * x**2 * (1 - x) + \
                                         p3 * x**3
 
+
+def safe_div(x, y):
+    try:
+        return x / y
+    except ZeroDivisionError:
+        return 0
+
+
 # Sin
-e_in__sin = lambda x: 1 - _cos((x * _pi) / 2)
-e_out__sin = lambda x: _sin((x * _pi) / 2)
-e_in_out__sin = lambda x: -(_cos(_pi * x) - 1) / 2
+e_in_sin = lambda x: 1 - _cos((x * _pi) / 2)
+e_out_sin = lambda x: _sin((x * _pi) / 2)
+e_in_out_sin = lambda x: -(_cos(_pi * x) - 1) / 2
 
 # Quadratic
 e_in_quad = lambda x: x * x
@@ -477,22 +487,22 @@ class Pos:
         try:
             m = diff.x / diff.y
         except ZeroDivisionError:
-            centre = Pos(mid.x, 0)
+            center = Pos(mid.x, 0)
         else:
             try:
                 q = mid.y + m * mid.x
                 if q / m > q:
-                    centre = Pos(q / m, 0)
+                    center = Pos(q / m, 0)
                 else:
-                    centre = Pos(0, q)
+                    center = Pos(0, q)
             except ZeroDivisionError:
-                centre = Pos(0, (pos1.y + pos2.y) * 0.5)
+                center = Pos(0, (pos1.y + pos2.y) * 0.5)
 
-        radius = _dist(pos1, centre)
+        radius = _dist(pos1, center)
 
         try:
-            pos1 = (pos1 - centre) / radius
-            pos2 = (pos2 - centre) / radius
+            pos1 = (pos1 - center) / radius
+            pos2 = (pos2 - center) / radius
         except ZeroDivisionError:
             pos1 = pos2 = Pos(0)
 
@@ -504,7 +514,7 @@ class Pos:
         if ang_diff > _pi:
             t *= -(_tau - ang_diff) / ang_diff
         angle = angle1 * (1 - t) + angle2 * t
-        return self.c(_cos(angle), _sin(angle)) * radius + centre + c
+        return self.c(_cos(angle), _sin(angle)) * radius + center + c
 
     def quad_bezier(self, other, p1, p2, t):
         # p1 = Pos(p1)

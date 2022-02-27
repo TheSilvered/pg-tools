@@ -98,8 +98,12 @@ Functions:
     - draw.odd_circle  (pgt.draw.odd_circle)
     - draw.aa_rect     (pgt.draw.aa_rect)
 
-    - parse_json_file (pgt.utils.parse_json_file)
-    - load_image      (pgt.utils.load_image)
+    - parse_json_file  (pgt.utils.parse_json_file)
+    - load_image       (pgt.utils.load_image)
+    - filled_surface   (pgt.utils.filled_surface)
+    - replace_color    (pgt.utils.replace_color)
+    - change_image_ani (pgt.utils.change_image_ani)
+    - transform_func   (pgt.utils.transform_func)
 
 Constants:
     - BLACK       (pgt.constants.BLACK)

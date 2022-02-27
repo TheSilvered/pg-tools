@@ -122,6 +122,22 @@ def change_image_ani(image: Surface,
 
 
 def transform_func(element):
+    """
+    transform_func(element)
+
+    Type: function
+
+    Description: this function returns another function that transforms
+        any screen coordinates to coordinates relative to an element
+        (including the rotation). This may be useful as a
+        'transform_mouse_pos' function for a MouseInteractionElement
+        that is part of a SurfaceElement.
+
+    Args:
+        'element' (Element): the element of reference
+
+    Return type: function
+    """
     def func(x):
         x = Pos(x)
 

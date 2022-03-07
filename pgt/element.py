@@ -13,6 +13,18 @@ from .type_hints import _pos, _size, _col_type
 
 pygame.init()
 
+_point_to_rect_point = {
+    "ul": "topleft",
+    "dl": "bottomleft",
+    "ur": "topright",
+    "dr": "bottomright",
+    "uc": "midtop",
+    "cl": "midleft",
+    "dc": "midbottom",
+    "cr": "midright",
+    "cc": "center"
+}
+
 
 class Element(pygame.sprite.Sprite):
     """
@@ -28,13 +40,12 @@ class Element(pygame.sprite.Sprite):
         'size' (pgt.Size): the size of the element, defaults to (0, 0)
         'image' (pygame.Surface): the image of the element, if set to
             None the element won't be displayed
-        'pos_point' (pgt.Anc): the point the position refers to, check
-            help(pgt.Anc) to all the valid values
+        'pos_point' (str): the point the position refers to
         'anchor_element' (pgt.Element): element to witch this element is
             anchored to, if set there is no need to set the 'pos'
             argument
-        'anchor_point' (pgt.Anc): the point of the 'anchor_element' that
-            this element anchors to, defaults to pgt.Anc.UL
+        'anchor_point' (str): the point of the 'anchor_element' that
+            this element anchors to, defaults to pgt.UL
         'offset' (pgt.Pos): the offset of the element from 'pos' or the
             point of the 'anchor_element'
         'img_offset' (pgt.Pos): offset of the image from the top-left
@@ -49,14 +60,15 @@ class Element(pygame.sprite.Sprite):
         'image' (pygame.Surface?): see 'image' in arguments
         '__backup_image' (pygame.Surface?): if the element is rotated,
             is a copy of 'image' not rotated, to not lose quality
-        '_pos_point' (pgt.Anc): see 'pos_point' in arguments
+        '_pos_point' (str): see 'pos_point' in arguments
         '__a_element' (pgt.Element?): see 'anchor_element' in arguments
-        '_a_point' (pgt.Anc?): see 'anchor_point' in arguments
+        '_a_point' (str?): see 'anchor_point' in arguments
         'offset' (pgt.Pos): see 'offset' in arguments
         'img_offset' (pgt.Pos): see 'img_offset' in arguments
         'alpha' (int): see 'alpha in arguments'
         '_rot' (int): the current rotation of the element in degrees
         'hidden' (bool): if the element is currently hidden
+        'is_anchored' (bool): if the element is currently anchored
         'u' (int): up
         'd' (int): down
         'l' (int): left
@@ -80,45 +92,14 @@ class Element(pygame.sprite.Sprite):
         'h' (int): height of the element
 
     Methods:
-        'rotate(angle, abs_=False, colorkey=pgt.BLACK)' (None):
-            rotates the element around '_pos_point'
-            'angle' (int): angle of the rotation in degrees
-            'abs_' (bool): if the rotation should be absolute
-            'colorkey' (iterable): the colorkey set to the image of the
-                element after it's been rotated
-        'scale(size, smooth=False, point=None)' (None): scales the
-            element relative to 'point', if 'point' is None, is relative
-            to 'pos_point'
-            'smooth' (bool): if the function should use
-                'pygame.transform.smoothscale' instead of
-                'pygame.transform.scale'
-            'point' (Pos): point
-        'collide(other)' (bool): returns if this element is colliding
-            with another element
-            'other' (pygame.Rect, pygame.sprite.Sprite): the object to
-                check the collision against
-        'collide_point(point)' (bool): returns if a point is colliding
-            with this element
-            'point' (pgt.Pos): the point to check
-        'show()' (None): shows the element
-        'hide()' (None): hides the element
-        'draw(surface, pos=None, point=pgt.Anc.UL, offset=None, flags=0
-              show_rect=False, rect_color=pgt.MAGENTA)': draws the
-            element's image on 'surface'
-            'surface' (pygame.Surface): the surface to draw the image on
-            'pos' (pgt.Pos): a position that overwrites the element's
-                pos
-            'point' (pgt.Anc): used only when 'pos' is not None, the
-                point the position refers to
-            'offset' (pgt.Pos): offset from the actual position, if
-                set to None the element's offset is used, if set it's
-                overwritten
-            'flags' (int): special flags for pygame.Surface.blit,
-                see the documentation at
-                www.pygame.org/docs/ref/surface.html#pygame.Surface.blit
-            'show_rect' (bool): if the rect of the element should be
-                shown
-            'rect_color' (tuple): the color of the rect if shown
+        - rotate(angle, abs_, colorkey)
+        - scale(size, smooth, point)
+        - change_image(surface)
+        - collide(other)
+        - collide_point(point)
+        - show()
+        - hide()
+        - draw(surface, pos, point, offset, flag, show_rect, rect_color)
     """
     def __init__(self,
                  pos: _pos = None,
@@ -307,6 +288,22 @@ class Element(pygame.sprite.Sprite):
                angle: int,
                abs_: bool = False,
                colorkey: _col_type = (0, 0, 0)) -> None:
+        """
+        rotate(self, angle, abs_=False, colorkey=(0, 0, 0))
+
+        Type: method
+
+        Description: rotates the element and resizes it to fit the size
+            of the newly rotated image, the position doesn't change
+
+        Args:
+            'angle' (int): angle of the rotation in degrees
+            'abs_' (bool): if the rotation should be absolute
+            'colorkey' (iterable): the colorkey set to the image of the
+                element after it's been rotated
+
+        Return type: None
+        """
         prev_pos = self.pos.copy()
 
         # Makes a backup to not lose quality
@@ -339,7 +336,24 @@ class Element(pygame.sprite.Sprite):
               size: _size,
               smooth: bool = False,
               point: Optional[str] = None) -> None:
+        """
+        scale(self, size, smooth=False, point=None)
 
+        Type: method
+
+        Description: scales the element's image and the size accordingly,
+            the position doesn't change
+
+        Args:
+            'size' (Size): the new size of the image
+            'smooth' (bool): if the function should use
+                'pygame.transform.smoothscale' instead of
+                'pygame.transform.scale'
+            'point' (Pos): the point that doesn't change it's position,
+                if None, defaults to the element's 'pos' property
+
+        Return type: None
+        """
         # Makes a backup to not lose quality
         if self.__backup_image is None:
             self.__backup_image = self.image.copy()
@@ -363,6 +377,19 @@ class Element(pygame.sprite.Sprite):
             setattr(self, point, prev_pos)
 
     def change_image(self, surface: pygame.Surface) -> None:
+        """
+        change_image(self, surface)
+
+        Type: method
+
+        Description: changes the image of an element re-applying alpha
+            and rotation (hence this method calls Element.rotate)
+
+        Args:
+            'surface' (pygame.Surface): the new element's image
+
+        Return type: None
+        """
         if not isinstance(surface, pygame.Surface):
             raise TypeError("Expected 'surface' to be pygame.Surface, "
                            f"got '{surface.__class__.__name__}' instead")
@@ -376,6 +403,20 @@ class Element(pygame.sprite.Sprite):
         self.rotate(self._rot, True)
 
     def collide(self, other: pygame.sprite.Sprite) -> bool:
+        """
+        collide(self, other)
+
+        Type: method
+
+        Description: checks for collision with another element, sprite
+            or rect
+
+        Args:
+            'other' (Element, pygame.sprite.Sprite, pygame.Rect): the
+                object to check the collision against
+
+        Return type: bool, returns False if hidden
+        """
         if self.hidden: return False
 
         # An element is a subclass of pygame.sprite.Sprite
@@ -389,21 +430,72 @@ class Element(pygame.sprite.Sprite):
                             " instead")
 
     def collide_point(self, point: _pos) -> bool:
+        """
+        collide_point(self, point)
+
+        Type: method
+
+        Description: checks the collision of the element with a point
+
+        Args:
+            'point' (Pos): the point to check the collision against
+
+        Return type: bool, returns False if hidden
+        """
         if self.hidden: return False
-        return self.rect.collidepoint(point)
+        return self.rect.collidepoint(Pos(point))
 
     def show(self) -> None:
+        """
+        show(self)
+
+        Type: method
+
+        Description: shows the element
+
+        Return type: None
+        """
         self.hidden = False
 
     def hide(self) -> None:
+        """
+        hide(self)
+
+        Type: method
+
+        Description: hides the element
+
+        Return type: None
+        """
         self.hidden = True
 
-    def anchor(self, anchor_element: Element, anchor_point: Optional[str] = None):
-        if not isinstance(anchor_element, Element):
+    def anchor(self,
+               anchor_element: Element,
+               anchor_point: Optional[str] = None) -> None:
+        """
+        anchor(self, anchor_element, anchor_point=None)
+
+        Type: method
+
+        Description: anchors the element to another one
+
+        Args:
+            'anchor_element' (Element?): the element to anchor to, if
+                set to None, the anchor is removed
+            'anchor_point' (str): the point of the 'anchor_element' that
+                this element anchors to, if None, defaults to the point
+                given on initialization
+
+        Return type: None
+        """
+        if not isinstance(anchor_element, (Element, None)):
             raise TypeError("Expected an instance of Element, got "\
                            f"'{anchor_element.__class__.__name__}' instead")
 
         self.__a_element = anchor_element
+
+        if anchor_element is None:
+            return
 
         # anchor_point overwrites self._a_point
         if anchor_point is not None:
@@ -419,7 +511,31 @@ class Element(pygame.sprite.Sprite):
              flags: int = 0,
              show_rect: bool = False,
              rect_color: _col_type = (255, 0, 255)) -> None:
+        """
+        draw(self,
+             surface,
+             pos=None,
+             point=None,
+             flags=0,
+             show_rect=False,
+             rect_color=pgt.MAGENTA)
 
+        Type: method
+
+        Description: draws the element onto a surface
+
+        Args:
+            'surface' (pygame.Surface): the surface to draw the image on
+            'pos' (Pos): a position that overwrites the element's pos
+            'point' (str): used only when 'pos' is not None, the point
+                the position refers to
+            'offset' (Pos): overwrites the element's 'img_offset'
+            'flags' (int): special flags for pygame.Surface.blit
+            'show_rect' (bool): if the rect of the element should be shown
+            'rect_color' (tuple): the color of the rect if shown
+
+        Return type: None
+        """
         # If the element is anchored and there is no arbitrary position set,
         # get the position of the element
         if pos is None and self.__a_element is not None:
@@ -430,8 +546,18 @@ class Element(pygame.sprite.Sprite):
         # Sets the position based on the parameters given in the arguments
         if pos is None:
             pos = self.ul
-        elif isinstance(pos, pygame.Rect):
-            pos = pos.topleft
+        else:
+            if not isinstance(pos, pygame.Rect):
+                pos = pygame.Rect(pos, self.size)
+
+            if point is not None:
+                attr = _point_to_rect_point.get(point, None)
+                if attr is None:
+                    raise ValueError("invalid point for "\
+                                    f"{self.__class__.__name__}.draw()")
+                pos = getattr(pos, attr)
+            else:
+                pos = pos.topleft
 
         # Sets the offset
         if offset is not None: pos += offset
@@ -467,15 +593,9 @@ class AniElement(Element):
         'player_sprite' you write 'player_sprite.jump')
 
     Methods:
-        'add_ani(ani)' (None): adds 'ani' to the element's animations
-            'ani' (pgt.animations.AniBase): the animation you are adding
-        'update_ani(global_time=None)' (None): calls update() on all
-            the animations currently running
-            'global_time' (float): the time at which the update takes
-                place, if set to None is the current computer time
-        'draw(update_ani=False, *args, **kwargs)' (None): if the
-            animations should be updated, 'update_ani', in order, comes
-            after 'rect_color'
+        add_ani(ani)
+        update_ani(global_time=None)
+        draw(*args, **kwargs, update_ani=False)
 
     Notes:
         - if the element is hidden all the animations are still updated
@@ -511,10 +631,36 @@ class AniElement(Element):
             self.hidden = True
 
     def add_ani(self, ani):
+        """
+        add_ani(self, ani)
+
+        Type: method
+
+        Description: adds an animation to the element
+
+        Args:
+            'ani' (ani.AniBase): the animation to add
+
+        Return type: None
+        """
         setattr(self, ani.name, ani)
         ani.set_new_element(self)
 
-    def update_ani(self, global_time: int = None) -> None:
+    def update_ani(self, global_time: Optional[float] = None) -> None:
+        """
+        update_ani(self, global_time=None)
+
+        Type: method
+
+        Description: updates each animation of the element
+
+        Args:
+            'global_time' (float?): the time the animation should
+                consider when updating, if not set time.perf_counter()
+                is used
+
+        Return type: None
+        """
         if global_time is None:
             global_time = time.perf_counter()
 
@@ -530,6 +676,12 @@ class AniElement(Element):
             self.is_hiding = False
 
     def draw(self, *args, **kwargs) -> None:
+        """
+        Args:
+            'update_ani' (bool): if true, calls self.update_ani
+
+        For full documentation see help(pgt.Element.draw)
+        """
         if "update_ani" in kwargs:
             if kwargs["update_ani"]: self.update_ani()
             del kwargs["update_ani"]
@@ -562,6 +714,9 @@ class MouseInteractionElement(Element):
             button, at index 1 the middlemost one ant at index 2 the
             rightmost one
         'transform_mouse_pos' (Callable): see 'transform_mouse_pos' in args
+
+    Methods:
+        get_mouse_pos()
     """
     def __init__(self,
                  transform_mouse_pos: Callable = lambda x: x,
@@ -574,7 +729,17 @@ class MouseInteractionElement(Element):
         self.__keep_clicked = False
         self.transform_mouse_pos = transform_mouse_pos
 
-    def get_mouse_pos(self):
+    def get_mouse_pos(self) -> Pos:
+        """
+        get_mouse_pos(self)
+
+        Type: method
+
+        Description: gets the current mouse position passed through
+            'transform_mouse_pos'
+
+        Return type: Pos
+        """
         return self.transform_mouse_pos(Pos(pygame.mouse.get_pos()))
 
     @property

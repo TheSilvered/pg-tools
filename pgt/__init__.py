@@ -36,14 +36,15 @@ Classes:
     - gui.VSlider (pgt.gui.slider.VSlider)
     - gui.SurfaceElement (pgt.gui.surface_element.SurfaceElement)
 
-    - Pos  (pgt.pos_size.Pos)
-    - Size (pgt.pos_size.Size)
+    - Pos  (pgt.mathf.Pos)
+    - Size (pgt.mathf.Size)
 
     - Stack (pgt.stack.Stack)
 
 Exceptions:
     - InvalidPosError (pgt.exceptions.InvalidPosError)
     - EmptyStackError (pgt.exceptions.EmptyStackError)
+    - LangError       (pgt.exceptions.LangError)
 
 Functions:
     - add_col    (pgt.color.add_col)
@@ -97,6 +98,7 @@ Functions:
     - draw.even_circle (pgt.draw.even_circle)
     - draw.odd_circle  (pgt.draw.odd_circle)
     - draw.aa_rect     (pgt.draw.aa_rect)
+    - draw.aa_line     (pgt.draw.aa_line)
 
     - parse_json_file  (pgt.utils.parse_json_file)
     - load_image       (pgt.utils.load_image)
@@ -176,7 +178,7 @@ Variables:
 """
 
 __author__ = "Davide Taffarello - TheSilvered"
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 from . import ani
 from .color import *

@@ -38,17 +38,9 @@ class Font:
             value, it cannot be None
 
     Methods:
-        'get_linesize()' (int): returns 'line_size', added to conform to
-            pygame.font.Font
-        'size(text)' (tuple[int, int]): returns the width and height of
-            the string 'text' if it were to be rendered
-        'render(self, text, antialias, color, background)': returns a
-            surface with the text on it
-                'text' (str): the text to render
-                'antialias' (bool): if anti aliasing should be applied
-                'color' (pygame.color.Color): the color of the text
-                'background' (pygame.color.Color): the color of the
-                    background
+        - get_linesize()
+        - size(text)
+        - render(text, antialias, color, background)
 
     Usage:
         To create a font, firs create an image with the characters all
@@ -103,10 +95,16 @@ class Font:
         else:
             self.line_size = h
 
-    def get_linesize(self): return self.line_size
+    def get_linesize(self) -> int:
+        """Returns 'line_size', added to conform to pygame.font.Font"""
+        return self.line_size
 
     def size(self, text: str):
-        tot_width = sum(self.chars.get(i, self.chars["nochar"])[1] for i in str(text))
+        """Returns the width and height of the string 'text'"""
+        tot_width = sum(
+            self.chars.get(i, self.chars["nochar"])[1]
+            for i in str(text)
+        )
 
         return tot_width, self.line_size
 
@@ -147,7 +145,22 @@ class Font:
                text: str,
                antialias: bool = False,
                color: _col_type = (1, 1, 1),
-               background: Optional[_col_type] = None):
+               background: Optional[_col_type] = None) -> pygame.Surface:
+        """
+        render(test, antialias=False, color=(1, 1, 1), background=None)
+
+        Type: method
+
+        Description: returns a surface with the text rendered on top
+
+        Args:
+            'text' (str): the text to render
+            'antialias' (bool): if anti aliasing should be applied
+            'color' (pygame.color.Color): the color of the text
+            'background' (pygame.color.Color): the color of the background
+
+        Return type: pygame.Surface
+        """
         image = pygame.Surface(self.size(text), flags=pygame.SRCALPHA)
         image.set_colorkey((0, 0, 0))
         text = str(text)

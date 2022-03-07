@@ -16,7 +16,7 @@ from .type_hints import _col_type, _size
 def parse_json_file(path: Union[str, PathLike],
                     encoding: str = "utf-8") -> Union[list, dict]:
     """
-    parse_json_file
+    parse_json_file(path, encoding='utf-8')
 
     Type: function
 
@@ -36,7 +36,7 @@ def load_image(path: Union[str, PathLike],
                has_alpha: bool = False,
                surface: Optional[Surface] = None) -> Surface:
     """
-    load_image
+    load_image(path, has_alpha=False, surface=None)
 
     Type: function
 
@@ -58,7 +58,7 @@ def load_image(path: Union[str, PathLike],
 
 def filled_surface(size: _size, color: _col_type, flags: int = 0) -> Surface:
     """
-    filled_surface
+    filled_surface(size, color, flags=0)
 
     Type: function
 
@@ -76,7 +76,7 @@ def filled_surface(size: _size, color: _col_type, flags: int = 0) -> Surface:
 
 def replace_color(surface: Surface, col1: _col_type, col2: _col_type) -> Surface:
     """
-    replace_color
+    replace_color(surface, col1, col2)
 
     Type: function
 
@@ -98,7 +98,7 @@ def change_image_ani(image: Surface,
                      name: Optional[str] = None,
                      id_: Optional[int] = None) -> TextureAni:
     """
-    change_image_ani(image: Surface, name: str, id_: Optional[int])
+    change_image_ani(image, name=None, id_None)
 
     Type: function
 

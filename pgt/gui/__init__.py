@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-r"""
+
+"""
 The gui sub-package contains modules which all relate to the GUI in some
 way.
 

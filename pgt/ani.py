@@ -53,7 +53,7 @@ class MyAnimation(pgt.AniBase):
 
 Here is the code of PosAni:
 
-class PosAni(FuncAniBase):
+class PosAni(AniBase):
     def start(self, *args, **kwargs):
         super().start(*args, **kwargs)
         # it copies the position into element_val
@@ -72,7 +72,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 import time as t
-from typing import Callable, Optional, Any, Sequence
+from typing import Callable, Optional, Any, Sequence, Union
 
 from .element import AniElement
 from .constants import PERC, PREV_VAL, STARTING_VAL, FRAME, ANIMATION
@@ -128,8 +128,7 @@ class AniBase(ABC):
         'id_' (int): defaults to None, if set any animation running with
             the same id will be stopped upon calling the 'start' or
             'restart' methods
-        'frames' (iterable): an iterable containing each frame of the
-            animation
+        'frames' (Sequence|FuncAniFrames): the frames of the animation
         'time' (float): the time that should elapse between frames
         'tot_time' (float): the time that should pass between the first
             and last frame, overwrites 'time' if set
@@ -148,6 +147,10 @@ class AniBase(ABC):
             - STARTING_VAL: 'start_val' in the arguments
             - FRAME: the number of the current frame
             - ANIMATION: the animation object itself
+        'queue_ani' (AniBase?): the animation that starts when this one
+            ends
+        'max_updates_per_frame' (int): the maximum frames the animation
+            can advance at once, 0 means no limit
 
     Attrs:
         'name' (str): see 'name' in arguments
@@ -176,29 +179,18 @@ class AniBase(ABC):
         '__running': if the animation is currently playing
         '__prev_val' (Any): the previous value returned by the function
         '__tot_frames' (int): the total number of frames of the animation
+        '__queued_ani' (AniBase?): see 'queued_ani' in args
 
     Methods:
-        'start(frame=0, start_time=None)' (None): starts the animation.
-            'frame' (int): the frame the animation should be started at
-            'start_time' (float): when the animation should start, if
-                None, defaults to the current system time
-        'update(frame_time)' (None): updates the frame of the animation,
-            is usually called automatically by AniElement.update_ani()
-            'frame_time' (float): value that marks the current time for
-                the animation, AniElement.update_ani() sets it to be
-                the current time
-            'set_element' (bool): if the set_element method should be
-                called, defaults to True
-        'stop()' (None): starts the stopping process of the animation,
-            note that the animation stops only at the end of the current
-            frame
-        'force_stop()' (None): stops immediately the animation
-        'restart(*args, **kwargs)' (None): restarts the animation, if
-            it's not running acts like 'start'
-        'get_frame()' (Any): returns the value of the current frame
-        'set_frames(frames)' (None): sets a new list of frames for the
-            animation
-            'frames' (Sequence): the new set of frames
+        - start(starting_val, frame, start_time)
+        - update(frame_time)
+        - stop()
+        - force_stop()
+        - restart(*args, **kwargs)
+        - get_frame()
+        - set_frames(frames)
+        - set_new_element(element)
+        - set_queue_ani(ani)
 
     Magic methods:
         '__len__()' (int): returns the total duration of the animation in
@@ -215,14 +207,15 @@ class AniBase(ABC):
                  name: Optional[str] = None,
                  element: Optional[AniElement] = None,
                  id_: Optional[int] = None,
-                 frames: Sequence = None,
+                 frames: Union[Sequence, FuncAniFrames] = None,
                  time: float = 0.001,
                  tot_time: float = 0.0,
                  loop: bool = False,
                  reset_on_end: bool = True,
                  starting_val: Any = None,
                  func_args: int = PREV_VAL,
-                 queued_ani: Optional[AniBase] = None):
+                 queued_ani: Optional[AniBase] = None,
+                 max_updates_per_frame: int = 0):
 
         if element is not None: setattr(element, name, self)
 
@@ -233,6 +226,7 @@ class AniBase(ABC):
         self.func_args = func_args
         self.name = name
         self.starting_val = starting_val
+        self.max_updates = max_updates_per_frame
 
         self._current_frame = 0
         self._ending = False
@@ -269,8 +263,23 @@ class AniBase(ABC):
     def start(self,
               starting_val: Any = None,
               frame: int = 0,
-              start_time: Optional[float] = None):
+              start_time: Optional[float] = None) -> None:
+        """
+        start(self, starting_val=None, frame=0, start_time=None)
 
+        Type: method
+
+        Description: starts the animation
+
+        Args:
+            'starting_val' (Any): the initial value of '__prev_val' when
+                starting the animation
+            'frame' (int): the frame the animation should be started at
+            'start_time' (float): the time of the start of the animation,
+                if None defaults to time.perf_counter()
+
+        Return type: None
+        """
         self.__prev_val = starting_val or self.starting_val
 
         if self._ending:
@@ -296,7 +305,24 @@ class AniBase(ABC):
         self.__running = True
         self.set_element()
 
-    def update(self, frame_time: float, set_element: bool = True):
+    def update(self, frame_time: float, set_element: bool = True) -> None:
+        """
+        update(frame_time, set_element=True)
+
+        Type: method
+
+        Description: updates the animation and if necessary, changes
+            frame(s)
+
+        Args:
+            'frame_time' (float): value that marks the current time for
+                the animation, AniElement.update_ani() sets it to be
+                the current time
+            'set_element' (bool): if the set_element method should be
+                called, defaults to True
+
+        Return type: None
+        """
         elapsed_time = frame_time - self._last_frame
 
         if elapsed_time < self._time: return
@@ -306,15 +332,20 @@ class AniBase(ABC):
             return
 
         try:
+            new_frames = int(elapsed_time // self._time)
+            if self.max_updates and new_frames > self.max_updates:
+                new_frames = self.max_updates
+
             if self.__using_func:
-                self.__pending = int(elapsed_time // self._time)
+                self.__pending = new_frames
             else:
-                self._current_frame += int(elapsed_time // self._time)
+                self._current_frame += new_frames
         except ZeroDivisionError:
             if self.__using_func:
                 self.__pending += 1
             else:
                 self._current_frame += 1
+
         if self.__using_func: self._current_frame += self.__pending
 
         if self._loop:
@@ -333,10 +364,12 @@ class AniBase(ABC):
         self._last_frame = self._start_time + self._time * self._current_frame
         if set_element: self.set_element()
 
-    def stop(self):
+    def stop(self) -> None:
+        """Stops the animation at the end of the current frame"""
         self._ending = True
 
-    def force_stop(self):
+    def force_stop(self) -> None:
+        """Stops the animation instantly"""
         if not self.__running: return
         self._ending = False
         self.e.current_ani.remove((self.name, self.id))
@@ -346,7 +379,19 @@ class AniBase(ABC):
         if self.__queued_ani is not None:
             self.__queued_ani.start()
 
-    def restart(self, *args, **kwargs):
+    def restart(self, *args, **kwargs) -> None:
+        """
+        restart(self, *args, **kwargs)
+
+        Type: method
+
+        Description: restarts the animation
+
+        Args: if the animation ended, start is called and *args and
+            **kwargs are passed as arguments
+
+        Return type: None
+        """
         if not self.__running:
             self.start(*args, **kwargs)
             return
@@ -360,7 +405,8 @@ class AniBase(ABC):
         if self._reset_on_end:
             self.reset_element()
 
-    def get_frame(self):
+    def get_frame(self) -> Any:
+        """Returns the value of the current frame"""
         if not self.__using_func: return self.frames[self._current_frame]
         return_val = self.__prev_val
         if return_val is None and self.__pending == 0: return self.element_val
@@ -378,7 +424,19 @@ class AniBase(ABC):
         self.__prev_val = return_val
         return return_val
 
-    def set_frames(self, frames: Sequence):
+    def set_frames(self, frames: Union[Sequence, FuncAniFrames]) -> None:
+        """
+        set_frames(self, frames)
+
+        Type: method
+
+        Description: changes the frames of the animation
+
+        Args:
+            'frames' (Sequence|FuncAniFrames): the new frames
+
+        Return type: None
+        """
         self.__tot_frames = len(frames)
         self.frames = frames
         self.__using_func = isinstance(self.frames, FuncAniFrames)
@@ -387,12 +445,14 @@ class AniBase(ABC):
         return self._time * self.__tot_frames
 
     def set_new_element(self, element):
+        """Changes the element of the animation"""
         self.e = element
         if self.__queued_ani is not None:
             self.__queued_ani.set_new_element(element)
             self.__queued_ani.e.add_ani(self.__queued_ani)
 
-    def set_queue_ani(self, ani):
+    def set_queue_ani(self, ani: AniBase):
+        """Changes the queued ani of the animation"""
         self.__queued_ani = ani
         self.__queued_ani.set_new_element(self.e)
 

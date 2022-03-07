@@ -5,7 +5,7 @@ lang.py
 
 Type: module
 
-Description: a parser for a filetype that makes it easier to implement
+Description: a parser for a file type that makes it easier to implement
     various languages in a game
 
 Classes:
@@ -13,8 +13,8 @@ Classes:
     - LangEval
 
 Functions:
-    - load
-    - loads
+    - load(path, encoding, as_dict)
+    - loads(s, encoding, as_dict, file)
 
 
 Lang syntax
@@ -113,9 +113,9 @@ If you don't want a new-line character to be added at the end of the
 line you can add an and-percent '&' at the start.
 To escape instructions you can use \\ at the start of the line, this
 keeps any character after itself, including new-line characters,
-whitespace, $, @, ~@, .~@, &, ::, %=, and itself (\\).
-
+white space, $, @, ~@, .~@, &, ::, %=, and itself (\\).
 """
+
 import re
 from .stack import Stack
 from .exceptions import LangError
@@ -125,20 +125,76 @@ name_expr = re.compile(r"[a-zA-Z_]\w*", re.ASCII)
 
 
 class LangNode:
-    def empty(self):
+    """
+    LangNode
+
+    Type: class
+
+    Description: a container for sets and attributes
+
+    Methods:
+        - empty()
+        - get()
+
+    All attributes and sets (sets are other LangNode objects) are set as
+    attributes to the object itself
+
+    Ex:
+    lang.s.attr  # this gets the attribute 'attr' from the set 's'
+    """
+    def empty(self) -> None:
+        """Removes all the attributes and sets the LangNode contains"""
         self.__dict__.clear()
 
-    def get(self, s):
+    def get(self, s: str) -> str:
+        """
+        get(self, s)
+
+        Type: method
+
+        Description: returns an attribute or set of the node
+
+        Args:
+            's' (str): the attribute to get
+
+        Return type: str
+            In case the attribute doesn't exist inside the LangNode, it
+            returns 's'
+
+        Usage:
+            in the string put the chain of attributes to access,
+            separated by dots
+
+            Ex:
+            lang.get('s.attr') # this gets the attribute 'attr' from the
+                               # set 's' without an error
+
+            This can be done also by indexing the object:
+            lang['s.attr']  # exactly like lang.get('s.attr')
+        """
         try:
             return eval(f"self.{s}")
         except Exception:
             return s
+
+    def __getitem__(self, idx):
+        return self.get(idx)
 
     def __repr__(self):
         return f"LangNode({self.__dict__})"
 
 
 class LangEval:
+    """
+    LangEval
+
+    Type: class
+
+    Description: a lang reference not evaluated
+
+    Methods:
+        - get_value(lang_obj)
+    """
     def __init__(self, branches, local, l_no, file):
         self.branches = branches
         self.local = local
@@ -146,7 +202,17 @@ class LangEval:
         self.file = file
         self.added_value = ""
 
-    def get_value(self, lang_obj):
+    def get_value(self, lang_obj: LangNode) -> str:
+        """
+        get_value(self, lang_obj)
+
+        Type: method
+
+        Description: evaluates the reference
+
+        Args:
+            'lang_obj' (LangNode): the node where the attribute resides
+        """
         c_obj = lang_obj
         for i, v in enumerate(self.branches):
             try:
@@ -157,7 +223,7 @@ class LangEval:
             except (AttributeError, KeyError):
                 raise LangError(
                     self.l_no,
-                    f"the value {'.'.join(self.branches)} is not valid",
+                    f"the value '{'.'.join(self.branches)}' is not valid",
                     self.file
                 )
 
@@ -165,8 +231,11 @@ class LangEval:
                 return c_obj + self.added_value
 
     def __add__(self, other):
-        self.added_value += other
+        self.added_value += str(other)
         return self
+
+    def __repr__(self):
+        return f"LangEval( at '{'.'.join(self.branches)}' )"
 
 
 def _make_lang_obj(d, root_node=None):
@@ -289,7 +358,7 @@ def _make_lang_dict(s, encoding, file):
 
 def load(path: str, encoding: str = "utf-8", as_dict: bool = False):
     """
-    load(path: str, encoding: str, as_dict: bool)
+    load(path, encoding='utf-8', as_dict=False)
 
     Type: function
 
@@ -302,7 +371,7 @@ def load(path: str, encoding: str = "utf-8", as_dict: bool = False):
         'as_dict' (bool): if the function should return a dictionary
             instead of a LangEval object
 
-    Return type: dict | LangEval
+    Return type: dict | LangNode
     """
     try:
         with open(path, encoding=encoding) as f:
@@ -317,7 +386,7 @@ def loads(s: str,
           as_dict: bool = False,
           file: str = "<string>"):
     """
-    loads(s: str, encoding: str, as_dict: bool, file: str)
+    loads(s, encoding='utf-8', as_dict=False, file='<string>')
 
     Type: function
 
@@ -331,7 +400,7 @@ def loads(s: str,
             instead of a LangEval object
         'file' (str): the file of the string
 
-    Return type: dict | LangEval
+    Return type: dict | LangNode
     """
     d = _make_lang_dict(s, encoding, file)
     if as_dict: return d

@@ -48,8 +48,7 @@ class GUIElement(Element):
             considering the padding
 
     Methods:
-        'set_layout(new_layout)' (None): sets the layout of the element
-            and anchors it to said layout
+        set_layout(new_layout)
     """
     def __init__(self,
                  layout: Optional["GUILayout"] = None,
@@ -84,7 +83,21 @@ class GUIElement(Element):
     def true_size(self):
         return Size(self.rect.size)
 
-    def set_layout(self, new_layout: "GUILayout"):
+    def set_layout(self, new_layout: "GUILayout") -> None:
+        """
+        set_layout(self, new_layout)
+
+        Type: method
+
+        Description: changes the layout of the element and anchors the
+            GUIElement to it if the element is not already anchored to
+            something
+
+        Args:
+            'new_layout' (GUILayout): the new element's layout
+
+        Return type: None
+        """
         self.layout = new_layout
         if not self.is_anchored:
             self.anchor(new_layout, self._a_point)

@@ -1,11 +1,12 @@
 from setuptools import setup
+from pgt import __version__
 
 with open("README.md") as f:
     long_desc = f.read()
-
+print(__version__)
 setup(
     name="tools-for-pygame",
-    version="0.1.3",
+    version=f"{__version__}",
     description="Tools to make using pygame easier",
     long_description=long_desc,
     long_description_content_type="text/markdown",
@@ -15,7 +16,7 @@ setup(
     install_requres=["pygame>=2.0.0"],
     keywords=["pygame", "game", "video-game"],
     url="https://github.com/TheSilvered/pg-tools",
-    download_url="https://github.com/TheSilvered/tools-for-pygame/archive/refs/tags/v0.1.0.tar.gz",
+    download_url=f"https://github.com/TheSilvered/tools-for-pygame/archive/refs/tags/v{__version__}.tar.gz",
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",

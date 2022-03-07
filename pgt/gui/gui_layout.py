@@ -39,15 +39,9 @@ class GUILayout(GUIElement, MouseInteractionElement):
         'adapt_height' (bool): see 'adapt_height' in args
 
     Methods:
-        'auto_run()' (bool): if the element hovered is a button or
-            another layout calls 'auto_run' on that element
-        'set_layout(new_layout)' (None): anchors itself to the new
-            layout and sets the 'layout' attribute of its elements to
-            the new layout without changing their anchor
-        'rotate' and 'scale' raise NotImplement and 'change_image'
-            changes the 'image' attribute
-        'collide_point(point)' (bool): collides each element with a
-            point and if there is a bg_color also itself
+        - auto_run()
+        - set_layout(new_layout)
+        - collide_point(point)
     """
     def __init__(self,
                  elements: dict[str: Element],
@@ -128,10 +122,14 @@ class GUILayout(GUIElement, MouseInteractionElement):
     def scale(self, *args, **kwargs):
         raise NotImplemented("Scaling GUILayout is not supported")
 
-    def change_image(self, surface):
+    def change_image(self, surface) -> None:
         self.image = transform.scale(surface, self.true_size)
 
     def collide_point(self, point: _pos) -> bool:
+        """
+        Collides each element with a point, if there is a bg_color
+        the collision is checked also onto itself
+        """
         for i in self.elements:
             if i.collide_point(point):
                 return True
@@ -139,29 +137,37 @@ class GUILayout(GUIElement, MouseInteractionElement):
             return super().collide_point(point)
         return False
 
-    def auto_run(self):
+    def auto_run(self) -> None:
+        """
+        If the element hovered is a button or another layout calls
+        'auto_run' on that element
+        """
         for i in reversed(self.elements):
             if i.collide_point(self.get_mouse_pos()):
                 if isinstance(i, Button): return i.auto_run()
                 return False
 
-    def show(self):
+    def show(self) -> None:
         for i in self.elements:
             i.show()
         super().show()
 
-    def hide(self):
+    def hide(self) -> None:
         for i in self.elements:
             i.hide()
         super().hide()
 
-    def set_layout(self, new_layout: Layout):
+    def set_layout(self, new_layout: Layout) -> None:
+        """
+        Anchors itself to the new layout and sets the 'layout' attribute
+        of its elements to the new layout without changing their anchor
+        """
         for i in self.elements:
             if isinstance(i, GUIElement):
                 i.layout = new_layout
         super().set_layout(new_layout)
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         super().draw(*args, **kwargs)
 
         for i in self.elements:

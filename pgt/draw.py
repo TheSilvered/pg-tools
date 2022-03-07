@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 
+"""
+pgt.draw
+
+Type: module
+
+Description: a module that contains some useful drawing utilities
+
+Functions:
+    - clear_cache(caches)
+    - even_circle(surface, center, radius, color, border, border_color)
+    - odd_circle(surface, center, radius, color, border, border_color)
+    - aa_rect(surface, rect, color, corner_radius, border, border_color)
+    - aa_line(surface, color, start_pos, end_pos, width=1)
+"""
+
 from typing import Optional
 
 import pygame
@@ -18,7 +33,7 @@ rect_cache = {}
 
 def clear_cache(caches: int = ALL_CACHES) -> None:
     """
-    clear_cache(caches: int)
+    clear_cache(caches=pgt.ALL_CACHES)
 
     Type: function
 
@@ -94,12 +109,7 @@ def even_circle(surface: Optional[pygame.Surface],
                 border: int = 0,
                 border_color: Optional[_col_type] = None) -> pygame.Surface:
     """
-    even_circle(surface: pygame.Surface,
-                center: _pos,
-                radius: int,
-                color: _col_type,
-                border: int,
-                border_color: Optional[_col_type])
+    even_circle(surface, center, radius, color, border=0, border_color=None)
 
     Type: function
 
@@ -109,6 +119,7 @@ def even_circle(surface: Optional[pygame.Surface],
 
     Args:
         'surface' (pygame.Surface?): where the circle should be drawn
+            if set to None, returns the image itself
         'center' (pgt.Pos): where the top-left pixel of the center should
             be on the surface
         'radius' (int): radius of the circle
@@ -157,12 +168,7 @@ def odd_circle(surface: Optional[pygame.Surface],
                border: int = 0,
                border_color: Optional[_col_type] = None) -> pygame.Surface:
     """
-    odd_circle(surface: pygame.Surface,
-               center: _pos,
-               radius: int,
-               color: _col_type,
-               border: int,
-               border_color: Optional[_col_type])
+    odd_circle(surface, center, radius, color, border=0, border_color=None)
 
     Type: function
 
@@ -172,6 +178,7 @@ def odd_circle(surface: Optional[pygame.Surface],
 
     Args:
         'surface' (pygame.Surface?): where the circle should be drawn
+            if set to None, returns the image itself
         'center' (pgt.Pos): where the center should be on the surface
         'radius' (int): radius of the circle
         'color' (tuple, list): the color of the circle
@@ -226,12 +233,7 @@ def aa_rect(surface: Optional[pygame.Surface],
             border: int = 0,
             border_color: Optional[_col_type] = None) -> pygame.Surface:
     """
-    aa_rect(surface: pygame.Surface,
-            rect: pygame.Rect,
-            color: _col_type,
-            corner_radius: int,
-            border: int,
-            border_color: Optional[_col_type])
+    aa_rect(surface, rect, color, corner_radius=0, border=0, border_color=None)
 
     Type: function
 
@@ -241,6 +243,7 @@ def aa_rect(surface: Optional[pygame.Surface],
 
     Args:
         'surface' (pygame.Surface?): where the rect should be drawn
+            if set to None, returns the image itself
         'rect' (pygame.Rect): the rectangle to draw
         'color' (list, tuple): the color of the rectangle
         'corner_radius' (int): the radius of the curvature of the
@@ -297,11 +300,7 @@ def aa_line(surface: pygame.Surface,
             end_pos: _pos,
             width: int = 1) -> None:
     """
-    aa_line(surface: pygame.Surface,
-            color: _col_type,
-            start_pos: _pos,
-            end_pos: _pos,
-            width: int)
+    aa_line(surface, color, start_pos, end_pos, width=1)
 
     Type: function
 

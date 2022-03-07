@@ -38,8 +38,8 @@ class Draggable(MouseInteractionAniElement):
             the button assigned with 'button'
 
     Methods:
-        'update()' (None): updates the position when it's being dragged
-        'fix_pos()' (None): puts the element back inside the boundaries
+        - update()
+        - fix_pos()
     """
     def __init__(self,
                  button: int = 0,
@@ -65,6 +65,7 @@ class Draggable(MouseInteractionAniElement):
         return self.clicked[self.button]
 
     def fix_pos(self):
+        """Repositions the draggable inside the boundaries"""
         if self.b_top is not None and self.u < self.b_top:
             self.u = self.b_top
         if self.b_bottom is not None and self.d > self.b_bottom:
@@ -75,6 +76,7 @@ class Draggable(MouseInteractionAniElement):
             self.r = self.b_right
 
     def update(self):
+        """Updates the draggable's position when it's dragged"""
         if not self.dragging and self.button_clicked and not self.locked:
             self.dragging = True
             self.drag_point = self.get_mouse_pos() - self.pos

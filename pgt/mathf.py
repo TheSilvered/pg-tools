@@ -517,16 +517,6 @@ class Pos:
         return self.c(_cos(angle), _sin(angle)) * radius + center + c
 
     def quad_bezier(self, other, p1, p2, t):
-        # p1 = Pos(p1)
-        # p2 = Pos(p2)
-        # other = Pos(other)
-
-        # ab = self.lerp(p1, t)
-        # bc = p1.lerp(p2, t)
-        # cd = p2.lerp(other, t)
-
-        # abbc = ab.lerp(bc, t)
-        # bccd = bc.lerp(cd, t)
         return quad_bezier(t, self, p1, p2, other)
 
     @classmethod

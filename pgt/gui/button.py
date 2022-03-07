@@ -75,9 +75,8 @@ class Button(MouseInteractionAniElement, GUIElement):
             with the assigned mouse button
 
     Methods:
-        'run()': runs the function
-        'auto_run()': to call every frame, calls 'run' automatically
-            when the button is pressed and plays the sound
+        - run()
+        - auto_run()
     """
     def __init__(self,
                  normal_ani: Optional[AniBase] = None,
@@ -151,9 +150,14 @@ class Button(MouseInteractionAniElement, GUIElement):
         return self.clicked[self.button]
 
     def run(self) -> None:
+        """Runs the button's function"""
         if self.func: self.func(*self.fargs, **self.fkwargs)
 
     def auto_run(self) -> bool:
+        """
+        Calls 'run' automatically and plays the sound, should be called
+        every frame
+        """
         if self.button_clicked:
             if not self.__pressed and self.sound is not None:
                 pygame.mixer.Sound.play(self.sound)

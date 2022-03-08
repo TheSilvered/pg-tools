@@ -24,13 +24,14 @@ e1 = pgt.Element(
 )
 
 e2 = pgt.Element(
-    anchor_element=e1,
+    pos=0,
+    # anchor_element=e1,
     anchor_point=pgt.CC,
     size=(100, 100),
     image=image2,
     alpha=127
 )
-
+e2.anchor(e1)
 # e1.rotate(45)
 # e2.rotate(45)
 
@@ -44,6 +45,8 @@ while True:
             sys.exit()
         elif event.type == pygame.MOUSEMOTION:
             e1.cc = event.pos
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            e2.anchor(None)
 
     screen.fill(pgt.GRAY(50))
     fps.draw(screen)

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import time
-from typing import Optional, Iterable, Callable
+from typing import Optional, Iterable, Callable, Union
 
 import pygame
 
@@ -488,7 +488,7 @@ class Element(pygame.sprite.Sprite):
 
         Return type: None
         """
-        if not isinstance(anchor_element, (Element, None)):
+        if not isinstance(anchor_element, Union[Element, None]):
             raise TypeError("Expected an instance of Element, got "\
                            f"'{anchor_element.__class__.__name__}' instead")
 

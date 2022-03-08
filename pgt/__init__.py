@@ -53,6 +53,7 @@ Functions:
     - min_col    (pgt.color.min_col)
     - max_col    (pgt.color.max_col)
     - calc_alpha (pgt.color.calc_alpha)
+    - c_alpha    (pgt.color.c_alpha)
     - GRAY       (pgt.color.GRAY)
     - R          (pgt.color.R)
     - G          (pgt.color.G)
@@ -178,7 +179,7 @@ Variables:
 """
 
 __author__ = "Davide Taffarello - TheSilvered"
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 from . import ani
 from .color import *

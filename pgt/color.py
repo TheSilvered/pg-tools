@@ -23,6 +23,8 @@ Functions:
         'alpha' onto 'prev_color'
     'GRAY(c)' (tuple[int]): returns a color with all the color channels
         set to 'c'
+    'c_alpha(c, a)' (tuple[int]): returns a new color with the same rgb
+        values as 'c' and with an alpha 'a'
     'R(c)' (tuple[int]): returns a color with the red channel set to 'c'
     'G(c)' (tuple[int]): returns a color with the green channel set to 'c'
     'B(c)' (tuple[int]): returns a color with the blue channel set to 'c'
@@ -58,6 +60,8 @@ def max_col(col1: _col_type, col2: _col_type) -> List[int]:
 def calc_alpha(new_color: _col_type, prev_color: _col_type, alpha: Real) -> List[int]:
     return [alpha * c1 + (1 - alpha) * c2 for c1, c2 in zip(new_color, prev_color)]
 
+
+c_alpha = lambda c, a: tuple(c[:3]) + (a,)
 
 GRAY = lambda c: (clamp(c, 0, 255), clamp(c, 0, 255), clamp(c, 0, 255), 255)
 

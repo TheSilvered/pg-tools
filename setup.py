@@ -16,7 +16,7 @@ setup(
     install_requres=["pygame>=2.0.0"],
     keywords=["pygame", "game", "video-game"],
     url="https://github.com/TheSilvered/pg-tools",
-    download_url=f"https://github.com/TheSilvered/tools-for-pygame/archive/refs/tags/v{__version__}.tar.gz",
+    download_url=f"https://github.com/TheSilvered/tools-for-pygame/archive/refs/tags/v{pgt_version}.tar.gz",
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",

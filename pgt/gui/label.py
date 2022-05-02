@@ -31,7 +31,7 @@ class Label(GUIElement):
         'font' (pgt.gui.Font, pygame.font.Font, str): if given a string
             pygame.font.SysFont is called and 'text_size' is applied
         'style' (int): any combination of pgt.NO_AA (no anti aliasing),
-            pgt.BOLD, pgt.UNDERLINE and pgt.ITALIC. Only the firs one
+            pgt.BOLD, pgt.UNDERLINE and pgt.ITALIC. Only the first one
             works with pgt.font.Font
         'alignment' (int): alignment of the text, can be pgt.LEFT,
             pgt.RIGHT and pgt.CENTER

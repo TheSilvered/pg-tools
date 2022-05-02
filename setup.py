@@ -1,12 +1,12 @@
 from setuptools import setup
-from pgt import __version__
+from pgt import __version__ as pgt_version
 
 with open("README.md") as f:
     long_desc = f.read()
 print(__version__)
 setup(
     name="tools-for-pygame",
-    version=f"{__version__}",
+    version=f"{pgt_version}",
     description="Tools to make using pygame easier",
     long_description=long_desc,
     long_description_content_type="text/markdown",

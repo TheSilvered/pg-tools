@@ -48,7 +48,7 @@ contexts:
   reference:
     - match: '\.'
       scope: punctuation.separator
-    - match: '[a-zA-Z0-9_]'
+    - match: '{{name}}'
       scope: variable.parameter
     - match: '(\n|$)'
       pop: true

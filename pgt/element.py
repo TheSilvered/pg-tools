@@ -92,6 +92,7 @@ class Element(pygame.sprite.Sprite):
         'h' (int): height of the element
 
     Methods:
+        - handle_event()
         - rotate(angle, abs_, colorkey)
         - scale(size, smooth, point)
         - change_image(surface)
@@ -283,6 +284,23 @@ class Element(pygame.sprite.Sprite):
     @property
     def is_anchored(self):
         return self.__a_element is not None
+
+    def handle_event(self, event: pygame.event.Event) -> bool:
+        """
+        handle_event(self, event: pygame.event.Event)
+
+        Type: method
+
+        Description: a method to overwrite in custom classes which
+            inherit from pgt.Element and need to handle some user event,
+            returns True if the event was handles, else False
+
+        Args:
+            'event' (pygame.event.Event): the event to handle
+
+        Return type: bool
+        """
+        return False
 
     def rotate(self,
                angle: int,

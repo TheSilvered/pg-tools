@@ -20,7 +20,8 @@ class SliderCursor(Button, Draggable):
     Type: class
 
     Description: this class should be used to create the cursor of the
-        slider
+        slider and merges pgt.gui.Button and pgt.gui.Draggable
+        functionality
     """
     pass
 
@@ -39,11 +40,6 @@ class _SliderBase(SurfaceElement, ABC):
 
         self.min_val = min_val
         self.max_val = max_val
-
-        if self.min_val == self.max_val:
-            raise ValueError("min_val and max_val must be different")
-
-        # transform_func = lambda x: x - self.ul
 
         self.ruler.func = None
         self.ruler.fargs = []
@@ -122,15 +118,19 @@ class HSlider(_SliderBase):
 
         self.max_x = self.ruler.w - self.cursor.w
 
-        if self.max_x <= 0:
+        if self.max_x < 0:
             raise ValueError("the ruler's width must be greater than the cursor's")
 
     @property
     def value(self):
+        if self.min_val == self.max_val or self.max_x == 0:
+            return self.min_val
         return self.min_val + (self.cursor.l / self.max_x) * (self.max_val - self.min_val)
 
     @value.setter
     def value(self, new_value):
+        if self.min_val == self.max_val:
+            return
         self.cursor.l = (new_value - self.min_val) / (self.max_val - self.min_val) * self.max_x
 
     def draw(self, *args, **kwargs):
@@ -194,15 +194,19 @@ class VSlider(_SliderBase):
         self.cursor.b_bottom = self.ruler.h
 
         self.max_y = self.ruler.h - self.cursor.h
-        if self.max_y <= 0:
+        if self.max_y < 0:
             raise ValueError("the ruler's height must be greater than the cursor's")
 
     @property
     def value(self):
+        if self.min_val == self.max_val or self.max_y == 0:
+            return self.min_val
         return self.min_val + (self.cursor.u / self.max_y) * (self.max_val - self.min_val)
 
     @value.setter
     def value(self, new_value):
+        if self.min_val == self.max_val:
+            return
         self.cursor.u = (new_value - self.min_val) / (self.max_val - self.min_val) * self.max_y
 
     def draw(self, *args, **kwargs):

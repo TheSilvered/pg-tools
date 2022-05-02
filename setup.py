@@ -3,7 +3,7 @@ from pgt import __version__ as pgt_version
 
 with open("README.md") as f:
     long_desc = f.read()
-print(__version__)
+print(pgt_version)
 setup(
     name="tools-for-pygame",
     version=f"{pgt_version}",

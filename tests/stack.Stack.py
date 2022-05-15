@@ -1,5 +1,5 @@
 import sys; sys.path.insert(0, "..")
-from pgt import Stack
+from tools_for_pygame import Stack
 
 s = Stack(1, 2, 3, 4)
 print(s, len(s))

@@ -1,6 +1,6 @@
 import pygame
 import sys; sys.path.insert(0, "..")
-import pgt
+import tools_for_pygame as pgt
 pygame.init()
 
 __test_name__ = "element.MouseInteractionElement"

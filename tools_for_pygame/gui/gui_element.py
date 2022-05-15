@@ -3,10 +3,10 @@ from typing import Optional
 
 from pygame import display
 
-from pgt.constants import ABSOLUTE
-from pgt.element import Element, AniElement
-from pgt.mathf import Pos, Size
-from pgt.type_hints import _size
+from tools_for_pygame.constants import ABSOLUTE
+from tools_for_pygame.element import Element, AniElement
+from tools_for_pygame.mathf import Pos, Size
+from tools_for_pygame.type_hints import _size
 
 
 class GUIElement(Element):
@@ -34,6 +34,8 @@ class GUIElement(Element):
         'padding_bottom' (int): space from the bottom
         'padding_left' (int): space from the left
         'padding_right' (int): space from the right
+        'app' (Any): an attribute that should be used to link the
+            element with the application you're creating
 
     Attrs:
         'rel_size' (Size): see 'rel_size' in args
@@ -102,7 +104,7 @@ class GUIElement(Element):
         if not self.is_anchored:
             self.anchor(new_layout, self._a_point)
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         if self.layout:
             max_size = self.layout.size
         else:

@@ -8,13 +8,6 @@ Type: module
 Description: module that contains the classes that define how animations
     work
 
-Constants:
-    - PERC
-    - PREV_VAL
-    - STARTING_VAL
-    - FRAME
-    - ANIMATION
-
 Abstract classes:
     - FuncAniFrames
     - AniBase
@@ -70,12 +63,21 @@ class PosAni(AniBase):
 """
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-import time as t
-from typing import Callable, Optional, Any, Sequence, Union
+from abc import ABC as _ABC, abstractmethod as _abstractmethod
+import time as _time
+from typing import (Callable as _Callable,
+                    Optional as _Optional,
+                    Any as _Any,
+                    Sequence as _Sequence,
+                    Union as _Union)
 
 from .element import AniElement
-from .constants import PERC, PREV_VAL, STARTING_VAL, FRAME, ANIMATION
+from .constants import (PERC as _PERC,
+                        PREV_VAL as _PREV_VAL,
+                        STARTING_VAL as _STARTING_VAL,
+                        FRAME as _FRAME,
+                        ANIMATION as _ANIMATION,
+                        ELEMENT as _ELEMENT)
 
 
 class FuncAniFrames:
@@ -101,7 +103,7 @@ class FuncAniFrames:
 
     See tests/ani.PosAni.py for examples
     """
-    def __init__(self, function: Callable, frames: int):
+    def __init__(self, function: _Callable, frames: int):
         self._func = function
         self._frames = frames
 
@@ -109,7 +111,7 @@ class FuncAniFrames:
         return self._frames
 
 
-class AniBase(ABC):
+class AniBase(_ABC):
     """
     AniBase(ABC)
 
@@ -204,20 +206,21 @@ class AniBase(ABC):
             (e.g. PosAni resets the element's position)
     """
     def __init__(self,
-                 name: Optional[str] = None,
-                 element: Optional[AniElement] = None,
-                 id_: Optional[int] = None,
-                 frames: Union[Sequence, FuncAniFrames] = None,
+                 name: _Optional[str] = None,
+                 element: _Optional[AniElement] = None,
+                 id_: _Optional[int] = None,
+                 frames: _Union[_Sequence, FuncAniFrames] = None,
                  time: float = 0.001,
                  tot_time: float = 0.0,
                  loop: bool = False,
                  reset_on_end: bool = True,
-                 starting_val: Any = None,
-                 func_args: int = PREV_VAL,
-                 queued_ani: Optional[AniBase] = None,
+                 starting_val: _Any = None,
+                 func_args: int = _PREV_VAL,
+                 queued_ani: _Optional[AniBase] = None,
                  max_updates_per_frame: int = 0):
 
-        if element is not None: setattr(element, name, self)
+        if element is not None:
+            setattr(element, name, self)
 
         self.e = element
         self.element_val = None
@@ -261,9 +264,9 @@ class AniBase(ABC):
         return self.__running
 
     def start(self,
-              starting_val: Any = None,
+              starting_val: _Any = None,
               frame: int = 0,
-              start_time: Optional[float] = None) -> None:
+              start_time: _Optional[float] = None) -> None:
         """
         start(self, starting_val=None, frame=0, start_time=None)
 
@@ -287,7 +290,7 @@ class AniBase(ABC):
             return
         if self.__running:
             return
-        if not start_time: start_time = t.perf_counter()
+        if not start_time: start_time = _time.perf_counter()
         self._start_time = start_time
         self._last_frame = start_time
         self._current_frame = frame
@@ -396,8 +399,8 @@ class AniBase(ABC):
             self.start(*args, **kwargs)
             return
 
-        self._start_time = t.perf_counter()
-        self._last_frame = t.perf_counter()
+        self._start_time = _time.perf_counter()
+        self._last_frame = _time.perf_counter()
         self._current_frame = 0
         self._ending = False
         self.__running = True
@@ -405,7 +408,7 @@ class AniBase(ABC):
         if self._reset_on_end:
             self.reset_element()
 
-    def get_frame(self) -> Any:
+    def get_frame(self) -> _Any:
         """Returns the value of the current frame"""
         if not self.__using_func: return self.frames[self._current_frame]
         return_val = self.__prev_val
@@ -414,17 +417,17 @@ class AniBase(ABC):
             frame = self._current_frame - (self.__pending - i) + 1
             perc = frame / self.__tot_frames
             args = []
-            if self.func_args & PERC:         args.append(perc)
-            if self.func_args & PREV_VAL:     args.append(return_val)
-            if self.func_args & STARTING_VAL: args.append(self.starting_val)
-            if self.func_args & FRAME:        args.append(frame)
-            if self.func_args & ANIMATION:    args.append(self)
+            if self.func_args & _PERC:         args.append(perc)
+            if self.func_args & _PREV_VAL:     args.append(return_val)
+            if self.func_args & _STARTING_VAL: args.append(self.starting_val)
+            if self.func_args & _FRAME:        args.append(frame)
+            if self.func_args & _ANIMATION:    args.append(self)
             return_val = self.frames._func(*args)
         self.__pending = 0
         self.__prev_val = return_val
         return return_val
 
-    def set_frames(self, frames: Union[Sequence, FuncAniFrames]) -> None:
+    def set_frames(self, frames: _Union[_Sequence, FuncAniFrames]) -> None:
         """
         set_frames(self, frames)
 
@@ -456,11 +459,11 @@ class AniBase(ABC):
         self.__queued_ani = ani
         self.__queued_ani.set_new_element(self.e)
 
-    @abstractmethod
+    @_abstractmethod
     def set_element(self):
         pass
 
-    @abstractmethod
+    @_abstractmethod
     def reset_element(self):
         pass
 

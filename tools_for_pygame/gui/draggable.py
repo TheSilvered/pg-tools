@@ -2,8 +2,8 @@
 
 from typing import Optional
 import pygame.mouse
-from pgt.element import MouseInteractionAniElement
-from pgt.mathf import Pos
+from tools_for_pygame.element import MouseInteractionAniElement
+from tools_for_pygame.mathf import Pos
 
 
 class Draggable(MouseInteractionAniElement):
@@ -64,7 +64,7 @@ class Draggable(MouseInteractionAniElement):
     def button_clicked(self):
         return self.clicked[self.button]
 
-    def fix_pos(self):
+    def fix_pos(self) -> None:
         """Repositions the draggable inside the boundaries"""
         if self.b_top is not None and self.u < self.b_top:
             self.u = self.b_top
@@ -75,7 +75,7 @@ class Draggable(MouseInteractionAniElement):
         if self.b_right is not None and self.r > self.b_right:
             self.r = self.b_right
 
-    def update(self):
+    def update(self) -> None:
         """Updates the draggable's position when it's dragged"""
         if not self.dragging and self.button_clicked and not self.locked:
             self.dragging = True
@@ -86,7 +86,7 @@ class Draggable(MouseInteractionAniElement):
         if self.dragging:
             self.pos = self.get_mouse_pos() - self.drag_point
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         self.update()
         self.fix_pos()
 

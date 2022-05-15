@@ -72,7 +72,7 @@ class Stack:
     def is_empty(self):
         return self.__size__ == 0
 
-    def clear(self):
+    def clear(self) -> None:
         del self.__head__.next
         self.__head__.next = None
         self.__size__ = 0

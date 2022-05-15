@@ -4,9 +4,9 @@ from typing import List, Optional
 
 import pygame
 
-from pgt.mathf import Size
-from pgt.color import GRAY
-from pgt.type_hints import _col_type
+from tools_for_pygame.mathf import Size
+from tools_for_pygame.color import GRAY
+from tools_for_pygame.type_hints import _col_type
 pygame.init()
 
 
@@ -99,7 +99,7 @@ class Font:
         """Returns 'line_size', added to conform to pygame.font.Font"""
         return self.line_size
 
-    def size(self, text: str):
+    def size(self, text: str) -> tuple:
         """Returns the width and height of the string 'text'"""
         tot_width = sum(
             self.chars.get(i, self.chars["nochar"])[1]
@@ -108,7 +108,10 @@ class Font:
 
         return tot_width, self.line_size
 
-    def __get_charset(self, aa=False, text_c=(1, 1, 1), bg_c=None):
+    def __get_charset(self,
+                      aa: bool = False,
+                      text_c: _col_type = (1, 1, 1),
+                      bg_c: Optional[_col_type] = None) -> dict:
         key = (aa, text_c, bg_c)
         chars = self.cache.get(key, None)
 

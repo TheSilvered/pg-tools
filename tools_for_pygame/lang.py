@@ -116,12 +116,17 @@ keeps any character after itself, including new-line characters,
 white space, $, @, ~@, .~@, &, ::, %=, and itself (\\).
 """
 
-import re
-from .stack import Stack
-from .exceptions import LangError
+import re as _re
+from typing import Union as _Union
+
+from .stack import Stack as _Stack
+from .exceptions import (
+    LangError as _LangError,
+    LangEncodingError as _LangEncodingError
+)
 
 # With re.ASCII \w matches only [a-zA-Z0-9_]
-name_expr = re.compile(r"[a-zA-Z_]\w*", re.ASCII)
+name_expr = _re.compile(r"[a-zA-Z_]\w*", _re.ASCII)
 
 
 class LangNode:
@@ -221,7 +226,7 @@ class LangEval:
                 else:
                     c_obj = getattr(c_obj, v)
             except (AttributeError, KeyError):
-                raise LangError(
+                raise _LangError(
                     self.l_no,
                     f"the value '{'.'.join(self.branches)}' is not valid",
                     self.file
@@ -238,7 +243,7 @@ class LangEval:
         return f"LangEval( at '{'.'.join(self.branches)}' )"
 
 
-def _make_lang_obj(d, root_node=None):
+def _make_lang_obj(d, root_node=None) -> LangNode:
     if root_node is None:
         root_node = this_node = LangNode()
     else:
@@ -261,19 +266,19 @@ def _make_lang_obj(d, root_node=None):
     return this_node
 
 
-def _check_name(s, l_no, file):
+def _check_name(s, l_no, file) -> None:
     match = name_expr.match(s)
     if match is None or match[0] != s:
-        raise LangError(l_no, f"name '{s}' is not a valid", file)
+        raise _LangError(l_no, f"name '{s}' is not a valid", file)
 
 
-def _make_lang_dict(s, encoding, file):
-    if isinstance(s, bytes | bytearray):
+def _make_lang_dict(s, encoding, file) -> dict:
+    if isinstance(s, bytes) or isinstance(s, bytearray):
         s = s.decode(encoding)
 
     lines = s.split("\n")
     root = {}
-    dict_stack = Stack(root)
+    dict_stack = _Stack(root)
     attr = ""
 
     for l_no, l in enumerate(lines):
@@ -284,7 +289,8 @@ def _make_lang_dict(s, encoding, file):
         if l[:2] == "%=":
             name = l[2:]
             if name.lower() != encoding.lower():
-                raise EncodingWarning(name)
+                return _LangEncodingError(f"encoding must be '{name.lower()}'")
+
             attr = ""
             continue
 
@@ -297,7 +303,11 @@ def _make_lang_dict(s, encoding, file):
                 dict_count += 1
 
             if dict_count > len(dict_stack):
-                raise LangError(l_no, "accessing child set with no parent", file)
+                raise _LangError(
+                    l_no,
+                    "accessing child set with no parent",
+                    file
+                )
 
             while dict_count < len(dict_stack): dict_stack.pop()
 
@@ -331,12 +341,15 @@ def _make_lang_dict(s, encoding, file):
             try:
                 name, val, *others = l.split(":")
             except ValueError:
-                raise LangError(l_no, "expected ':'", file)
+                raise _LangError(l_no, "expected ':'", file)
             if others:
-                raise LangError(l_no, "invalid syntax", file)
+                raise _LangError(l_no, "invalid syntax", file)
 
             _check_name(name, l_no, file)
-            dict_stack.peek()[name] = LangEval(val.split("."), local, l_no, file)
+            dict_stack.peek()[name] = LangEval(val.split("."),
+                                               local,
+                                               l_no,
+                                               file)
             attr = ""
             continue
 
@@ -351,12 +364,14 @@ def _make_lang_dict(s, encoding, file):
             except KeyError:
                 dict_stack.peek()[attr] = l
         else:
-            raise LangError(l_no, f"text with no attribute", file)
+            raise _LangError(l_no, f"text with no attribute", file)
 
     return root
 
 
-def load(path: str, encoding: str = "utf-8", as_dict: bool = False):
+def load(path: str,
+         encoding: str = "utf-8",
+         as_dict: bool = False) -> _Union[LangNode, dict]:
     """
     load(path, encoding='utf-8', as_dict=False)
 
@@ -376,15 +391,15 @@ def load(path: str, encoding: str = "utf-8", as_dict: bool = False):
     try:
         with open(path, encoding=encoding) as f:
             return loads(f.read(), encoding, as_dict, path)
-    except EncodingWarning as e:
-        with open(path, encoding=e.args[0]) as f:
-            return loads(f.read(), e.args[0], as_dict, path)
+    except _LangEncodingError as e:
+        with open(path, encoding=e.args[0][17:-1]) as f:
+            return loads(f.read(), e.args[0][17:-1], as_dict, path)
 
 
 def loads(s: str,
           encoding: str = "utf-8",
           as_dict: bool = False,
-          file: str = "<string>"):
+          file: str = "<string>") -> _Union[LangNode, dict]:
     """
     loads(s, encoding='utf-8', as_dict=False, file='<string>')
 

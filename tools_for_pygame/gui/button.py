@@ -7,9 +7,9 @@ import pygame.mixer
 
 from .label import Label
 from .gui_element import GUIElement
-from pgt.ani import AniBase
-from pgt.constants import BUTTON_NORMAL, BUTTON_CLICK, BUTTON_HOVER
-from pgt.element import MouseInteractionAniElement, Element
+from tools_for_pygame.ani import AniBase
+from tools_for_pygame.constants import BUTTON_NORMAL, BUTTON_CLICK, BUTTON_HOVER
+from tools_for_pygame.element import MouseInteractionAniElement, Element
 
 
 class Button(MouseInteractionAniElement, GUIElement):
@@ -44,12 +44,13 @@ class Button(MouseInteractionAniElement, GUIElement):
         'func' (Callable): function to run when the button is pressed
         'func_args' (Iterable?): *args of the function
         'func_kwargs' (dict?): **kwargs of the function
+        'func_as_method' (bool): makes the 'func' argument a method by
+            adding the button object as the first positional argument
+            of the function
         'button' (int): which mouse button should activate the button
             1 - left, 2 - middle, 3 - right
         'sound' (pygame.mixer.Sound?): a sound to play when the
             button is clicked
-        'app' (Any): an attribute that should be used to link the button
-            with whatever application you're trying to create
 
     Attrs:
         'normal_ani' (AniBase?): see 'normal_ani' in args
@@ -61,6 +62,7 @@ class Button(MouseInteractionAniElement, GUIElement):
         'func' (Callable?): see 'func' in args
         'fargs' (Iterable?): see 'func_args' in args
         'fkwargs' (dict?): see 'func_kwargs' in args
+        'func_as_method' (bool): see 'func_as_method' in args
         'button' (int): see 'button' in args
         'sound' (pygame.mixer.Sound?): see 'sound' in args
         'force_state' (int?): which state is shown of the button,
@@ -92,6 +94,7 @@ class Button(MouseInteractionAniElement, GUIElement):
                  func: Optional[Callable] = None,
                  func_args: Optional[Iterable] = None,
                  func_kwargs: Optional[dict] = None,
+                 func_as_method: bool = False,
                  button: int = 0,
                  sound: Optional[pygame.mixer.Sound] = None,
                  app: Any = None,
@@ -127,6 +130,7 @@ class Button(MouseInteractionAniElement, GUIElement):
         self.fargs = func_args
         if func_kwargs is None: func_kwargs = {}
         self.fkwargs = func_kwargs
+        self.func_as_method = func_as_method
 
         self.button = button
         self.sound = sound
@@ -151,7 +155,12 @@ class Button(MouseInteractionAniElement, GUIElement):
 
     def run(self) -> None:
         """Runs the button's function"""
-        if self.func: self.func(*self.fargs, **self.fkwargs)
+        if not self.func:
+            return
+        if self.func_as_method:
+            self.func(self, *self.fargs, **self.fkwargs)
+        else:
+            self.func(*self.fargs, **self.fkwargs)
 
     def auto_run(self) -> bool:
         """

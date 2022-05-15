@@ -40,6 +40,7 @@ Classes:
     - Pos
     - Size
 """
+from __future__ import annotations
 
 from math import (sqrt as _sqrt,
                   pi as _pi,
@@ -48,8 +49,9 @@ from math import (sqrt as _sqrt,
                   atan2 as _atan2,
                   tau as _tau)
 try:
-    from math import _dist as _dist
+    from math import dist as _dist
 except ImportError:
+    # Taken from https://docs.python.org/3/library/math.html#math.dist
     _dist = lambda p, q: _sqrt(sum((px - qx) ** 2.0 for px, qx in zip(p, q)))
 
 clamp = lambda value, min_, max_: min(max(value, min_), max_)
@@ -441,16 +443,28 @@ class Pos:
         return self.tuple().__hash__()
 
     def __eq__(self, other):
-        return self.x == other[0] and self.y == other[1]
+        try:
+            return self.x == other[0] and self.y == other[1]
+        except (TypeError, ValueError):
+            return self.x == other and self.y == other
 
     def __ne__(self, other):
-        return self.x != other[0] or self.y != other[1]
+        try:
+            return self.x != other[0] or self.y != other[1]
+        except (TypeError, ValueError):
+            return self.x != other or self.y != other
 
     def __gt__(self, other):
-        return self.x > other[0] and self.y > other[1]
+        try:
+            return self.x > other[0] and self.y > other[1]
+        except (TypeError, ValueError):
+            return self.x > other and self.y > other
 
     def __lt__(self, other):
-        return self.x < other[0] and self.y < other[1]
+        try:
+            return self.x < other[0] and self.y < other[1]
+        except (TypeError, ValueError):
+            return self.x < other and self.y < other
 
     def __ge__(self, other):
         return self == other or self > other
@@ -458,26 +472,26 @@ class Pos:
     def __le__(self, other):
         return self == other or self < other
 
-    def list(self):
+    def list(self) -> list:
         return [self.x, self.y]
 
-    def tuple(self):
+    def tuple(self) -> tuple:
         return self.x, self.y
 
-    def int(self):
+    def int(self) -> Pos:
         return self.c(int(self.x), int(self.y))
 
-    def copy(self):
+    def copy(self) -> Pos:
         return self.c(self.x, self.y)
 
-    def dot(self, other):
+    def dot(self, other) -> float:
         product = self * other
         return product.x + product.y
 
-    def lerp(self, other, t):
+    def lerp(self, other, t) -> Pos:
         return self * (1 - t) + Pos(other) * t
 
-    def slerp(self, other, t, c=0):
+    def slerp(self, other, t, c=0) -> Pos:
         c = Pos(c)
         pos1 = self.copy() - c
         pos2 = Pos(other) - c
@@ -516,7 +530,7 @@ class Pos:
         angle = angle1 * (1 - t) + angle2 * t
         return self.c(_cos(angle), _sin(angle)) * radius + center + c
 
-    def quad_bezier(self, other, p1, p2, t):
+    def quad_bezier(self, other, p1, p2, t) -> Pos:
         return quad_bezier(t, self, p1, p2, other)
 
     @classmethod

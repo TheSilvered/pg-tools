@@ -6,10 +6,10 @@ import pygame
 
 from .font import Font
 from .gui_element import GUIElement
-from pgt.constants import LEFT, RIGHT, CENTER, NO_AA, BOLD, ITALIC, UNDERLINE
-from pgt.element import AniElement
-from pgt.mathf import Pos
-from pgt.type_hints import _col_type
+from tools_for_pygame.constants import LEFT, RIGHT, CENTER, NO_AA, BOLD, ITALIC, UNDERLINE
+from tools_for_pygame.element import AniElement
+from tools_for_pygame.mathf import Pos
+from tools_for_pygame.type_hints import _col_type
 
 
 class Label(GUIElement):
@@ -152,9 +152,6 @@ class Label(GUIElement):
 
     @text.setter
     def text(self, text: Any):
-        def check_size(this_text):
-            return self.font.size(this_text)[0] > self.size.w
-
         self.__text = str(text)
 
         lines = self.__text.split("\n")
@@ -167,22 +164,22 @@ class Label(GUIElement):
                 current_text = words[0]
                 prev_text = words[0]
 
-                while check_size(prev_text) and len(prev_text) > 1:
+                while self.__check_size(prev_text) and len(prev_text) > 1:
                     new_line = prev_text[0]
                     prev_text = prev_text[1:]
-                    while prev_text and not check_size(new_line + prev_text[0]):
+                    while prev_text and not self.__check_size(new_line + prev_text[0]):
                         new_line += prev_text[0]
                         prev_text = prev_text[1:]
                     new_lines.append(new_line)
 
                 for word in words[1:]:
                     current_text += " " + word
-                    if check_size(current_text):
+                    if self.__check_size(current_text):
                         new_lines.append(prev_text)
-                        while check_size(word) and len(word) > 1:
+                        while self.__check_size(word) and len(word) > 1:
                             new_line = word[0]
                             word = word[1:]
-                            while word and not check_size(new_line + word[0]):
+                            while word and not self.__check_size(new_line + word[0]):
                                 new_line += word[0]
                                 word = word[1:]
                             new_lines.append(new_line)
@@ -229,6 +226,9 @@ class Label(GUIElement):
             self.img_offset = Pos((self.size.w - new_image.get_width()) / 2, 0)
 
         self.change_image(new_image)
+
+    def __check_size(self, text) -> bool:
+        return self.font.size(text)[0] > self.size.w
 
     def rotate(self, *args, **kwargs) -> None:
         if self.auto_size:

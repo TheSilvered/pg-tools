@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 # Ani
-PERC         = 0b00001
-PREV_VAL     = 0b00010
-STARTING_VAL = 0b00100
-FRAME        = 0b01000
-ANIMATION    = 0b10000
+PERC         = 0b000001
+PREV_VAL     = 0b000010
+STARTING_VAL = 0b000100
+FRAME        = 0b001000
+ANIMATION    = 0b010000
+ELEMENT      = 0b100000
 
 # Button
 BUTTON_NORMAL = 1

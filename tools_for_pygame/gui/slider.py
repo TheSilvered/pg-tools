@@ -2,13 +2,12 @@ from abc import ABC
 
 from pygame import display
 
-from pgt.constants import CC, BUTTON_CLICK, BUTTON_HOVER, BUTTON_NORMAL
-from pgt.mathf import Pos, Size
-from pgt.utils import transform_func
-
 from .button import Button
 from .draggable import Draggable
 from .surface_element import SurfaceElement
+from tools_for_pygame.constants import CC, BUTTON_CLICK, BUTTON_HOVER, BUTTON_NORMAL
+from tools_for_pygame.mathf import Pos, Size, safe_div
+from tools_for_pygame.utils import transform_func
 
 display.init()
 
@@ -58,7 +57,7 @@ class _SliderBase(SurfaceElement, ABC):
     def value(self):
         return None
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         if self.hidden: return
         if self.ruler.button_clicked \
            and not self.cursor.dragging \
@@ -123,9 +122,7 @@ class HSlider(_SliderBase):
 
     @property
     def value(self):
-        if self.min_val == self.max_val or self.max_x == 0:
-            return self.min_val
-        return self.min_val + (self.cursor.l / self.max_x) * (self.max_val - self.min_val)
+        return self.min_val + (safe_div(self.cursor.l, self.max_x)) * (self.max_val - self.min_val)
 
     @value.setter
     def value(self, new_value):
@@ -133,7 +130,7 @@ class HSlider(_SliderBase):
             return
         self.cursor.l = (new_value - self.min_val) / (self.max_val - self.min_val) * self.max_x
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         prev_val = self.value
 
         if self.layout:
@@ -199,9 +196,7 @@ class VSlider(_SliderBase):
 
     @property
     def value(self):
-        if self.min_val == self.max_val or self.max_y == 0:
-            return self.min_val
-        return self.min_val + (self.cursor.u / self.max_y) * (self.max_val - self.min_val)
+        return self.min_val + (safe_div(self.cursor.u, self.max_y)) * (self.max_val - self.min_val)
 
     @value.setter
     def value(self, new_value):
@@ -209,7 +204,7 @@ class VSlider(_SliderBase):
             return
         self.cursor.u = (new_value - self.min_val) / (self.max_val - self.min_val) * self.max_y
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
         prev_val = self.value
 
         if self.layout:

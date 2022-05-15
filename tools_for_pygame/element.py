@@ -7,7 +7,6 @@ from typing import Optional, Iterable, Callable, Union
 import pygame
 
 from .constants import UL
-from .exceptions import InvalidPosError
 from .mathf import clamp, Pos, Size
 from .type_hints import _pos, _size, _col_type
 
@@ -137,9 +136,9 @@ class Element(pygame.sprite.Sprite):
             self._a_point = anchor_point
             self.pos = getattr(self.__a_element, self._a_point) + self.__offset
         else:
-            raise InvalidPosError("Element "
-                                 f"{self.__class__.__name__} needs a position")\
-                                  from None
+            self.__a_element = None
+            self._a_point = anchor_point
+            self.pos = self.__offset
 
         self.hidden = hidden
 
@@ -284,6 +283,41 @@ class Element(pygame.sprite.Sprite):
     @property
     def is_anchored(self):
         return self.__a_element is not None
+
+    def anchor(self,
+               anchor_element: Element,
+               anchor_point: Optional[str] = None) -> None:
+        """
+        anchor(self, anchor_element, anchor_point=None)
+
+        Type: method
+
+        Description: anchors the element to another one
+
+        Args:
+            'anchor_element' (Element?): the element to anchor to, if
+                set to None, the anchor is removed
+            'anchor_point' (str): the point of the 'anchor_element' that
+                this element anchors to, if None, defaults to the point
+                given on initialization
+
+        Return type: None
+        """
+        if anchor_element is not None and \
+           not isinstance(anchor_element, Element):
+            raise TypeError("Expected an instance of Element, got "\
+                           f"'{anchor_element.__class__.__name__}' instead")
+
+        self.__a_element = anchor_element
+
+        if anchor_element is None:
+            return
+
+        # anchor_point overwrites self._a_point
+        if anchor_point is not None:
+            self._a_point = anchor_point
+        setattr(self, self._pos_point,
+                getattr(self.__a_element, self._a_point) + self.__offset)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         """
@@ -487,40 +521,6 @@ class Element(pygame.sprite.Sprite):
         """
         self.hidden = True
 
-    def anchor(self,
-               anchor_element: Element,
-               anchor_point: Optional[str] = None) -> None:
-        """
-        anchor(self, anchor_element, anchor_point=None)
-
-        Type: method
-
-        Description: anchors the element to another one
-
-        Args:
-            'anchor_element' (Element?): the element to anchor to, if
-                set to None, the anchor is removed
-            'anchor_point' (str): the point of the 'anchor_element' that
-                this element anchors to, if None, defaults to the point
-                given on initialization
-
-        Return type: None
-        """
-        if not isinstance(anchor_element, Union[Element, None]):
-            raise TypeError("Expected an instance of Element, got "\
-                           f"'{anchor_element.__class__.__name__}' instead")
-
-        self.__a_element = anchor_element
-
-        if anchor_element is None:
-            return
-
-        # anchor_point overwrites self._a_point
-        if anchor_point is not None:
-            self._a_point = anchor_point
-        setattr(self, self._pos_point,
-                getattr(self.__a_element, self._a_point) + self.__offset)
-
     def draw(self,
              surface: pygame.Surface,
              pos: _pos = None,
@@ -566,7 +566,7 @@ class Element(pygame.sprite.Sprite):
             pos = self.ul
         else:
             if not isinstance(pos, pygame.Rect):
-                pos = pygame.Rect(pos, self.size)
+                pos = pygame.Rect(Pos(pos), self.size)
 
             if point is not None:
                 attr = _point_to_rect_point.get(point, None)

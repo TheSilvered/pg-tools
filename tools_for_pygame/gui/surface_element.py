@@ -7,9 +7,9 @@ import pygame
 from .gui_element import GUIElement
 
 
-from pgt.element import AniElement
-from pgt.mathf import Size
-from pgt.type_hints import _col_type
+from tools_for_pygame.element import AniElement
+from tools_for_pygame.mathf import Size
+from tools_for_pygame.type_hints import _col_type
 
 
 class SurfaceElement(GUIElement):
@@ -149,9 +149,9 @@ class SurfaceElement(GUIElement):
         super().draw(*args, **kwargs)
 
 
-class AniSurfaceElement(SurfaceElement, AniElement):
+class SurfaceAniElement(SurfaceElement, AniElement):
     """
-    AniSurfaceElement(SurfaceElement, AniElement)
+    SurfaceAniElement(SurfaceElement, AniElement)
 
     Type: class
 

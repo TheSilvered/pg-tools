@@ -1,6 +1,6 @@
 import pygame
 import sys; sys.path.insert(0, "..")
-import pgt
+import tools_for_pygame as pgt
 pygame.init()
 
 __test_name__ = "gui.Button"
@@ -36,7 +36,7 @@ b = pgt.gui.Button(
             1000
         ),
         reset_on_end=False,
-        func_args=pgt.ani.PERC | pgt.ani.ANIMATION,
+        func_args=pgt.PERC | pgt.ANIMATION,
         tot_time=.2,
         smooth=True
     ),
@@ -46,7 +46,7 @@ b = pgt.gui.Button(
             1000
         ),
         reset_on_end=False,
-        func_args=pgt.ani.PERC | pgt.ani.ANIMATION,
+        func_args=pgt.PERC | pgt.ANIMATION,
         tot_time=.3,
         smooth=True
     ),
@@ -56,7 +56,7 @@ b = pgt.gui.Button(
             1000
         ),
         reset_on_end=False,
-        func_args=pgt.ani.PERC | pgt.ani.ANIMATION,
+        func_args=pgt.PERC | pgt.ANIMATION,
         tot_time=.1,
         smooth=True
     )

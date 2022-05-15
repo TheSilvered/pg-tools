@@ -5,11 +5,11 @@ from pygame import mouse, transform
 
 from .button import Button
 from .gui_element import GUIElement
-from pgt.constants import AUTOMATIC
-from pgt.mathf import Pos, Size
-from pgt.element import Element, MouseInteractionElement
-from pgt.type_hints import _col_type, _pos
-from pgt.utils import filled_surface
+from tools_for_pygame.constants import AUTOMATIC
+from tools_for_pygame.mathf import Pos, Size
+from tools_for_pygame.element import Element, MouseInteractionElement
+from tools_for_pygame.type_hints import _col_type, _pos
+from tools_for_pygame.utils import filled_surface
 
 
 class GUILayout(GUIElement, MouseInteractionElement):
@@ -58,6 +58,10 @@ class GUILayout(GUIElement, MouseInteractionElement):
 
         self.elements = []
 
+        if not isinstance(elements, dict):
+            raise TypeError("'elements' must be 'dict', " \
+                            f"not {elements.__class__.__name__}")
+
         for name, element in elements.items():
             if name in self.__dict__:
                 raise NameError(f"name '{name}' already exists in the layout")
@@ -70,7 +74,7 @@ class GUILayout(GUIElement, MouseInteractionElement):
             element.set_layout(self)
         self._calculate_autopos_offsets()
 
-    def _calculate_autopos_offsets(self):
+    def _calculate_autopos_offsets(self) -> None:
         max_h = 0
         curr_y = 0
         curr_x = 0
@@ -116,10 +120,10 @@ class GUILayout(GUIElement, MouseInteractionElement):
         self.image = filled_surface(self.size, self.bg_color)
         self._calculate_autopos_offsets()
 
-    def rotate(self, *args, **kwargs):
+    def rotate(self, *args, **kwargs) -> None:
         raise NotImplemented("Rotating GUILayout is not supported")
 
-    def scale(self, *args, **kwargs):
+    def scale(self, *args, **kwargs) -> None:
         raise NotImplemented("Scaling GUILayout is not supported")
 
     def change_image(self, surface) -> None:

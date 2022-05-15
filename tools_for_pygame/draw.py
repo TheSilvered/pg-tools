@@ -55,7 +55,7 @@ def clear_cache(caches: int = ALL_CACHES) -> None:
         rect_cache.clear()
 
 
-def _draw_quarters(surf, rad, col, border, b_col, w, h):
+def _draw_quarters(surf, rad, col, border, b_col, w, h) -> None:
     in_rad = rad - border
     alpha_col = len(col) == 4
     alpha_b_col = b_col and len(b_col) == 4
@@ -123,7 +123,7 @@ def even_circle(surface: Optional[pygame.Surface],
         'center' (pgt.Pos): where the top-left pixel of the center should
             be on the surface
         'radius' (int): radius of the circle
-        'color' (tuple, list): the color of the circle
+        'color' (list, tuple): the color of the circle
         'border' (int): the thickness of the border, if 0 the border
             is not drawn
         'border_color' (tuple, list): the color of the border, can be
@@ -181,7 +181,7 @@ def odd_circle(surface: Optional[pygame.Surface],
             if set to None, returns the image itself
         'center' (pgt.Pos): where the center should be on the surface
         'radius' (int): radius of the circle
-        'color' (tuple, list): the color of the circle
+        'color' (list, tuple): the color of the circle
         'border' (int): the thickness of the border, if 0 the border
             is not drawn
         'border_color' (tuple, list): the color of the border, can be

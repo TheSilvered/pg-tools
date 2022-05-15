@@ -3,6 +3,9 @@ This module offers many useful tools that make using pygame easier. \
 The goal of this package is to be as reliable as possible offering
 many customization options.
 
+**Any release before 1.0.0 or of which the firs version number changes
+can have non backwards compatible changes**
+
 ### Elements
 The element is the base building block of the package, almost every
 class inherits from the base Element class and adds some functionality

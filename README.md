@@ -3,7 +3,7 @@ This module offers many useful tools that make using pygame easier. \
 The goal of this package is to be as reliable as possible offering
 many customization options.
 
-**Any release before 1.0.0 or of which the firs version number changes
+**Any release before 1.0.0 or of which the first version number changes
 can have non backwards compatible changes**
 
 ### Elements

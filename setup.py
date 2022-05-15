@@ -1,5 +1,5 @@
 from setuptools import setup
-from pgt import __version__ as pgt_version
+from tools_for_pygame import __version__ as pgt_version
 
 with open("README.md") as f:
     long_desc = f.read()

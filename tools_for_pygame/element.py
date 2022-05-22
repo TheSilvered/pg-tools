@@ -45,6 +45,8 @@ class Element(pygame.sprite.Sprite):
             argument
         'anchor_point' (str): the point of the 'anchor_element' that
             this element anchors to, defaults to pgt.UL
+        'point' (str?): attribute that overwrites 'pos_point' and
+            'anchor_point' to set them to the same point
         'offset' (pgt.Pos): the offset of the element from 'pos' or the
             point of the 'anchor_element'
         'img_offset' (pgt.Pos): offset of the image from the top-left
@@ -91,6 +93,8 @@ class Element(pygame.sprite.Sprite):
         'h' (int): height of the element
 
     Methods:
+        - anchor(anchor_element, anchor_point)
+        - _update_anchor_pos()
         - handle_event()
         - rotate(angle, abs_, colorkey)
         - scale(size, smooth, point)
@@ -106,8 +110,9 @@ class Element(pygame.sprite.Sprite):
                  size: _size = Size(0),
                  image: Optional[pygame.Surface] = None,
                  pos_point: str = UL,
-                 anchor_element=None,
+                 anchor_element: Optional[Element] = None,
                  anchor_point: str = UL,
+                 point: Optional[str] = None,
                  offset: _pos = Pos(0),
                  img_offset: _pos = Pos(0),
                  alpha: int = 255,
@@ -125,22 +130,19 @@ class Element(pygame.sprite.Sprite):
 
         self.__offset = Pos(offset)
         self.img_offset = Pos(img_offset)
-        self._pos_point = pos_point
+        self.hidden = hidden
+        self._pos_point = point if point else pos_point
+        self._a_point = point if point else anchor_point
 
         if pos is not None:
             self.__a_element = None
-            self._a_point = anchor_point
             self.pos = pos + self.__offset
         elif anchor_element is not None:
             self.__a_element = anchor_element
-            self._a_point = anchor_point
             self.pos = getattr(self.__a_element, self._a_point) + self.__offset
         else:
             self.__a_element = None
-            self._a_point = anchor_point
             self.pos = self.__offset
-
-        self.hidden = hidden
 
         self._rot = 0
         if rotation != 0:
@@ -317,6 +319,12 @@ class Element(pygame.sprite.Sprite):
         if anchor_point is not None:
             self._a_point = anchor_point
         setattr(self, self._pos_point,
+                getattr(self.__a_element, self._a_point) + self.__offset)
+
+    def _update_anchor_pos(self):
+        """Updates the element's position when it's anchored"""
+        if self.__a_element is not None:
+            setattr(self, self._pos_point,
                 getattr(self.__a_element, self._a_point) + self.__offset)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -498,27 +506,11 @@ class Element(pygame.sprite.Sprite):
         return self.rect.collidepoint(Pos(point))
 
     def show(self) -> None:
-        """
-        show(self)
-
-        Type: method
-
-        Description: shows the element
-
-        Return type: None
-        """
+        """Shows the element"""
         self.hidden = False
 
     def hide(self) -> None:
-        """
-        hide(self)
-
-        Type: method
-
-        Description: hides the element
-
-        Return type: None
-        """
+        """Hides the element"""
         self.hidden = True
 
     def draw(self,
@@ -556,10 +548,12 @@ class Element(pygame.sprite.Sprite):
         """
         # If the element is anchored and there is no arbitrary position set,
         # get the position of the element
-        if pos is None and self.__a_element is not None:
-            self.pos = getattr(self.__a_element, self._a_point) + self.__offset
+        if pos is None: self._update_anchor_pos()
 
-        if self.hidden or self.image is None: return
+        if self.hidden or self.image is None:
+            if show_rect:
+                pygame.draw.rect(surface, rect_color, self.rect, 1)
+            return
 
         # Sets the position based on the parameters given in the arguments
         if pos is None:
@@ -585,7 +579,8 @@ class Element(pygame.sprite.Sprite):
         surface.blit(self.image, pos, special_flags=flags)
 
         # Draws the rectangle if requested
-        if show_rect: pygame.draw.rect(surface, rect_color, self.rect, 1)
+        if show_rect:
+            pygame.draw.rect(surface, rect_color, self.rect, 1)
 
 
 class AniElement(Element):
@@ -764,8 +759,7 @@ class MouseInteractionElement(Element):
     def hovered(self):
         if self.hidden: return False
 
-        new_pos = self.get_mouse_pos()
-        in_area = self.collide_point(new_pos)
+        in_area = self.collide_point(self.get_mouse_pos())
 
         if not any(pygame.mouse.get_pressed()) and in_area:
             self.__prev_hovered = True
@@ -779,9 +773,6 @@ class MouseInteractionElement(Element):
     @property
     def clicked(self):
         if not self.hovered: return False, False, False
-
-        if not self.ul < self.get_mouse_pos() < self.dr:
-            return False, False, False
 
         if not (self.__prev_hovered or self.__keep_clicked):
             return False, False, False

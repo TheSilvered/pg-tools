@@ -17,6 +17,7 @@ input_label = pgt.gui.InputLabel(
     size=(500, 30),
     image=pgt.filled_surface((500, 30), pgt.GRAY(80)),
     # right_aligned=True,
+    char_subs={"\t": "     "},
     func=print_self,
     func_as_method=True,
     caret_color=pgt.WHITE,

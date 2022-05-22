@@ -72,6 +72,8 @@ class GUILayout(GUIElement, MouseInteractionElement):
                 continue
 
             element.set_layout(self)
+
+        self.__prev_button = None
         self._calculate_autopos_offsets()
 
     def _calculate_autopos_offsets(self) -> None:
@@ -146,10 +148,21 @@ class GUILayout(GUIElement, MouseInteractionElement):
         If the element hovered is a button or another layout calls
         'auto_run' on that element
         """
+        if self.__prev_button is not None:
+            res = self.__prev_button.auto_run()
+        else:
+            res = False
+
         for i in reversed(self.elements):
             if i.collide_point(self.get_mouse_pos()):
-                if isinstance(i, Button): return i.auto_run()
+                if i is self.__prev_button:
+                    return res
+
+                if isinstance(i, Button):
+                    self.__prev_button = i
+                    return i.auto_run()
                 return False
+        return res
 
     def show(self) -> None:
         for i in self.elements:

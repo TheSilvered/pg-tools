@@ -37,6 +37,9 @@ class InputLabel(Button):
         'caret_corner_radius' (int): corner radius of the caret
         'right_aligned' (bool): if the text should be written from the
             right to the left, such as Hebrew or Arabic scripts
+        'char_subs' (dict): a string that is added to the text instead
+            of the unicode of the key (Ex. {"\\t": "    "} when pressing
+            [TAB])
 
     Attrs:
         'focused' (bool): see 'focused' in args
@@ -48,6 +51,7 @@ class InputLabel(Button):
         'text' (str): the current text of the label, do NOT use
             'InputLabel.label.text' to take the contents because they
             may be incomplete
+        'char_subs' (dict): see 'char_subs' in args
 
     Changed attrs:
         'func' is now called when the label loses focus
@@ -74,6 +78,7 @@ class InputLabel(Button):
                  caret_rect: Optional[pygame.Rect] = None,
                  caret_corner_radius: int = 0,
                  right_aligned: bool = False,
+                 char_subs: dict = None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -94,6 +99,10 @@ class InputLabel(Button):
 
         self.auto_focus = auto_focus
         self.allowed_chars = allowed_chars
+
+        if char_subs is None:
+            char_subs = {}
+        self.char_subs = char_subs
 
         if not isinstance(caret_rect, pygame.Rect):
             caret_rect = pygame.Rect(0, 0, 2, self.label.h)
@@ -253,11 +262,13 @@ class InputLabel(Button):
             if self.allowed_chars and uni not in self.allowed_chars:
                 return
 
+            uni = self.char_subs.get(uni, uni)
+
             self.text = self.text[:self.__caret] + uni + self.text[self.__caret:]
             if self.right_aligned:
-                self.__t_offset += 1
+                self.__t_offset += len(uni)
             else:
-                self.__caret += 1
+                self.__caret += len(uni)
 
         self.__blink_timer = time.perf_counter()
         self._update_text()

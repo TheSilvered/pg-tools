@@ -422,6 +422,7 @@ class AniBase(_ABC):
             if self.func_args & _STARTING_VAL: args.append(self.starting_val)
             if self.func_args & _FRAME:        args.append(frame)
             if self.func_args & _ANIMATION:    args.append(self)
+            if self.func_args & _ELEMENT:      args.append(self.e)
             return_val = self.frames._func(*args)
         self.__pending = 0
         self.__prev_val = return_val

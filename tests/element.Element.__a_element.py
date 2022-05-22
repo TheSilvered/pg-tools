@@ -23,7 +23,6 @@ e1 = pgt.Element(
 )
 
 e2 = pgt.Element(
-    pos=0,
     # anchor_element=e1,
     anchor_point=pgt.CC,
     size=(100, 100),

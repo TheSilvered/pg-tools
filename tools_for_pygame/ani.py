@@ -48,9 +48,9 @@ Here is the code of PosAni:
 
 class PosAni(AniBase):
     def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
         # it copies the position into element_val
         self.element_val = self.e.pos.copy()
+        super().start(*args, **kwargs)
 
     def set_element(self):
         # it assumes that get_frame() always returns a valid position
@@ -149,6 +149,7 @@ class AniBase(_ABC):
             - STARTING_VAL: 'start_val' in the arguments
             - FRAME: the number of the current frame
             - ANIMATION: the animation object itself
+            - ELEMENT: the element that owns the animation
         'queue_ani' (AniBase?): the animation that starts when this one
             ends
         'max_updates_per_frame' (int): the maximum frames the animation

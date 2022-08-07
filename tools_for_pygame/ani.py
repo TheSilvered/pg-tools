@@ -61,7 +61,7 @@ class PosAni(AniBase):
         # position saved is put back
         self.e.pos = self.element_val
 """
-from __future__ import annotations
+from __future__ import annotations as _annotations
 
 from abc import ABC as _ABC, abstractmethod as _abstractmethod
 import time as _time
@@ -144,8 +144,8 @@ class AniBase(_ABC):
             function, these are:
             - PERC: the percentage of the animation (from 0 to 1)
             - PREV_VAL: the previous value returned by the function, if
-                starting val is not set, the first time 'element_val' is
-                passed
+                starting_val is not set, the first time 'element_val' is
+                None
             - STARTING_VAL: 'start_val' in the arguments
             - FRAME: the number of the current frame
             - ANIMATION: the animation object itself
@@ -566,7 +566,7 @@ class ScaleAni(AniBase):
         super().__init__(*args, **kwargs)
 
     def start(self, *args, **kwargs):
-        self.element_val = self.e.size
+        self.element_val = self.e.size.copy()
         super().start(*args, **kwargs)
 
     def set_element(self):

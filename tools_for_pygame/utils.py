@@ -129,7 +129,7 @@ def transform_func(element: Element) -> _Callable:
     Type: function
 
     Description: this function returns another function that transforms
-        any screen coordinates to coordinates relative to an element
+        any screen coordinate to a coordinate relative to an element
         (including the rotation). This may be useful as a
         'transform_mouse_pos' function for a MouseInteractionElement
         that is part of a SurfaceElement.

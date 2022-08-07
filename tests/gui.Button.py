@@ -30,36 +30,56 @@ b = pgt.gui.Button(
     ),
     func=print,
     func_args=["Hello"],
-    normal_ani=pgt.ani.ScaleAni(
-        frames=pgt.ani.FuncAniFrames(
-            lambda p, a: a.element_val + (pgt.Size(100) - a.element_val) * pgt.e_out_exp(p),
-            1000
+    animations=[
+        pgt.ani.ScaleAni(
+            name="_from_hover",
+            id_=1,
+            frames=pgt.ani.FuncAniFrames(
+                lambda p, a: a.element_val + (pgt.Size(100) - a.element_val) * pgt.e_out_exp(p),
+                1000
+            ),
+            reset_on_end=False,
+            func_args=pgt.PERC | pgt.ANIMATION,
+            tot_time=.2,
+            smooth=True
         ),
-        reset_on_end=False,
-        func_args=pgt.PERC | pgt.ANIMATION,
-        tot_time=.2,
-        smooth=True
-    ),
-    on_hover_ani=pgt.ani.ScaleAni(
-        frames=pgt.ani.FuncAniFrames(
-            lambda p, a: a.element_val + (pgt.Size(115) - a.element_val) * pgt.e_out_exp(p),
-            1000
+        pgt.ani.ScaleAni(
+            name="_on_hover",
+            id_=1,
+            frames=pgt.ani.FuncAniFrames(
+                lambda p, a: a.element_val + (pgt.Size(115) - a.element_val) * pgt.e_out_exp(p),
+                1000
+            ),
+            reset_on_end=False,
+            func_args=pgt.PERC | pgt.ANIMATION,
+            tot_time=.3,
+            smooth=True
         ),
-        reset_on_end=False,
-        func_args=pgt.PERC | pgt.ANIMATION,
-        tot_time=.3,
-        smooth=True
-    ),
-    on_click_ani=pgt.ani.ScaleAni(
-        frames=pgt.ani.FuncAniFrames(
-            lambda p, a: a.element_val + (pgt.Size(80) - a.element_val) * pgt.e_out_exp(p),
-            1000
+        pgt.ani.ScaleAni(
+            name="_on_click",
+            id_=1,
+            frames=pgt.ani.FuncAniFrames(
+                lambda p, a: a.element_val + (pgt.Size(130) - a.element_val) * pgt.e_out_exp(p),
+                1000
+            ),
+            reset_on_end=False,
+            func_args=pgt.PERC | pgt.ANIMATION,
+            tot_time=.1,
+            smooth=True
         ),
-        reset_on_end=False,
-        func_args=pgt.PERC | pgt.ANIMATION,
-        tot_time=.1,
-        smooth=True
-    )
+        pgt.ani.ScaleAni(
+            name="_on_hover_from_click",
+            id_=1,
+            frames=pgt.ani.FuncAniFrames(
+                lambda p, a: a.element_val + (pgt.Size(90) - a.element_val) * pgt.e_out_exp(p),
+                1000
+            ),
+            reset_on_end=False,
+            func_args=pgt.PERC | pgt.ANIMATION,
+            tot_time=.2,
+            smooth=True
+        )
+    ]
 )
 
 info = pgt.gui.Label(

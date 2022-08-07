@@ -29,35 +29,34 @@ Functions:
     'G(c)' (tuple[int]): returns a color with the green channel set to 'c'
     'B(c)' (tuple[int]): returns a color with the blue channel set to 'c'
 """
-
-from numbers import Real
-from typing import List
+from numbers import Real as _Real
+from typing import List as _List
 
 from .mathf import clamp
 from .type_hints import _col_type
 
 
-def add_col(col1: _col_type, col2: _col_type) -> List[int]:
+def add_col(col1: _col_type, col2: _col_type) -> _List[int]:
     return [clamp(c1 + c2, 0, 255) for c1, c2 in zip(col1, col2)]
 
 
-def sub_col(col1: _col_type, col2: _col_type) -> List[int]:
+def sub_col(col1: _col_type, col2: _col_type) -> _List[int]:
     return [clamp(c1 - c2, 0, 255) for c1, c2 in zip(col1, col2)]
 
 
-def mul_col(col1: _col_type, col2: _col_type) -> List[int]:
+def mul_col(col1: _col_type, col2: _col_type) -> _List[int]:
     return [clamp(c1 * c2, 0, 255) for c1, c2 in zip(col1, col2)]
 
 
-def min_col(col1: _col_type, col2: _col_type) -> List[int]:
+def min_col(col1: _col_type, col2: _col_type) -> _List[int]:
     return [min(c1, c2) for c1, c2 in zip(col1, col2)]
 
 
-def max_col(col1: _col_type, col2: _col_type) -> List[int]:
+def max_col(col1: _col_type, col2: _col_type) -> _List[int]:
     return [max(c1, c2) for c1, c2 in zip(col1, col2)]
 
 
-def calc_alpha(new_color: _col_type, prev_color: _col_type, alpha: Real) -> List[int]:
+def calc_alpha(new_color: _col_type, prev_color: _col_type, alpha: _Real) -> _List[int]:
     return [alpha * c1 + (1 - alpha) * c2 for c1, c2 in zip(new_color, prev_color)]
 
 

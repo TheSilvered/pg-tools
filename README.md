@@ -32,6 +32,7 @@ Animations support both a predefined list of frames and a function
 that returns the appropriate value.
 You can also create your custom animation by creating a class that
 inherits from AniBase and defining a couple of methods!
+
 ```python
 # Creating an animation that changes the alpha of an element
 class MyAnimation(pgt.AniBase):
@@ -48,30 +49,60 @@ class MyAnimation(pgt.AniBase):
 
 ### GUI
 Pygame Tools also adds a basic GUI system that implements buttons,
-text labels, draggable elements, sliders and a layout system that
-allows you automatically position elements and adds some functionality
-to buttons.
+text labels, text boxes, draggable elements, sliders, and a layout
+system that allows you automatically position elements.
+
+```python
+# Creating a simple button that prints "Hello, world"
+button = pgt.gui.Button(
+    pos=(100, 100),
+    size=(200, 60),
+    image=pgt.draw.aa_rect(
+        surface=None,
+        rect=pygame.Rect(0, 0, 200, 60),
+        color=pgt.GRAY(220),
+        corner_radius=10
+    ),
+    func=print,
+    func_args=["Hello, world!"]
+)
+```
 
 ### Draw
 Pygame Tools adds some new draw functions that should probably be
 in pygame itself. It adds anti-aliased versions of rects, circles
 (in pygame anti-aliased circles are only empty) and lines.
 The last one is present in pygame but doesn't allow you to change
-its thickness
+its thickness.
+
+```python
+# Getting a rectangle with rounded corners images
+
+img = pgt.draw.aa_rect(
+    # With no surface the function just returns the created image
+    surface=None,
+    rect=pygame.Rect(0, 0, 100, 100),
+    color=pgt.WHITE,
+    corner_radius=20,
+    border_width=10,
+    border_color=pgt.BLACK
+)
+```
 
 ### Lang
 Pygame Tools introduces a useful .lang file loader that allows you
 to easily implement many languages inside your game, and it's designed
 to allow an easy resource-pack implementation.
+
 ```
 :: This is an example of a .lang file
 %=utf-8
+:: a set is a container for related strings
 $this_is_a_set
-  :: a set is a container for related strings
-  @this_is_an_attribute:And this is it's value
   :: attributes contain strings
-  .~@this_is_a_reference;this_is_an_attribute
+  @this_is_an_attribute:And this is it's value
   :: references get the value of the specified attribute or set
+  .~@this_is_a_reference;this_is_an_attribute
 ```
 
 ### Math

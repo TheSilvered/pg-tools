@@ -20,7 +20,7 @@ ruler = pgt.gui.Button(
     image=pgt.filled_surface((120, 10), pgt.WHITE)
 )
 
-cursor = pgt.gui.SliderCursor(
+cursor = pgt.gui.Draggable(
     pos=0,
     size=(20, 10),
     image=pgt.filled_surface((20, 10), pgt.RED)

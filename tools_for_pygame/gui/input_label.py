@@ -14,6 +14,10 @@ from tools_for_pygame.exceptions import NoLabelError
 from tools_for_pygame.mathf import clamp
 from tools_for_pygame.type_hints import _col_type
 
+_control_keys = (pygame.K_BACKSPACE, pygame.K_DELETE, pygame.K_LEFT,
+                 pygame.K_RIGHT, pygame.K_END, pygame.K_HOME, pygame.K_RETURN,
+                 pygame.K_ESCAPE, )
+
 
 class InputLabel(Button):
     """
@@ -53,6 +57,13 @@ class InputLabel(Button):
             may be incomplete
         'char_subs' (dict): see 'char_subs' in args
 
+    Methods:
+        - focus()
+        - unfocus()
+        - set_text(text)
+        - _handle_keypress(key, uni)
+        - _update_text()
+
     Changed attrs:
         'func' is now called when the label loses focus
 
@@ -62,13 +73,6 @@ class InputLabel(Button):
               event is not caught and the function returns False.
             - now catches any KEYDOWN events when the input label is
               focused, returning True
-
-    Methods:
-        - focus()
-        - unfocus()
-        - set_text(text)
-        - _handle_keypress(key, uni)
-        - _update_text()
     """
     def __init__(self,
                  focused: bool = False,
@@ -83,7 +87,7 @@ class InputLabel(Button):
         super().__init__(*args, **kwargs)
 
         if not isinstance(self.label, Label):
-            raise NoLabelError("'text_label' argument of 'InputLabel'" \
+            raise NoLabelError("'text_label' argument of 'InputLabel'"
                                f" must be of type 'Label', not '{self.label.__class__.__name__}'")
 
         self.label.exceed_size = False
@@ -151,6 +155,10 @@ class InputLabel(Button):
         self.__focused = False
         pygame.key.set_repeat(0)
 
+    def hide(self):
+        self.unfocus()
+        super().hide()
+
     def handle_event(self, event: pygame.event.Event) -> bool:
         if event.type == pygame.MOUSEBUTTONDOWN and \
            not self.hovered and self.__focused:
@@ -158,7 +166,10 @@ class InputLabel(Button):
             return False
         elif event.type == pygame.KEYDOWN and \
              (self.__focused or self.auto_focus):
-            if self.auto_focus and not self.__focused:
+            if self.auto_focus \
+               and not self.__focused \
+               and event.unicode \
+               and event.key not in _control_keys:
                 self.focus()
             self._handle_keypress(event.key, event.unicode)
             return True
@@ -193,8 +204,8 @@ class InputLabel(Button):
 
         # Skip whitespace before the word
         while 0 <= idx + n < len(self.text) and \
-              (self.text[idx + n] in punctuation or \
-              self.text[idx + n] in whitespace):
+              (self.text[idx + n] in punctuation or
+               self.text[idx + n] in whitespace):
             idx += -1 if reverse else 1
 
         while 0 <= idx + n < len(self.text) and \
@@ -221,6 +232,7 @@ class InputLabel(Button):
         Return type: None
         """
         ctrl_pressed = pygame.key.get_mods() & pygame.KMOD_CTRL
+
         if (key == pygame.K_BACKSPACE and not self.right_aligned) or \
            (key == pygame.K_DELETE and self.right_aligned):
             if ctrl_pressed: char_q = self.__find_word_break(True)
@@ -254,7 +266,7 @@ class InputLabel(Button):
              (key == pygame.K_END and self.right_aligned):
             self.__caret = 0
 
-        elif key in (pygame.K_RETURN, pygame.K_ESCAPE):
+        elif key in (pygame.K_RETURN, pygame.K_ESCAPE, pygame.K_KP_ENTER):
             self.unfocus()
             return
 

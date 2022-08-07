@@ -22,7 +22,7 @@ hslider = pgt.gui.HSlider(
         size=hruler_size,
         image=pgt.filled_surface(hruler_size, pgt.WHITE)
     ),
-    cursor=pgt.gui.SliderCursor(
+    cursor=pgt.gui.Draggable(
         pos=0,
         size=hcursor_size,
         image=pgt.filled_surface(hcursor_size, pgt.RED)
@@ -38,7 +38,7 @@ vslider = pgt.gui.VSlider(
         size=vruler_size,
         image=pgt.filled_surface(vruler_size, pgt.WHITE)
     ),
-    cursor=pgt.gui.SliderCursor(
+    cursor=pgt.gui.Draggable(
         pos=0,
         size=vcursor_size,
         image=pgt.filled_surface(vcursor_size, pgt.RED)

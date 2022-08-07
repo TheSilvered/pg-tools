@@ -12,23 +12,10 @@ from tools_for_pygame.utils import transform_func
 display.init()
 
 
-class SliderCursor(Button, Draggable):
-    """
-    SliderCursor(Button, Draggable)
-
-    Type: class
-
-    Description: this class should be used to create the cursor of the
-        slider and merges pgt.gui.Button and pgt.gui.Draggable
-        functionality
-    """
-    pass
-
-
 class _SliderBase(SurfaceElement, ABC):
     def __init__(self,
                  ruler: Button,
-                 cursor: SliderCursor,
+                 cursor: Draggable,
                  min_val: float = 0,
                  max_val: float = 1,
                  *args, **kwargs):
@@ -50,8 +37,6 @@ class _SliderBase(SurfaceElement, ABC):
         self.cursor.fkwargs = {}
         self.cursor.transform_mouse_pos = transform_func(self)
         self.cursor._pos_point = CC
-
-        self._rect_size = self.size
 
     @property
     def value(self):
@@ -106,11 +91,11 @@ class HSlider(_SliderBase):
 
         if self.ruler.h <= self.cursor.h:
             self.cursor.b_top = 0
-            self.cursor.b_bottom = self.true_size.h
+            self.cursor.b_bottom = self.size.h
             self.ruler.offset = (0, (self.cursor.h - self.ruler.h) / 2)
         else:
-            self.cursor.b_top = (self.true_size.h - self.cursor.h) / 2
-            self.cursor.b_bottom = (self.true_size.h + self.cursor.h) / 2
+            self.cursor.b_top = (self.size.h - self.cursor.h) / 2
+            self.cursor.b_bottom = (self.size.h + self.cursor.h) / 2
 
         self.cursor.b_left = 0
         self.cursor.b_right = self.ruler.w
@@ -181,11 +166,11 @@ class VSlider(_SliderBase):
 
         if self.ruler.w <= self.cursor.w:
             self.cursor.b_left = 0
-            self.cursor.b_right = self.true_size.w
+            self.cursor.b_right = self.size.w
             self.ruler.offset = ((self.cursor.w - self.ruler.w) / 2, 0)
         else:
-            self.cursor.b_left = (self.true_size.w - self.cursor.w) / 2
-            self.cursor.b_right = (self.true_size.w + self.cursor.w) / 2
+            self.cursor.b_left = (self.size.w - self.cursor.w) / 2
+            self.cursor.b_right = (self.size.w + self.cursor.w) / 2
 
         self.cursor.b_top = 0
         self.cursor.b_bottom = self.ruler.h

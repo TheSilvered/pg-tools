@@ -27,7 +27,8 @@ input_label = pgt.gui.InputLabel(
         size=(494, 24),
         pos_point=pgt.CC,
         anchor_point=pgt.CC,
-        color=pgt.WHITE
+        color=pgt.WHITE,
+        auto_size=False
     )
 )
 

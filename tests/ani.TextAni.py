@@ -17,6 +17,7 @@ l = pgt.gui.AniLabel(
     text="Starting Text",
     font="consolas",
     adapt_to_width=True,
+    auto_size=False,
     alignment=pgt.CENTER,
     color=pgt.WHITE,
     text_size=22,

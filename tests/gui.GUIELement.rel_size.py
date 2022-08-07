@@ -1,14 +1,21 @@
 import pygame
 import sys; sys.path.insert(0, "..")
 import tools_for_pygame as pgt
-
 pygame.init()
 
-__test_name__ = "draw.odd_circle"
-screen = pygame.display.set_mode((800, 600))
+__test_name__ = "gui.GUIELement.rel_size"
+screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
 pygame.display.set_caption(__test_name__)
 clock = pygame.time.Clock()
 fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
+
+def on_size_change(e):
+    e.image = pgt.filled_surface(e.size, pgt.SALMON)
+
+e = pgt.gui.GUIElement(
+    rel_size=(0.5, -50),
+    on_size_change=on_size_change
+)
 
 while True:
     clock.tick()
@@ -18,12 +25,8 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                pgt.draw.clear_cache(pgt.draw.ODD_CIRCLE_CACHE)
 
     screen.fill(pgt.GRAY(50))
     fps.draw(screen)
-    pygame.draw.rect(screen, pgt.WHITE, pygame.Rect(100, 0, 200, 800))
-    pgt.draw.odd_circle(screen, (100, 100), 50, pgt.SALMON, 10, pgt.GREEN[:3] + (100,))
+    e.draw(screen)
     pygame.display.update()

@@ -42,6 +42,14 @@ class GUILayout(GUIElement, MouseInteractionElement):
         - auto_run()
         - set_layout(new_layout)
         - collide_point(point)
+
+    Changed methods:
+        'handle_event':
+            - now 'handle_event' is called for each of the layout's
+              elements from the first to the last to be rendered
+            - when an element catches the event, any element following
+              will not get 'handle_event' called and the function retuns
+              True
     """
     def __init__(self,
                  elements: dict[str: Element],
@@ -59,7 +67,7 @@ class GUILayout(GUIElement, MouseInteractionElement):
         self.elements = []
 
         if not isinstance(elements, dict):
-            raise TypeError("'elements' must be 'dict', " \
+            raise TypeError("'elements' must be 'dict', "
                             f"not {elements.__class__.__name__}")
 
         for name, element in elements.items():
@@ -85,39 +93,42 @@ class GUILayout(GUIElement, MouseInteractionElement):
             if not isinstance(e, GUIElement) or e.position_mode != AUTOMATIC:
                 continue
 
-            offset = e.padding_ul + Pos(0, curr_y)
-            if curr_x + e.w <= self.w or e.w > self.w and curr_x == 0:
+            offset = e.margin_ul + Pos(0, curr_y)
+            m_w = e.margin_size.w
+            m_h = e.margin_size.h
+
+            if curr_x + m_w <= self.w or m_w > self.w and curr_x == 0:
                 offset.x += curr_x
-                curr_x += e.w
-                if e.h > max_h:
-                    max_h = e.h
+                curr_x += m_w
+                if m_h > max_h:
+                    max_h = m_h
             else:
                 offset.y += max_h
                 curr_y += max_h
-                max_h = e.h
-                curr_x = e.w
+                max_h = m_h
+                curr_x = m_w
             e.offset = offset
             e._pos_point = "ul"
 
-        if not self.adapt_height: return
+        if not self.adapt_height:
+            return
 
         self.rect.h = max_h + curr_y
-        if self.bg_color is None: return
+        if self.bg_color is None:
+            return
         self.image = filled_surface(self.size, self.bg_color)
 
     @property
     def size(self):
-        size = Size(self.rect.size)
-        size += self.padding_ul
-        size += self.padding_dr
-        return size
+        return Size(self.rect.size)
 
     @size.setter
     def size(self, value):
-        value = round(Size(value))
-        value -= self.padding_ul
-        value -= self.padding_dr
-        self.rect.size = value
+        new_size = round(Size(value))
+        if self.size == new_size:
+            return
+        self.rect.size = new_size
+        if self.on_size_change: self.on_size_change(self)
         if self.bg_color is None: return
         self.image = filled_surface(self.size, self.bg_color)
         self._calculate_autopos_offsets()
@@ -148,21 +159,21 @@ class GUILayout(GUIElement, MouseInteractionElement):
         If the element hovered is a button or another layout calls
         'auto_run' on that element
         """
-        if self.__prev_button is not None:
-            res = self.__prev_button.auto_run()
-        else:
-            res = False
-
         for i in reversed(self.elements):
             if i.collide_point(self.get_mouse_pos()):
-                if i is self.__prev_button:
-                    return res
-
                 if isinstance(i, Button):
                     self.__prev_button = i
                     return i.auto_run()
+
+                if self.__prev_button is not None:
+                    self.__prev_button._Button__pressed = False
+                self.__prev_button = None
                 return False
-        return res
+
+        if self.__prev_button is not None:
+            self.__prev_button._Button__pressed = False
+        self.__prev_button = None
+        return False
 
     def show(self) -> None:
         for i in self.elements:
@@ -184,13 +195,35 @@ class GUILayout(GUIElement, MouseInteractionElement):
                 i.layout = new_layout
         super().set_layout(new_layout)
 
+    def handle_event(self, event: pygame.event.Event) -> bool:
+        """
+        handle_event(self, event: pygame.event.Event)
+
+        Type: method
+
+        Description: a method to overwrite in custom classes which
+            inherit from pgt.Element and need to handle some user event,
+            returns True if the event was handles, else False, GUILayout
+            calls this method for each one of its elements
+
+        Args:
+            'event' (pygame.event.Event): the event to handle
+
+        Return type: bool
+        """
+        for e in self.elements:
+            if e.handle_event(event):
+                return True
+        return False
+
     def draw(self, *args, **kwargs) -> None:
         super().draw(*args, **kwargs)
 
         for i in self.elements:
             i.draw(*args, **kwargs)
 
-        if self.hidden or self.auto_run(): return
+        if self.hidden or self.auto_run():
+            return
 
         if self._curr_button_hint:
             mouse_pos = Pos(mouse.get_pos())

@@ -50,7 +50,7 @@ e = pgt.AniElement(
         AlphaAni(
             name="_hide",
             frames=pgt.ani.FuncAniFrames(
-                lambda p: (pgt.e_in_sin(p) - 1) * -1,
+                lambda p: -(pgt.e_in_sin(p) - 1),
                 60
             ),
             tot_time=0.5,

@@ -26,6 +26,7 @@ l = pgt.gui.Label(
     bg_color=pgt.BLACK,
     style=pgt.UNDERLINE | pgt.ITALIC,
     exceed_size=True,
+    auto_size=False,
     text_size=22
 )
 

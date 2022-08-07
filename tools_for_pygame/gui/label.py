@@ -72,7 +72,7 @@ class Label(GUIElement):
                  line_height: Optional[int] = None,
                  adapt_to_width: bool = False,
                  exceed_size: bool = True,
-                 auto_size: bool = False,
+                 auto_size: bool = True,
                  *args, **kwargs):
 
         super().__init__(*args, **kwargs)

@@ -21,7 +21,20 @@ e = pgt.gui.Draggable(
     boundary_left=100,
     boundary_right=500,
     boundary_bottom=500,
-    locked=False
+    locked=False,
+    snap_pos=200,
+    animations=[
+        pgt.ani.PosAni(
+            name="_snap",
+            frames=pgt.ani.FuncAniFrames(
+                lambda p, a, e: a.element_val.lerp(e.snap_pos, pgt.e_out_elastic(p)),
+                60
+            ),
+            func_args=pgt.PERC | pgt.ANIMATION | pgt.ELEMENT,
+            tot_time=0.8,
+            reset_on_end=False
+        )
+    ]
 )
 
 while True:

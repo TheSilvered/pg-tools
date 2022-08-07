@@ -40,7 +40,7 @@ Classes:
     - Pos
     - Size
 """
-from __future__ import annotations
+from __future__ import annotations as _annotations
 
 from math import (sqrt as _sqrt,
                   pi as _pi,
@@ -52,7 +52,7 @@ try:
     from math import dist as _dist
 except ImportError:
     # Taken from https://docs.python.org/3/library/math.html#math.dist
-    _dist = lambda p, q: _sqrt(sum((px - qx) ** 2.0 for px, qx in zip(p, q)))
+    _dist = lambda p, q: _sqrt(sum((_px - _qx) ** 2.0 for _px, _qx in zip(p, q)))
 
 clamp = lambda value, min_, max_: min(max(value, min_), max_)
 
@@ -194,7 +194,7 @@ class Pos:
         'slerp(other, t, c=0)' (Pos): spherical interpolation to 'other'
             with 'c' being the center of the plane, defaults to (0, 0)
         'quad_bezier(other, p1, p2, t)' (Pos): quadratic Bézier curve to
-            other with p1 and p2 being the two control points
+            'other' with p1 and p2 being the two control points
 
     How operations work: if given an iterable with size 2 (Pos is an
         iterable) it will make the operation between x and the first

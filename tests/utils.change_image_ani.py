@@ -12,9 +12,20 @@ fps = pgt.gui.Label(pos=0, font="consolas", text_size=20, color=pgt.WHITE)
 button = pgt.gui.Button(
     pos=100,
     size=(150, 70),
-    normal_ani=pgt.change_image_ani(pgt.filled_surface((150, 70), pgt.RED)),
-    on_hover_ani=pgt.change_image_ani(pgt.filled_surface((150, 70), pgt.GREEN)),
-    on_click_ani=pgt.change_image_ani(pgt.filled_surface((150, 70), pgt.BLUE))
+    animations=[
+        pgt.change_image_ani(
+            pgt.filled_surface((150, 70), pgt.RED),
+            "_normal"
+        ),
+        pgt.change_image_ani(
+            pgt.filled_surface((150, 70), pgt.GREEN),
+            "_on_hover"
+        ),
+        pgt.change_image_ani(
+            pgt.filled_surface((150, 70), pgt.BLUE),
+            "_on_click"
+        )
+    ]
 )
 
 while True:

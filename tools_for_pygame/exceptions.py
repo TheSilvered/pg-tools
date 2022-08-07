@@ -18,5 +18,5 @@ class LangEncodingError(Exception):
 
 
 class NoLabelError(Exception):
-    """Exception raised when an InputLabel is initalized without a label"""
+    """Exception raised when an InputLabel is initialized without a label"""
     pass

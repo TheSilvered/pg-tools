@@ -5,8 +5,6 @@ from typing import Iterable, Any
 import pygame
 
 from .gui_element import GUIElement
-
-
 from tools_for_pygame.element import AniElement
 from tools_for_pygame.mathf import Size
 from tools_for_pygame.type_hints import _col_type
@@ -56,7 +54,6 @@ class SurfaceElement(GUIElement):
             self._Element__backup_image = self.image.copy()
         self.image = pygame.transform.rotate(self.image, self._rot)
 
-        if bg_color is None: bg_color = (0, 0, 0)
         self.bg_color = bg_color
 
     def __getitem__(self, index):
@@ -127,8 +124,9 @@ class SurfaceElement(GUIElement):
         else:
             elements_args = []
 
-        new_image = pygame.Surface(self._size)
-        new_image.fill(self.bg_color)
+        new_image = pygame.Surface(self._size, flags=pygame.SRCALPHA)
+        if self.bg_color:
+            new_image.fill(self.bg_color)
 
         for i, e in enumerate(self.__elements):
             try:
@@ -144,7 +142,7 @@ class SurfaceElement(GUIElement):
                 e.draw(**e_args)
 
         self.change_image(new_image)
-        self.image.convert_alpha()
+        # self.image.convert_alpha()
 
         super().draw(*args, **kwargs)
 

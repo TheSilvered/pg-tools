@@ -22,18 +22,6 @@ class Button(MouseInteractionAniElement, GUIElement):
         when clicked
 
     Args:
-        'normal_ani' (AniBase?): animation that plays when the button
-            is idle
-        'on_hover_ani' (AniBase?): animation that plays when the
-            button is hovered by the cursor
-        'on_click_ani' (AniBase?): animation that plays when the
-            button is clicked
-        'repeat_normal_ani' (bool): if the animation should be
-            started each frame or only once
-        'repeat_hover_ani' (bool): if the animation should be
-            started each frame or only once
-        'repeat_click_ani' (bool): if the animation should be
-            started each frame or only once
         'text_label' (Label?): a Label that gets drawn in front of
             the button
         'hint_bg' (Element?): background of the hint shown when the
@@ -53,12 +41,6 @@ class Button(MouseInteractionAniElement, GUIElement):
             button is clicked
 
     Attrs:
-        'normal_ani' (AniBase?): see 'normal_ani' in args
-        'on_hover_ani' (AniBase?): see 'on_hover_ani' in args
-        'on_click_ani' (AniBase?): see 'on_click_ani' in args
-        'repeat_normal_ani' (bool): see 'repeat_normal_ani' in args
-        'repeat_hover_ani' (bool): see 'repeat_hover_ani' in args
-        'repeat_hover_ani' (bool): see 'repeat_hover_ani' in args
         'func' (Callable?): see 'func' in args
         'fargs' (Iterable?): see 'func_args' in args
         'fkwargs' (dict?): see 'func_kwargs' in args
@@ -79,14 +61,26 @@ class Button(MouseInteractionAniElement, GUIElement):
     Methods:
         - run()
         - auto_run()
+
+    Notes:
+        - an animation called '_on_click' will start when a button is
+          clicked
+        - an animation called '_on_hover_from_click' will start when the
+          button is unclicked but still hovered
+        - an animation called '_on_hover' will start when the button is
+          hovered and replaces '_on_hover_from_click' if not set
+        - an animation called '_from_hover' will start when the button
+          is no longer hovered and the cursor was not clicking when it
+          left the button
+        - an animation called '_from_click' will start start when the
+          button is no longer hovered and the cursor was clicking when
+          it left the button
+        - an animation called '_normal' will start when the button is
+          no longer hovered, replaces '_from_click' and or '_from_hover'
+          if not set. If both '_from_hover' and '_from_click' are set,
+          this animation never starts
     """
     def __init__(self,
-                 normal_ani: Optional[AniBase] = None,
-                 on_hover_ani: Optional[AniBase] = None,
-                 on_click_ani: Optional[AniBase] = None,
-                 repeat_normal_ani: bool = False,
-                 repeat_hover_ani: bool = False,
-                 repeat_click_ani: bool = False,
                  text_label: Optional[Label] = None,
                  hint_bg: Optional[Element] = None,
                  hint_label: Optional[Label] = None,
@@ -100,30 +94,9 @@ class Button(MouseInteractionAniElement, GUIElement):
                  app: Any = None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        if normal_ani is not None:
-            normal_ani.name = "normal_ani"
-            normal_ani.id = -1
-            self.add_ani(normal_ani)
-        else: self.normal_ani = None
-
-        if on_hover_ani is not None:
-            on_hover_ani.name = "on_hover_ani"
-            on_hover_ani.id = -1
-            self.add_ani(on_hover_ani)
-        else: self.on_hover_ani = None
-
-        if on_click_ani is not None:
-            on_click_ani.name = "on_click_ani"
-            on_click_ani.id = -1
-            self.add_ani(on_click_ani)
-        else: self.on_click_ani = None
-
-        self.repeat_normal_ani = repeat_normal_ani
-        self.repeat_hover_ani = repeat_hover_ani
-        self.repeat_click_ani = repeat_click_ani
-
-        self.__started_ani = None
+        self.__was_hovered = False
+        self.__was_clicked = False
+        self.__started_ani = ""
 
         self.func = func
         if func_args is None: func_args = []
@@ -195,20 +168,47 @@ class Button(MouseInteractionAniElement, GUIElement):
             elif self.force_state == BUTTON_CLICK:
                 clicked = True
 
-        if clicked and self.on_click_ani is not None:
-            if not self.__started_ani == "c" or self.repeat_click_ani:
-                self.on_click_ani.start()
-                self.__started_ani = "c"
+        if clicked and hasattr(self, "_on_click"):
+            if not self._on_click.running and self.__started_ani != "_on_click":
+                self._on_click.start()
+                self.__started_ani = "_on_click"
 
-        elif hovered and self.on_hover_ani is not None:
-            if not self.__started_ani == "h" or self.repeat_hover_ani:
-                self.on_hover_ani.start()
-                self.__started_ani = "h"
+        elif hovered and self.__was_clicked and hasattr(self, "_on_hover_from_click"):
+            if not self._on_hover_from_click.running \
+               and self.__started_ani != "_on_hover_from_click":
+                self._on_hover_from_click.start()
+                self.__started_ani = "_on_hover_from_click"
 
-        elif self.normal_ani is not None:
-            if not self.__started_ani == "n" or self.repeat_normal_ani:
-                self.normal_ani.start()
-                self.__started_ani = "n"
+        elif hovered and hasattr(self, "_on_hover"):
+            if not self._on_hover.running \
+               and self.__started_ani not in ("_on_hover", "_on_hover_from_click"):
+                self._on_hover.start()
+                self.__started_ani = "_on_hover"
+
+        elif self.__was_hovered and hasattr(self, "_from_hover"):
+            if not self._from_hover.running \
+               and self.__started_ani != "_from_hover":
+                self._from_hover.start()
+                self.__started_ani = "_from_hover"
+
+        elif self.__was_clicked and hasattr(self, "_from_click"):
+            if not self._from_click.running \
+               and self.__started_ani != "_from_click":
+                self._from_click.start()
+                self.__started_ani = "_from_click"
+
+        elif not clicked \
+             and not hovered \
+             and not self.__was_hovered \
+             and not self.__was_clicked \
+             and hasattr(self, "_normal"):
+            if not self._normal.running \
+               and self.__started_ani not in ("_normal", "_from_hover", "_from_click"):
+                self._normal.start()
+                self.__started_ani = "_normal"
+
+        self.__was_hovered = False if clicked else hovered
+        self.__was_clicked = clicked
 
         if self.hidden:
             self.start_hover = None

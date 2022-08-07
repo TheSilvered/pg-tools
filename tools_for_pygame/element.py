@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-from __future__ import annotations
+from __future__ import annotations as _annotations
 
-import time
-from typing import Optional, Iterable, Callable, Union
+import time as _time
+from typing import Optional as _Opt, Iterable as _Iter, Callable as _Callable
 
-import pygame
+import pygame as _pg
 
 from .constants import UL
 from .mathf import clamp, Pos, Size
 from .type_hints import _pos, _size, _col_type
 
-pygame.init()
+_pg.init()
 
 _point_to_rect_point = {
     "ul": "topleft",
@@ -25,7 +25,7 @@ _point_to_rect_point = {
 }
 
 
-class Element(pygame.sprite.Sprite):
+class Element(_pg.sprite.Sprite):
     """
     Element(pygame.sprite.Sprite)
 
@@ -85,8 +85,7 @@ class Element(pygame.sprite.Sprite):
         'dr' (pgt.Pos): down-right
         'pos' (pgt.Pos): position of the '_pos_point' of the element
         'size' (pgt.Size): size of the element
-        '_size' (pgt.Size): the original size of the element (without
-            rotation or scaling)
+        '_size' (pgt.Size): the size of the element without rotation
         'x' (int): x position of the element
         'y' (int): y position of the element
         'w' (int): width of the element
@@ -108,20 +107,22 @@ class Element(pygame.sprite.Sprite):
     def __init__(self,
                  pos: _pos = None,
                  size: _size = Size(0),
-                 image: Optional[pygame.Surface] = None,
+                 image: _Opt[_pg.Surface] = None,
                  pos_point: str = UL,
-                 anchor_element: Optional[Element] = None,
+                 anchor_element: _Opt[Element] = None,
                  anchor_point: str = UL,
-                 point: Optional[str] = None,
+                 point: _Opt[str] = None,
                  offset: _pos = Pos(0),
                  img_offset: _pos = Pos(0),
                  alpha: int = 255,
                  rotation: int = 0,
-                 hidden: bool = False):
-        pygame.sprite.Sprite.__init__(self)
+                 hidden: bool = False,
+                 on_size_change: _Opt[_Callable] = None):
+        _pg.sprite.Sprite.__init__(self)
         size = Size(size)
-        self.rect = pygame.Rect((0, 0), size)
+        self.rect = _pg.Rect((0, 0), size)
         self._size = size
+        self.on_size_change = on_size_change
         self.image = image
         self.__backup_image = None if rotation == 0 else image
 
@@ -242,10 +243,13 @@ class Element(pygame.sprite.Sprite):
     @property
     def size(self):
         return Size(self.rect.size)
-
     @size.setter
     def size(self, value):
-        self.rect.size = round(Size(value))
+        new_size = round(Size(value))
+        if self.size != new_size:
+            self.rect.size = new_size
+            if self.on_size_change is not None:
+                self.on_size_change(self)
 
     @property
     def w(self):
@@ -287,8 +291,8 @@ class Element(pygame.sprite.Sprite):
         return self.__a_element is not None
 
     def anchor(self,
-               anchor_element: Element,
-               anchor_point: Optional[str] = None) -> None:
+               anchor_element: _Opt[Element],
+               anchor_point: _Opt[str] = None) -> None:
         """
         anchor(self, anchor_element, anchor_point=None)
 
@@ -299,7 +303,7 @@ class Element(pygame.sprite.Sprite):
         Args:
             'anchor_element' (Element?): the element to anchor to, if
                 set to None, the anchor is removed
-            'anchor_point' (str): the point of the 'anchor_element' that
+            'anchor_point' (str?): the point of the 'anchor_element' that
                 this element anchors to, if None, defaults to the point
                 given on initialization
 
@@ -307,7 +311,7 @@ class Element(pygame.sprite.Sprite):
         """
         if anchor_element is not None and \
            not isinstance(anchor_element, Element):
-            raise TypeError("Expected an instance of Element, got "\
+            raise TypeError("Expected an instance of Element, got "
                            f"'{anchor_element.__class__.__name__}' instead")
 
         self.__a_element = anchor_element
@@ -327,7 +331,7 @@ class Element(pygame.sprite.Sprite):
             setattr(self, self._pos_point,
                 getattr(self.__a_element, self._a_point) + self.__offset)
 
-    def handle_event(self, event: pygame.event.Event) -> bool:
+    def handle_event(self, event: _pg.event.Event) -> bool:
         """
         handle_event(self, event: pygame.event.Event)
 
@@ -379,9 +383,9 @@ class Element(pygame.sprite.Sprite):
         # Rotates the image
         if angle != 0:
             if not angle % 90:
-                self.image = pygame.transform.rotate(self.image, angle)
+                self.image = _pg.transform.rotate(self.image, angle)
             else:
-                self.image = pygame.transform.rotozoom(self.image, angle, 1)
+                self.image = _pg.transform.rotozoom(self.image, angle, 1)
                 self.image.set_alpha(self._alpha)
             self._rot = angle
 
@@ -395,7 +399,7 @@ class Element(pygame.sprite.Sprite):
     def scale(self,
               size: _size,
               smooth: bool = False,
-              point: Optional[str] = None) -> None:
+              point: _Opt[str] = None) -> None:
         """
         scale(self, size, smooth=False, point=None)
 
@@ -409,7 +413,7 @@ class Element(pygame.sprite.Sprite):
             'smooth' (bool): if the function should use
                 'pygame.transform.smoothscale' instead of
                 'pygame.transform.scale'
-            'point' (Pos): the point that doesn't change it's position,
+            'point' (Pos): the point that doesn't change its position,
                 if None, defaults to the element's 'pos' property
 
         Return type: None
@@ -424,9 +428,9 @@ class Element(pygame.sprite.Sprite):
 
         # Scales the image
         if smooth:
-            self.image = pygame.transform.smoothscale(self.image, size)
+            self.image = _pg.transform.smoothscale(self.image, size)
         else:
-            self.image = pygame.transform.scale(self.image, size)
+            self.image = _pg.transform.scale(self.image, size)
 
         self.size = size
 
@@ -436,7 +440,7 @@ class Element(pygame.sprite.Sprite):
         else:
             setattr(self, point, prev_pos)
 
-    def change_image(self, surface: pygame.Surface) -> None:
+    def change_image(self, surface: _pg.Surface) -> None:
         """
         change_image(self, surface)
 
@@ -450,7 +454,7 @@ class Element(pygame.sprite.Sprite):
 
         Return type: None
         """
-        if not isinstance(surface, pygame.Surface):
+        if not isinstance(surface, _pg.Surface):
             raise TypeError("Expected 'surface' to be pygame.Surface, "
                            f"got '{surface.__class__.__name__}' instead")
 
@@ -462,7 +466,7 @@ class Element(pygame.sprite.Sprite):
             self.__backup_image = self.image.copy()
         self.rotate(self._rot, True)
 
-    def collide(self, other: pygame.sprite.Sprite) -> bool:
+    def collide(self, other: _pg.sprite.Sprite) -> bool:
         """
         collide(self, other)
 
@@ -480,9 +484,9 @@ class Element(pygame.sprite.Sprite):
         if self.hidden: return False
 
         # An element is a subclass of pygame.sprite.Sprite
-        if isinstance(other, pygame.sprite.Sprite):
+        if isinstance(other, _pg.sprite.Sprite):
             return self.rect.colliderect(other.rect)
-        elif isinstance(other, pygame.Rect):
+        elif isinstance(other, _pg.Rect):
             return self.rect.colliderect(other)
         else:
             raise TypeError("Expected 'other' to be pygame.Rect or "
@@ -514,10 +518,10 @@ class Element(pygame.sprite.Sprite):
         self.hidden = True
 
     def draw(self,
-             surface: pygame.Surface,
+             surface: _pg.Surface,
              pos: _pos = None,
              point: str = UL,
-             offset: Optional[_pos] = None,
+             offset: _Opt[_pos] = None,
              flags: int = 0,
              show_rect: bool = False,
              rect_color: _col_type = (255, 0, 255)) -> None:
@@ -550,22 +554,25 @@ class Element(pygame.sprite.Sprite):
         # get the position of the element
         if pos is None: self._update_anchor_pos()
 
-        if self.hidden or self.image is None:
+        if self.hidden:
+            return
+
+        if self.image is None:
             if show_rect:
-                pygame.draw.rect(surface, rect_color, self.rect, 1)
+                _pg.draw.rect(surface, rect_color, self.rect, 1)
             return
 
         # Sets the position based on the parameters given in the arguments
         if pos is None:
             pos = self.ul
         else:
-            if not isinstance(pos, pygame.Rect):
-                pos = pygame.Rect(Pos(pos), self.size)
+            if not isinstance(pos, _pg.Rect):
+                pos = _pg.Rect(Pos(pos), self.size)
 
             if point is not None:
                 attr = _point_to_rect_point.get(point, None)
                 if attr is None:
-                    raise ValueError("invalid point for "\
+                    raise ValueError("invalid point for "
                                     f"{self.__class__.__name__}.draw()")
                 pos = getattr(pos, attr)
             else:
@@ -580,7 +587,7 @@ class Element(pygame.sprite.Sprite):
 
         # Draws the rectangle if requested
         if show_rect:
-            pygame.draw.rect(surface, rect_color, self.rect, 1)
+            _pg.draw.rect(surface, rect_color, self.rect, 1)
 
 
 class AniElement(Element):
@@ -597,27 +604,30 @@ class AniElement(Element):
         'animations' (list): a list that contains all the animations of
             the element (the 'element' argument of the animations is
             set automatically)
+        'update_when_hidden' (bool): if the animations of the element
+            should be updated when it's hidden
 
     Attrs:
         'current_ani' (list[str]): the names of the animations that are
             currently running
-        any animation can be accessed as an attribute named after the
-        name of the animation (to access an animation called "jump" of
-        'player_sprite' you write 'player_sprite.jump')
+        'update_when_hidden' (bool): see 'update_when_hidden' in args
 
     Methods:
         add_ani(ani)
         update_ani(global_time=None)
-        draw(*args, **kwargs, update_ani=False)
+        draw(..., update_ani=False)
 
     Notes:
-        - if the element is hidden all the animations are still updated
         - animations with the names '_show' and '_hide' will start when
           calling the show() or hide() methods, the element is hidden
           at the end of the '_hide' animation
+        - any animation can be accessed as an attribute named after the
+          name of the animation (to access an animation called 'jump' of
+          'player_sprite' you write 'player_sprite.jump')
     """
     def __init__(self,
-       animations: Optional[Iterable] = None,
+       animations: _Opt[_Iter] = None,
+       update_when_hidden: bool = True,
        *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -627,9 +637,12 @@ class AniElement(Element):
             self.add_ani(i)
 
         self.current_ani = []
-        self.is_hiding = False
+        self.update_when_hidden = update_when_hidden
+        self.__is_hiding = False
 
     def show(self):
+        if not self.hidden:
+            return
         self.hidden = False
         try:
             self._show.start()
@@ -637,9 +650,11 @@ class AniElement(Element):
             pass
 
     def hide(self):
+        if self.hidden:
+            return
         try:
             self._hide.start()
-            self.is_hiding = True
+            self.__is_hiding = True
         except AttributeError:
             self.hidden = True
 
@@ -659,7 +674,7 @@ class AniElement(Element):
         setattr(self, ani.name, ani)
         ani.set_new_element(self)
 
-    def update_ani(self, global_time: Optional[float] = None) -> None:
+    def update_ani(self, global_time: _Opt[float] = None) -> None:
         """
         update_ani(self, global_time=None)
 
@@ -675,35 +690,40 @@ class AniElement(Element):
         Return type: None
         """
         if global_time is None:
-            global_time = time.perf_counter()
+            global_time = _time.perf_counter()
 
-        hide = self.is_hiding
+        hide = self.__is_hiding
 
         for i in self.current_ani.copy():
             getattr(self, i[0]).update(global_time)
-            if self.is_hiding and i[0] == "_hide" and getattr(self, i[0]).running:
+            if self.__is_hiding \
+               and i[0] == "_hide" \
+               and getattr(self, i[0]).running:
                 hide = False
 
         if hide:
             self.hidden = True
-            self.is_hiding = False
+            self.__is_hiding = False
 
-    def draw(self, *args, **kwargs) -> None:
+    def draw(self,
+             surface: _pg.Surface,
+             pos: _pos = None,
+             point: str = UL,
+             offset: _Opt[_pos] = None,
+             flags: int = 0,
+             show_rect: bool = False,
+             rect_color: _col_type = (255, 0, 255),
+             update_ani: bool = True) -> None:
         """
         Args:
             'update_ani' (bool): if true, calls self.update_ani
 
         For full documentation see help(pgt.Element.draw)
         """
-        if "update_ani" in kwargs:
-            if kwargs["update_ani"]: self.update_ani()
-            del kwargs["update_ani"]
-        elif len(args) == 8:
-            if args[7]: self.update_ani()
-            args = args[:7]
-        else:
+        if update_ani and (not self.hidden or self.update_when_hidden):
             self.update_ani()
-        super().draw(*args, **kwargs)
+
+        super().draw(surface, pos, point, offset, flags, show_rect, rect_color)
 
 
 class MouseInteractionElement(Element):
@@ -732,7 +752,7 @@ class MouseInteractionElement(Element):
         get_mouse_pos()
     """
     def __init__(self,
-                 transform_mouse_pos: Callable = lambda x: x,
+                 transform_mouse_pos: _Callable = lambda x: x,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -753,7 +773,7 @@ class MouseInteractionElement(Element):
 
         Return type: Pos
         """
-        return self.transform_mouse_pos(Pos(pygame.mouse.get_pos()))
+        return self.transform_mouse_pos(Pos(_pg.mouse.get_pos()))
 
     @property
     def hovered(self):
@@ -761,7 +781,7 @@ class MouseInteractionElement(Element):
 
         in_area = self.collide_point(self.get_mouse_pos())
 
-        if not any(pygame.mouse.get_pressed()) and in_area:
+        if not any(_pg.mouse.get_pressed()) and in_area:
             self.__prev_hovered = True
             self.__keep_clicked = False
         elif not in_area:
@@ -780,7 +800,7 @@ class MouseInteractionElement(Element):
         self.__prev_hovered = False
         self.__keep_clicked = True
 
-        return pygame.mouse.get_pressed()
+        return _pg.mouse.get_pressed()
 
 
 class MouseInteractionAniElement(MouseInteractionElement, AniElement):

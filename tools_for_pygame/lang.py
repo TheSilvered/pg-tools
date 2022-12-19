@@ -269,7 +269,7 @@ def _make_lang_obj(d, root_node=None) -> LangNode:
 def _check_name(s, l_no, file) -> None:
     match = name_expr.match(s)
     if match is None or match[0] != s:
-        raise _LangError(l_no, f"name '{s}' is not a valid", file)
+        raise _LangError(l_no, f"name '{s}' is not valid", file)
 
 
 def _make_lang_dict(s, encoding, file) -> dict:
@@ -281,26 +281,30 @@ def _make_lang_dict(s, encoding, file) -> dict:
     dict_stack = _Stack(root)
     attr = ""
 
-    for l_no, l in enumerate(lines):
-        if l.strip() == "": continue
-        l = l.lstrip()
-        if not l: continue
+    for l_no, line in enumerate(lines):
+        if line.strip() == "": continue
+        line = line.lstrip()
+        if not line: continue
 
-        if l[:2] == "%=":
-            name = l[2:]
+        l_len = len(line)
+
+        if l_len >= 2 and line[0] == "%" and line[1] == "=":
+            name = line[2:]
             if name.lower() != encoding.lower():
                 return _LangEncodingError(f"encoding must be '{name.lower()}'")
 
             attr = ""
             continue
 
-        elif l[:2] == "::": continue
+        elif l_len >= 2 and line[0] == ":" and line[1] == ":": continue
 
-        elif l[:1] == "$":
+        elif line[0] == "$":
             dict_count = 0
-            while l[:1] == "$":
-                l = l[1:]
-                dict_count += 1
+            for i in line:
+                if i == "$":
+                    dict_count += 1
+                else:
+                    break
 
             if dict_count > len(dict_stack):
                 raise _LangError(
@@ -311,35 +315,39 @@ def _make_lang_dict(s, encoding, file) -> dict:
 
             while dict_count < len(dict_stack): dict_stack.pop()
 
-            if l == "!": continue
+            if l_len == dict_count + 1 and line[dict_count] == "!": continue
 
-            _check_name(l, l_no, file)
-            dict_stack.peek()[l] = {}
-            dict_stack.push(dict_stack.peek()[l])
+            line = line[dict_count:]
+
+            _check_name(line, l_no, file)
+            d = {}
+            dict_stack.peek()[line] = d
+            dict_stack.push(d)
             attr = ""
             continue
 
-        elif l[:1] == "@":
-            l = l[1:]
-            colon_idx = l.find(":")
+        elif line[0] == "@":
+            colon_idx = line.find(":")
             if colon_idx != -1:
-                name = l[:colon_idx]
+                name = line[1:colon_idx]
                 _check_name(name, l_no, file)
-                dict_stack.peek()[name] = l[colon_idx + 1:]
+                dict_stack.peek()[name] = line[colon_idx + 1:]
                 attr = ""
             else:
-                _check_name(l, l_no, file)
-                attr = l
+                line = line[1:]
+                _check_name(line, l_no, file)
+                attr = line
             continue
 
-        elif l[:2] == "~@" or l[:3] == ".~@":
-            local = l[:3] == ".~@"
+        elif (l_len >= 2 and line[0] == "~" and line[1] == "@") or \
+             (l_len >= 3 and line[0] == "." and line[1] == "~" and line[2] == "@"):
+            local = line[0] == "."
 
-            if local: l = l[3:]
-            else:     l = l[2:]
+            if local: line = line[3:]
+            else:     line = line[2:]
 
             try:
-                name, val, *others = l.split(":")
+                name, val, *others = line.split(":")
             except ValueError:
                 raise _LangError(l_no, "expected ':'", file)
             if others:
@@ -353,16 +361,16 @@ def _make_lang_dict(s, encoding, file) -> dict:
             attr = ""
             continue
 
-        if l[:1] == "&": l = l[1:]
+        if line[0] == "&": line = line[1:]
         else:
-            if l[:1] == "\\": l = l[1:]
-            l += "\n"
+            if line[0] == "\\": line = line[1:]
+            line += "\n"
 
         if attr:
             try:
-                dict_stack.peek()[attr] += l
+                dict_stack.peek()[attr] += line
             except KeyError:
-                dict_stack.peek()[attr] = l
+                dict_stack.peek()[attr] = line
         else:
             raise _LangError(l_no, f"text with no attribute", file)
 
